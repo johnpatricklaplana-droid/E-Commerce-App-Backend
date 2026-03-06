@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name="")
+@Table(name="location")
 public class User_Location {
     
     @Id
@@ -43,4 +46,9 @@ public class User_Location {
     @Column(name="longitude")
     private double longitude;
 
+    @ManyToMany(mappedBy="costumer_location")
+    private List<Customer> costumers;
+
+    @ManyToMany(mappedBy="seller_location")
+    private List<Seller> sellers;
 }
