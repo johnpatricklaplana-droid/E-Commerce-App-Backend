@@ -47,7 +47,7 @@ public class User_Location {
     private double longitude;
 
     @ManyToMany(mappedBy="costumer_location")
-    private List<Customer> costumers;
+    private List<Costumer> costumers;
 
     @ManyToMany(mappedBy="seller_location")
     private List<Seller> sellers;
