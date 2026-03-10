@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name="customer")
+@Table(name="costumers")
 public class Costumer {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Id
@@ -31,7 +31,7 @@ public class Costumer {
     @Column(name="last_name")
     private String last_name;
 
-    @Column(name="profile_pic")
+    @Column(name="image_file_path")
     private String profile_pic;
 
     @Column(name="email")

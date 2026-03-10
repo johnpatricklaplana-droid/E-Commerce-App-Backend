@@ -1,12 +1,14 @@
 package com.example.demo.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.costumerAndLocationDTO;
 import com.example.demo.Service.SignupService;
-import com.example.demo.entity.Costumer;
 
 @RestController
 public class SignUpController {
@@ -15,9 +17,11 @@ public class SignUpController {
     SignupService service;
     
     @PostMapping("/signup")
-    public String signup (@RequestBody Costumer costumer) {
-        service.signup(costumer);
-        return "todo";
+    public ResponseEntity<?> signup (@RequestBody costumerAndLocationDTO dto) {
+        service.signup(dto);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body("Sign up successful");
     }
 
 }

@@ -1,37 +1,59 @@
 package com.example.demo.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.DTO.costumerAndLocationDTO;
 import com.example.demo.entity.Costumer;
+import com.example.demo.entity.User_Location;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repository.Costumer_Repository;
 import com.example.demo.repository.User_LocationRepository;
-import com.example.demo.utils.EmailValidator;
+import com.example.demo.utils.CreateIds;
+import com.example.demo.utils.CredentialsValidator;
 
 @Service
 public class SignupService {
 
     @Autowired
-    Costumer_Repository costumer_repository;
+    private Costumer_Repository costumer_repository;
 
     @Autowired
-    User_LocationRepository location_repository;
+    private User_LocationRepository location_repository;
 
-    public void signup(Costumer costumer) {
+    @Autowired
+    private CredentialsValidator credentialsValidator;
+
+    public void signup(costumerAndLocationDTO requestBody) {
         
-        String emailInput = costumer.getEmail();
-        String passwordInput = costumer.getPassword();
+        System.out.println(requestBody.toString());
+        Costumer costumer = requestBody.getCostumer();
+        User_Location location = requestBody.getLocation();
 
-        if(!EmailValidator.isValidEmail(emailInput)) {
-            throw new IllegalArgumentException("Invalid email");
+        String email = costumer.getEmail();
+        String password = costumer.getPassword();
+
+        credentialsValidator.validateEmail(email);
+        credentialsValidator.validatePassword(password);
+          
+        String location_id = CreateIds.createLocationId(location);
+        boolean locExist = location_repository.existsById(location_id);
+        
+        if(!locExist) {
+            throw new ResourceNotFoundException("location not found");
         }
 
-        if(passwordInput.length() < 6) {
-            throw new IllegalArgumentException("Password too short");
-        }
-
+        List<User_Location> userLoc = new ArrayList<>();
+        location.setId(location_id);
+        userLoc.add(location);
+     
+        costumer.setCostumer_location(userLoc);
+       
+        costumer_repository.save(costumer);
         
-
     }
     
 }
