@@ -1,4 +1,4 @@
-package com.example.demo.DTO;
+package com.example.demo.DTO.userDTO;
 
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;
@@ -18,6 +18,7 @@ public class costumerAndLocationDTO {
     private String profile_pic;
     private String email;
     private String password;
+    private String confirm_password;
 
     // Location
     private String street;
@@ -51,23 +52,5 @@ public class costumerAndLocationDTO {
 
         return location;
     }
-
-    @Override
-public String toString() {
-    return "CostumerAndLocationDTO{" +
-            "first_name='" + first_name + '\'' +
-            ", last_name='" + last_name + '\'' +
-            ", profile_pic='" + profile_pic + '\'' +
-            ", email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            ", street='" + street + '\'' +
-            ", city='" + city + '\'' +
-            ", province='" + province + '\'' +
-            ", postal_code='" + postal_code + '\'' +
-            ", country='" + country + '\'' +
-            ", latitude=" + latitude +
-            ", longitude=" + longitude +
-            '}';
-}
 
 }

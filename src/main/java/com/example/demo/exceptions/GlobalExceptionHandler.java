@@ -5,21 +5,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.example.demo.DTO.errorDTO.ErrorMessage;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorMessage> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<String> handleEmailAlreadyExist(EmailAlreadyExistException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorMessage> handleEmailAlreadyExist(EmailAlreadyExistException ex) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorMessage> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(new ErrorMessage(ex.getMessage()));
     }
 }

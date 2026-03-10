@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.DTO.costumerAndLocationDTO;
+import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
 import com.example.demo.Service.SignupService;
 
 @RestController

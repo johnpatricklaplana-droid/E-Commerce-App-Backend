@@ -10,9 +10,11 @@ public class CreateIds {
         String city = location.getCity();
         String province = location.getProvince();
         String postalCode = location.getPostal_code();
-        String street = location.getStreet();
 
-        return country + city + province + postalCode + street;
+        String location_id = (country + city + province + postalCode).replaceAll("\\s+", "");
+        
+        return location_id;
     }
 
 }
+ 
