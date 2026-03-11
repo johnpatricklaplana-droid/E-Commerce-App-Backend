@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -19,11 +20,15 @@ public class Security_Config {
         .csrf(csrf -> csrf
             .disable()
         )
+        .formLogin(form -> form.disable())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .cors(cors -> cors.configurationSource(CORSConfiguration()))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/signup").permitAll()
+            .requestMatchers("/signup/costumer").permitAll()
+            .requestMatchers("/login/costumer").permitAll()
             .anyRequest().authenticated()
-        );
+        )
+        .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
 
     return http.build();
     }

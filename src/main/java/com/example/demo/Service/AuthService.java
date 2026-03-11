@@ -9,14 +9,16 @@ import org.springframework.stereotype.Service;
 import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;
+import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Costumer_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.utils.CreateIds;
 import com.example.demo.utils.CredentialsValidator;
 
 @Service
-public class SignupService {
+public class AuthService {
 
     @Autowired
     private Costumer_Repository costumer_repository;
@@ -27,24 +29,30 @@ public class SignupService {
     @Autowired
     private CredentialsValidator credentialsValidator;
 
+    @Autowired
+    private Jwt jwt;
+
     public void signup(costumerAndLocationDTO requestBody) {
         
         Costumer costumer = requestBody.getCostumer();
         User_Location location = requestBody.getLocation();
 
-        // get credentials
         String email = costumer.getEmail();
         String password = costumer.getPassword();
-        String confirm_password = requestBody.getConfirm_password();
 
-        // validate email and password
+        boolean emailExist = costumer_repository.existsByEmail(email);
+
+        if(emailExist) {
+            throw new EmailAlreadyExistException(
+                "email con only be use once to create account for some reason"
+            );
+        }
+
         credentialsValidator.validateEmail(email);
-        credentialsValidator.validatePassword(password, confirm_password);
+        credentialsValidator.validatePassword(password);
           
-        // create location id
         String location_id = CreateIds.createLocationId(location);
 
-        // find if location exist
         boolean locExist = location_repository.existsById(location_id);
         
         if(!locExist) {
@@ -59,6 +67,43 @@ public class SignupService {
        
         costumer_repository.save(costumer);
         
+    }
+
+    public String login(Costumer costumer) {
+        
+        String email = costumer.getEmail();
+        String password = costumer.getPassword();
+
+        credentialsValidator.validateEmail(email);
+        credentialsValidator.validatePassword(password);
+
+        Costumer cos = costumer_repository.findByEmail(email);
+
+        if(cos == null) {
+            throw new ResourceNotFoundException("wrong credentials");
+        }
+    
+        if(password.equals(cos.getPassword())  && email.equals(cos.getEmail())) {
+            throw new ResourceNotFoundException("wrong credentials");
+        }
+
+        return jwt.generateToken(cos.getId().toString());
+
+    }
+
+    public String validateJwtToken (String token) {
+
+       if(token == null) {
+            return token;
+       }
+
+       boolean isit = jwt.isTokenValid(token);
+
+       if(!isit) {
+            throw new UnAuthorizedException("Unauthorized");
+       }
+
+        return token;
     }
     
 }

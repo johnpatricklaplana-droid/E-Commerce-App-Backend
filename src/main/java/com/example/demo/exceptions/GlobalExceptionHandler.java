@@ -30,4 +30,11 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(new ErrorMessage(ex.getMessage()));
     }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ErrorMessage> handleUnAuthorized(UnAuthorizedException ex) {
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(new ErrorMessage(ex.getMessage()));
+    }
 }

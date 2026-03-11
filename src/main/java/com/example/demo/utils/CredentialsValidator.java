@@ -26,12 +26,6 @@ public class CredentialsValidator {
         if(!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email");
         }
-
-        boolean emailExist = costumer_repository.existsByEmail(email);
-
-        if(emailExist) {
-            throw new EmailAlreadyExistException("Email already exist buddy");
-        }
     }
 
     public void validatePassword(String password) {

@@ -40,6 +40,9 @@ public class Costumer {
     @Column(name="password")
     private String password;
 
+    @Column(name="role")
+    private String role;
+
     @ManyToMany
     @JoinTable(
         name="costumer_location",

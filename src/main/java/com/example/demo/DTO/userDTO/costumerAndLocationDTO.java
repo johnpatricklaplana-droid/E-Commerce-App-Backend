@@ -18,7 +18,6 @@ public class costumerAndLocationDTO {
     private String profile_pic;
     private String email;
     private String password;
-    private String confirm_password;
 
     // Location
     private String street;
