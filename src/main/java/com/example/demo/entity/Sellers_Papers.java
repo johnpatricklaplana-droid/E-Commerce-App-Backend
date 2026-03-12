@@ -15,15 +15,15 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name="seller_papers")
-public class Seller_Papers {
+@Table(name="sellers_papers")
+public class Sellers_Papers {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="business_registration_document_file_path")
-    private String business_registration_document_file_path;
+    @Column(name="business_registration_documents")
+    private String business_registration_documents;
 
     @Column(name="national_id")
     private String national_id;

@@ -28,8 +28,8 @@ public class Seller_Bank_Account {
     @Column(name="bank_account_number")
     private String bank_account_number;
 
-    @Column(name="bank_account_type")
-    private String bank_account_type;
+    @Column(name="account_type")
+    private String account_type;
 
     @Column(name="status")
     private Bank_Account_status status;

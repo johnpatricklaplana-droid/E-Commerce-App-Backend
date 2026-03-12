@@ -36,13 +36,16 @@ public class Seller {
 
     @OneToOne
     @JoinColumn(name="seller_paper_id")
-    private Seller_Papers papers;
+    private Sellers_Papers papers;
 
     @Column(name="email")
     private String email;
 
     @Column(name="password")
     private String password;
+
+    @Column(name="role")
+    private String role;
 
     @Column(name="profile_pic_image_path")
     private String profile_pic_image_path;

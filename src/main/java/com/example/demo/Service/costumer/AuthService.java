@@ -1,4 +1,4 @@
-package com.example.demo.Service;
+package com.example.demo.Service.costumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
+import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;
 import com.example.demo.exceptions.EmailAlreadyExistException;
@@ -40,10 +41,10 @@ public class AuthService {
 
         List<costumerAndLocationDTO> body = Location_external_API.getUserLocation(location);
 
-        if(body == null) {
+        if(body.isEmpty()) {
             throw new ResourceNotFoundException("Location not found make sure to submit valid address buddy");
         }
-        
+       
         for (costumerAndLocationDTO costumer_location : body) {
             location.setRegion(costumer_location.getAddress().getRegion());
             location.setPostal_code(costumer_location.getAddress().getPostcode());
@@ -89,7 +90,7 @@ public class AuthService {
             throw new ResourceNotFoundException("wrong credentials");
         }
     
-        if(password.equals(cos.getPassword())  && email.equals(cos.getEmail())) {
+        if(password.equals(cos.getPassword())) {
             throw new ResourceNotFoundException("wrong credentials");
         }
 

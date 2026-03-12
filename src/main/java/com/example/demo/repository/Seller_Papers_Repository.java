@@ -2,8 +2,8 @@ package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.Seller_Papers;
+import com.example.demo.entity.Sellers_Papers;
 
-public interface Seller_Papers_Repository extends JpaRepository<Seller_Papers, Integer> {
+public interface Seller_Papers_Repository extends JpaRepository<Sellers_Papers, Integer> {
     
 }
