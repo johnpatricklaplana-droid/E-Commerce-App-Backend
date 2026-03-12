@@ -5,36 +5,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.DTO.errorDTO.ErrorMessage;
+import com.example.demo.DTO.ResponseDTO.HttpResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessage> handleIllegalArgument(IllegalArgumentException ex) {
+    public ResponseEntity<HttpResponse> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorMessage(ex.getMessage()));
+            .body(new HttpResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<ErrorMessage> handleEmailAlreadyExist(EmailAlreadyExistException ex) {
+    public ResponseEntity<HttpResponse> handleEmailAlreadyExist(EmailAlreadyExistException ex) {
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
-            .body(new ErrorMessage(ex.getMessage()));
+            .body(new HttpResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<HttpResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .body(new ErrorMessage(ex.getMessage()));
+            .body(new HttpResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
-    public ResponseEntity<ErrorMessage> handleUnAuthorized(UnAuthorizedException ex) {
+    public ResponseEntity<HttpResponse> handleUnAuthorized(UnAuthorizedException ex) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
-            .body(new ErrorMessage(ex.getMessage()));
+            .body(new HttpResponse(ex.getMessage()));
     }
 }

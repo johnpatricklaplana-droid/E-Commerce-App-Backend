@@ -1,8 +1,7 @@
 package com.example.demo.Controller.costumer;
 
-import org.springframework.http.HttpHeaders;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.DTO.errorDTO.ErrorMessage;
+import com.example.demo.DTO.ResponseDTO.HttpResponse;
 import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
 import com.example.demo.Service.AuthService;
 import com.example.demo.entity.Costumer;
@@ -24,15 +23,15 @@ public class AuthController {
     AuthService service;
     
     @PostMapping("/signup/costumer")
-    public ResponseEntity<ErrorMessage> signup (@RequestBody costumerAndLocationDTO dto) {
+    public ResponseEntity<HttpResponse> signup (@RequestBody costumerAndLocationDTO dto) {
         service.signup(dto);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new ErrorMessage("sign up successfully"));
+            .body(new HttpResponse("sign up successfully"));
     }
 
     @PostMapping("/login/costumer")
-    public ResponseEntity<ErrorMessage> login(@RequestBody Costumer costumer, 
+    public ResponseEntity<HttpResponse> login(@RequestBody Costumer costumer, 
                                                HttpServletResponse response) {
 
         String token = service.login(costumer);
@@ -49,7 +48,7 @@ public class AuthController {
 
         return ResponseEntity
             .status(200)
-            .body(new ErrorMessage("login success"));
+            .body(new HttpResponse("login success"));
     }
 
 }

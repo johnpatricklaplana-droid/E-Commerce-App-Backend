@@ -2,17 +2,11 @@ package com.example.demo.utils;
 
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.example.demo.exceptions.EmailAlreadyExistException;
-import com.example.demo.repository.Costumer_Repository;
 
 @Component
 public class CredentialsValidator {
 
-    @Autowired
-    private Costumer_Repository costumer_repository;
 
     public boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";

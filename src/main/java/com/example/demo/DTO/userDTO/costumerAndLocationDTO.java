@@ -23,10 +23,11 @@ public class costumerAndLocationDTO {
     private String street;
     private String city;
     private String province;
-    private String postal_code;
     private String country;
-    private double latitude;
-    private double longitude;
+    private String postcode;
+    private double lat;
+    private double lon;
+    private AddressDTO address;
 
     public Costumer getCostumer () {
         Costumer costumer = new Costumer();
@@ -44,10 +45,9 @@ public class costumerAndLocationDTO {
         location.setStreet(street);
         location.setCity(city);
         location.setProvince(province);
-        location.setPostal_code(postal_code);
         location.setCountry(country);
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
+        location.setLat(lat);
+        location.setLon(lon);
 
         return location;
     }

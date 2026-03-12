@@ -30,7 +30,7 @@ public class Security_Config {
         )
         .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
 
-    return http.build();
+        return http.build();
     }
 
     @Bean
