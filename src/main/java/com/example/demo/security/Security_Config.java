@@ -26,6 +26,7 @@ public class Security_Config {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/signup/costumer").permitAll()
             .requestMatchers("/login/costumer").permitAll()
+            .requestMatchers("/signup/seller").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);

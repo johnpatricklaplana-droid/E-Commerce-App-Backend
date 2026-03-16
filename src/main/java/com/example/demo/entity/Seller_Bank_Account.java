@@ -4,6 +4,8 @@ import com.example.demo.enums.Bank_Account_status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +34,7 @@ public class Seller_Bank_Account {
     private String account_type;
 
     @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private Bank_Account_status status;
 
     @ManyToOne

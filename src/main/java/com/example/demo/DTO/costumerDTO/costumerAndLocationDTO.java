@@ -1,4 +1,4 @@
-package com.example.demo.DTO.userDTO;
+package com.example.demo.DTO.costumerDTO;
 
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;

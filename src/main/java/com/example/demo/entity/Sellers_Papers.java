@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,8 +23,9 @@ public class Sellers_Papers {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="business_registration_documents")
-    private String business_registration_documents;
+    @JoinColumn(name="business_registration_documents")
+    @OneToOne
+    private Business_Registration_Documents business_registration_documents;
 
     @Column(name="national_id")
     private String national_id;

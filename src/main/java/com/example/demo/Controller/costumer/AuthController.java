@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.ResponseDTO.HttpResponse;
-import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
+import com.example.demo.DTO.costumerDTO.costumerAndLocationDTO;
 import com.example.demo.Service.costumer.AuthService;
 import com.example.demo.entity.Costumer;
 

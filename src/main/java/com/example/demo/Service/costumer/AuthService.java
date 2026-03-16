@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Controller.client.Location_external_API;
-import com.example.demo.DTO.userDTO.costumerAndLocationDTO;
+import com.example.demo.DTO.costumerDTO.costumerAndLocationDTO;
+import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;
@@ -39,13 +40,13 @@ public class AuthService {
         costumer.setRole("COSTUMER");
         User_Location location = requestBody.getLocation();
 
-        List<costumerAndLocationDTO> body = Location_external_API.getUserLocation(location);
+        List<LocationDTO> body = Location_external_API.getUserLocation(location);
 
         if(body.isEmpty()) {
-            throw new ResourceNotFoundException("Location not found make sure to submit valid address buddy");
+            throw new ResourceNotFoundException("Location not found check some spelling on input");
         }
        
-        for (costumerAndLocationDTO costumer_location : body) {
+        for (LocationDTO costumer_location : body) {
             location.setRegion(costumer_location.getAddress().getRegion());
             location.setPostal_code(costumer_location.getAddress().getPostcode());
             location.setLat(costumer_location.getLat());

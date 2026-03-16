@@ -4,6 +4,8 @@ import com.example.demo.enums.Business_Registration_Document_Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +29,7 @@ public class Business_Registration_Documents {
     private String file_url;
 
     @Column(name="verification_status")
+    @Enumerated(EnumType.STRING)
     private Business_Registration_Document_Status status; 
 
 }
