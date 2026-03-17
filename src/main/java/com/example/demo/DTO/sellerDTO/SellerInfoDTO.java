@@ -6,7 +6,6 @@ import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Sellers_Papers;
 import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Bank_Account_status;
-import com.example.demo.enums.Business_Registration_Document_Status;
 
 import lombok.Getter;
 import lombok.Setter;

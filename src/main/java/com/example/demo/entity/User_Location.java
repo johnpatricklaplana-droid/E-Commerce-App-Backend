@@ -23,7 +23,7 @@ public class User_Location {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @Column(name="street")
     private String street;

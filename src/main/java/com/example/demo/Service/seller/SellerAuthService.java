@@ -79,51 +79,85 @@ public class SellerAuthService {
         User_Location location = seller_info.toSellerLocation();
         Business_Registration_Documents documents = seller_info.toBusiness_Registration_Documents();
 
-        String email = seller.getEmail();
-        String password  = seller.getPassword();
-
-        credentialsValidator.validateEmail(email);
-        credentialsValidator.validatePassword(password);    
+        credentialsValidator.validateEmail(seller.getEmail());
+        credentialsValidator.validatePassword(seller.getPassword());    
         
-        if(seller_Repo.existsByEmail(email)) {
+        if(seller_Repo.existsByEmail(seller.getEmail())) {
             throw new EmailAlreadyExistException("conflict");
         }
 
         Integer admin_id = admin_repo.findByEmail(admin_email);
-   
+
+        Integer location_id = save_location(location);
+
+        Integer document_id = save_document(documents);
+
+        Integer seller_paper_id = save_seller_paper(sellers_Papers, document_id);
+
+        Integer seller_id = save_seller(seller, location_id, seller_paper_id);
+
+        save_bank_account(seller_Bank_Account, seller_id);
+
+        save_paper_storage(seller_paper_id, admin_id);
+     
+    }
+
+    private Integer save_location (User_Location location) {
+          
+        // The result of this is always 1 or nothing for some reason
         List<LocationDTO> result = Location_external_API.getUserLocation(location);
 
-        for (LocationDTO costumer_location : result) {
-            location.setRegion(costumer_location.getAddress().getRegion());
-            location.setLat(costumer_location.getLat());
-            location.setLon(costumer_location.getLon());
+        for (LocationDTO seller_location : result) {
+            location.setRegion(seller_location.getAddress().getRegion());
+            location.setLat(seller_location.getLat());
+            location.setLon(seller_location.getLon());
         }
 
         location_repo.save(location);
 
-        List<User_Location> locations = new ArrayList<>();
-        locations.add(location);
+        return location.getId();
+    }
 
-        sellers_Papers.setBusiness_registration_documents(documents);
-        seller_paper_repo.save(sellers_Papers);
-
-        seller.setSeller_location(locations);
-        seller.setRole("SELLER");
-        seller.setPapers(sellers_Papers);
-        seller_repo.save(seller);
-
-        seller_Bank_Account.setSeller(seller);
-
-        bank_Account_Repo.save(seller_Bank_Account);
+    private Integer save_document (Business_Registration_Documents documents) {
 
         documents.setStatus(Business_Registration_Document_Status.PENDING);
         documents_repo.save(documents);
-     
-        Seller_Paper_Storage seller_File_Storage = new Seller_Paper_Storage();
-        seller_File_Storage.setAdmin(entityManager.getReference(Admin.class, admin_id));
-        seller_File_Storage.setSeller_paper_id(sellers_Papers);
- 
-        seller_Paper_Storage_Repo.save(seller_File_Storage);
+
+        return documents.getId();
     }
 
+    private Integer save_seller_paper (Sellers_Papers sellers_Papers, Integer document_id) {
+        sellers_Papers.setBusiness_registration_documents(
+                entityManager.getReference(Business_Registration_Documents.class, document_id));
+        seller_paper_repo.save(sellers_Papers);
+
+        return sellers_Papers.getId();
+    }
+
+    private Integer save_seller (Seller seller, Integer location_id, Integer seller_paper_id) {
+        List<User_Location> locations = new ArrayList<>();
+        locations.add(entityManager.getReference(User_Location.class, location_id));
+
+        seller.setSeller_location(locations);
+        seller.setRole("SELLER");
+        seller.setPapers(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
+        seller_repo.save(seller);
+
+        return seller.getId();
+    }
+
+    private void save_bank_account (Seller_Bank_Account seller_Bank_Account, Integer seller_id) {
+        seller_Bank_Account.setSeller(entityManager.getReference(Seller.class, seller_id));
+
+        bank_Account_Repo.save(seller_Bank_Account);
+    }
+
+    private void save_paper_storage (Integer seller_paper_id, Integer admin_id) {
+        Seller_Paper_Storage seller_File_Storage = new Seller_Paper_Storage();
+        seller_File_Storage.setAdmin(entityManager.getReference(Admin.class, admin_id));
+        seller_File_Storage.setSeller_paper_id(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
+        seller_Paper_Storage_Repo.save(seller_File_Storage);
+    }
 }
+
+
