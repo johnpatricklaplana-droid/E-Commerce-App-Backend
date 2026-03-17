@@ -44,7 +44,7 @@ public class SellerInfoDTO {
         seller.setLast_name(last_name);
         seller.setEmail(email);
         seller.setPassword(password);
-        seller.setProfile_pic_image_path(profile_pic_image_path);
+        seller.setProfile_pic(profile_pic_image_path);
 
         return seller;
     }

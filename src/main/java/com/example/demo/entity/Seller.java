@@ -2,10 +2,7 @@ package com.example.demo.entity;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -18,37 +15,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="seller")
 @Setter
 @Getter
 @NoArgsConstructor
-public class Seller {
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name="first_name")
-    private String first_name;
-
-    @Column(name="last_name")
-    private String last_name;
+public class Seller extends User {
 
     @OneToOne
     @JoinColumn(name="seller_paper_id")
     private Sellers_Papers papers;
-
-    @Column(name="email")
-    private String email;
-
-    @Column(name="password")
-    private String password;
-
-    @Column(name="role")
-    private String role;
-
-    @Column(name="profile_pic_image_path")
-    private String profile_pic_image_path;
 
     @ManyToMany
     @JoinTable(

@@ -18,6 +18,7 @@ import com.example.demo.entity.Seller_Paper_Storage;
 import com.example.demo.entity.Sellers_Papers;
 import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Business_Registration_Document_Status;
+import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.repository.Business_Registration_Documents_Repository;
@@ -139,7 +140,7 @@ public class SellerAuthService {
         locations.add(entityManager.getReference(User_Location.class, location_id));
 
         seller.setSeller_location(locations);
-        seller.setRole("SELLER");
+        seller.setRole(User_Role.SELLER);
         seller.setPapers(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
         seller_repo.save(seller);
 

@@ -12,6 +12,7 @@ import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Costumer;
 import com.example.demo.entity.User_Location;
+import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UnAuthorizedException;
@@ -37,7 +38,7 @@ public class AuthService {
     public void signup(costumerAndLocationDTO requestBody) {
         
         Costumer costumer = requestBody.getCostumer();
-        costumer.setRole("COSTUMER");
+        costumer.setRole(User_Role.COSTUMER);
         User_Location location = requestBody.getLocation();
 
         List<LocationDTO> body = Location_external_API.getUserLocation(location);
