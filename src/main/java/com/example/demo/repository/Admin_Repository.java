@@ -11,11 +11,13 @@ public interface Admin_Repository extends JpaRepository<Admin, Integer> {
     boolean existsByEmail(String string);
 
     @Query("""
-        SELECT a.id
-        FROM Admin a
-        WHERE a.email = :email
+        SELECT u
+        FROM User u
+        JOIN Admin a
+        ON a.id = u.id
+        WHERE u.email = :email
         """)
-    Integer findByEmail(@Param("email") String admin_email);
+    Admin findByEmail(@Param("email") String admin_email);
 
     
 }

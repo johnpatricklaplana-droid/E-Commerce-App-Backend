@@ -27,6 +27,7 @@ public class Security_Config {
             .requestMatchers("/signup/costumer").permitAll()
             .requestMatchers("/login/costumer").permitAll()
             .requestMatchers("/signup/seller").permitAll()
+            .requestMatchers("/login/admin").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);

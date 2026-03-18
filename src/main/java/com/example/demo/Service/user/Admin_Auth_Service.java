@@ -1,34 +1,41 @@
-package com.example.demo.Service.admin;
+package com.example.demo.Service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.Configuration.AdminProperties;
+import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Admin;
 import com.example.demo.enums.User_Role;
+import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Admin_Repository;
+import com.example.demo.utils.CredentialsValidator;
 
 import jakarta.annotation.PostConstruct;
 
 @Service
-public class Admin_Service {
+public class Admin_Auth_Service {
 
     @Autowired
     Admin_Repository admin_Repo;
-    
-    @Value("${admin.email}")
-    private String email;
-    
-    @Value("${admin.password}")
-    private String password;
 
-    @Value("${admin.contact.number}")
-    private String contact_number;
+    @Autowired
+    Jwt jwt;
+
+    @Autowired
+    CredentialsValidator validator;
+    
+    @Autowired
+    AdminProperties adminProperties;
 
     @PostConstruct
     public void createAdmin () {
 
-        if(!admin_Repo.existsByEmail("johnyheydaddy@gmail.com")) {
+        String email = adminProperties.getEmail();
+        String password = adminProperties.getPassword();
+        String contact_number = adminProperties.getContactNumber();
+
+        if(!admin_Repo.existsByEmail(email)) {
             Admin admin = new Admin();
             admin.setFirst_name("John patrick");
             admin.setLast_name("Laplana");

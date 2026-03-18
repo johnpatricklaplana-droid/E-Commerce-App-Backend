@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.DTO.ResponseDTO.HttpResponse;
 import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
-import com.example.demo.Service.costumer.AuthService;
-import com.example.demo.entity.Costumer;
+import com.example.demo.Service.user.AuthService;
+import com.example.demo.Service.user.UserAuthService;
+import com.example.demo.entity.User;
+import com.example.demo.enums.User_Role;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -21,20 +22,23 @@ public class AuthController {
 
     @Autowired
     AuthService service;
+
+    @Autowired
+    UserAuthService userAuthService;
     
     @PostMapping("/signup/costumer")
-    public ResponseEntity<HttpResponse> signup (@RequestBody costumer_InfoDTO dto) {
+    public ResponseEntity<String> signup (@RequestBody costumer_InfoDTO dto) {
         service.signup(dto);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new HttpResponse("sign up successfully"));
+            .body("sign up successfully");
     }
 
     @PostMapping("/login/costumer")
-    public ResponseEntity<HttpResponse> login(@RequestBody Costumer costumer, 
+    public ResponseEntity<String> login(@RequestBody User user, 
                                                HttpServletResponse response) {
 
-        String token = service.login(costumer);
+        String token = userAuthService.login(user, User_Role.COSTUMER);
 
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
             .httpOnly(true)
@@ -48,7 +52,7 @@ public class AuthController {
 
         return ResponseEntity
             .status(200)
-            .body(new HttpResponse("login success"));
+            .body("login success");
     }
 
 }

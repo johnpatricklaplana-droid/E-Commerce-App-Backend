@@ -1,4 +1,4 @@
-package com.example.demo.Service.costumer;
+package com.example.demo.Service.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,28 +80,6 @@ public class AuthService {
         location_repository.save(location);
         costumer_repository.save(costumer);
         
-    }
-
-    public String login(Costumer costumer) {
-        
-        String email = costumer.getEmail();
-        String password = costumer.getPassword();
-
-        credentialsValidator.validateEmail(email);
-        credentialsValidator.validatePassword(password);
-
-        Costumer cos = user_repo.findByEmail(email);
-
-        if(cos == null) {
-            throw new ResourceNotFoundException("wrong credentials");
-        }
-    
-        if(password.equals(cos.getPassword())) {
-            throw new ResourceNotFoundException("wrong credentials");
-        }
-
-        return jwt.generateToken(cos.getId().toString());
-
     }
 
     public String validateJwtToken (String token) {

@@ -1,25 +1,25 @@
-package com.example.demo.Service.seller;
+package com.example.demo.Service.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfoDTO;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller;
-import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Seller_Paper_Storage;
 import com.example.demo.entity.Sellers_Papers;
 import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
+import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.repository.Business_Registration_Documents_Repository;
 import com.example.demo.repository.Seller_Bank_Account_Repository;
@@ -68,8 +68,8 @@ public class SellerAuthService {
     @Autowired
     Seller_Paper_Storage_Repository seller_Paper_Storage_Repo;
 
-    @Value("${admin.email}")
-    private String admin_email;
+    @Autowired
+    AdminProperties adminProperties;
 
     @Transactional
     public void signup (SellerInfoDTO seller_info) {
@@ -86,7 +86,9 @@ public class SellerAuthService {
             throw new EmailAlreadyExistException("conflict");
         }
 
-        Integer admin_id = admin_repo.findByEmail(admin_email);
+        String admin_email = adminProperties.getEmail();
+
+        Integer admin_id = admin_repo.findByEmail(admin_email).getId();
 
         Integer location_id = save_location(location);
 
@@ -149,6 +151,7 @@ public class SellerAuthService {
         seller_File_Storage.setSeller_paper_id(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
         seller_Paper_Storage_Repo.save(seller_File_Storage);
     }
+
 }
 
 
