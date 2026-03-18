@@ -2,10 +2,8 @@ package com.example.demo.DTO.sellerDTO;
 
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller;
-import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Sellers_Papers;
 import com.example.demo.entity.User_Location;
-import com.example.demo.enums.Bank_Account_status;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,10 +21,6 @@ public class SellerInfoDTO {
 
     // Sellers Paper
     private String national_id;
-
-    // Sellers Bank account
-    private String bank_account_number;
-    private String account_type;
 
     // Sellers location
     private String street;
@@ -60,15 +54,6 @@ public class SellerInfoDTO {
         sellers_Papers.setNational_id(national_id);
 
         return sellers_Papers;
-    }
-
-    public Seller_Bank_Account toSellerBank_Account () {
-        Seller_Bank_Account seller_Bank_Account = new Seller_Bank_Account();
-        seller_Bank_Account.setBank_account_number(bank_account_number);
-        seller_Bank_Account.setAccount_type(account_type);
-        seller_Bank_Account.setStatus(Bank_Account_status.ACTIVE);
-
-        return seller_Bank_Account;
     }
 
     public User_Location toSellerLocation () {

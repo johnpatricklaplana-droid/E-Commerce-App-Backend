@@ -76,7 +76,6 @@ public class SellerAuthService {
         
         Seller seller = seller_info.toSeller();
         Sellers_Papers sellers_Papers = seller_info.toSellers_Papers();
-        Seller_Bank_Account seller_Bank_Account = seller_info.toSellerBank_Account();
         User_Location location = seller_info.toSellerLocation();
         Business_Registration_Documents documents = seller_info.toBusiness_Registration_Documents();
 
@@ -95,9 +94,7 @@ public class SellerAuthService {
 
         Integer seller_paper_id = save_seller_paper(sellers_Papers, document_id);
 
-        Integer seller_id = save_seller(seller, location_id, seller_paper_id);
-
-        save_bank_account(seller_Bank_Account, seller_id);
+        save_seller(seller, location_id, seller_paper_id);
 
         save_paper_storage(seller_paper_id, admin_id);
      
@@ -135,7 +132,7 @@ public class SellerAuthService {
         return sellers_Papers.getId();
     }
 
-    private Integer save_seller (Seller seller, Integer location_id, Integer seller_paper_id) {
+    private void save_seller (Seller seller, Integer location_id, Integer seller_paper_id) {
         List<User_Location> locations = new ArrayList<>();
         locations.add(entityManager.getReference(User_Location.class, location_id));
 
@@ -144,13 +141,6 @@ public class SellerAuthService {
         seller.setPapers(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
         seller_repo.save(seller);
 
-        return seller.getId();
-    }
-
-    private void save_bank_account (Seller_Bank_Account seller_Bank_Account, Integer seller_id) {
-        seller_Bank_Account.setSeller(entityManager.getReference(Seller.class, seller_id));
-
-        bank_Account_Repo.save(seller_Bank_Account);
     }
 
     private void save_paper_storage (Integer seller_paper_id, Integer admin_id) {

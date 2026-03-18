@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Admin;
+import com.example.demo.enums.User_Role;
 import com.example.demo.repository.Admin_Repository;
 
 import jakarta.annotation.PostConstruct;
@@ -33,7 +34,7 @@ public class Admin_Service {
             admin.setLast_name("Laplana");
             admin.setEmail(email);
             admin.setPassword(password);
-            admin.setRole("ADMIN");
+            admin.setRole(User_Role.ADMIN);
             admin.setContact_number(contact_number);
             admin_Repo.save(admin);
         }

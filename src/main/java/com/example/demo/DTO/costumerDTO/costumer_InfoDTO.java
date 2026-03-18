@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class costumerAndLocationDTO {
+public class costumer_InfoDTO {
   
     // Costumer
     private String first_name;

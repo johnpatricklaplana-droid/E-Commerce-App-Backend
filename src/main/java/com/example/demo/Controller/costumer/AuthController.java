@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.ResponseDTO.HttpResponse;
-import com.example.demo.DTO.costumerDTO.costumerAndLocationDTO;
+import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
 import com.example.demo.Service.costumer.AuthService;
 import com.example.demo.entity.Costumer;
 
@@ -23,7 +23,7 @@ public class AuthController {
     AuthService service;
     
     @PostMapping("/signup/costumer")
-    public ResponseEntity<HttpResponse> signup (@RequestBody costumerAndLocationDTO dto) {
+    public ResponseEntity<HttpResponse> signup (@RequestBody costumer_InfoDTO dto) {
         service.signup(dto);
         return ResponseEntity
             .status(HttpStatus.CREATED)

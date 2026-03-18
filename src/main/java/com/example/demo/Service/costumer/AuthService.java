@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Controller.client.Location_external_API;
-import com.example.demo.DTO.costumerDTO.costumerAndLocationDTO;
+import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Costumer;
@@ -17,6 +17,7 @@ import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Costumer_Repository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.utils.CredentialsValidator;
 
@@ -33,9 +34,12 @@ public class AuthService {
     private CredentialsValidator credentialsValidator;
 
     @Autowired
+    private UserRepository user_repo;
+
+    @Autowired
     private Jwt jwt;
 
-    public void signup(costumerAndLocationDTO requestBody) {
+    public void signup(costumer_InfoDTO requestBody) {
         
         Costumer costumer = requestBody.getCostumer();
         costumer.setRole(User_Role.COSTUMER);
@@ -44,7 +48,7 @@ public class AuthService {
         List<LocationDTO> body = Location_external_API.getUserLocation(location);
 
         if(body.isEmpty()) {
-            throw new ResourceNotFoundException("Location not found check some spelling on input");
+            throw new ResourceNotFoundException("Location not found make sure your not messing around");
         }
        
         for (LocationDTO costumer_location : body) {
@@ -60,7 +64,7 @@ public class AuthService {
         credentialsValidator.validateEmail(email);
         credentialsValidator.validatePassword(password);
 
-        boolean emailExist = costumer_repository.existsByEmail(email);
+        boolean emailExist = user_repo.existsByEmail(email);
 
         if(emailExist) {
             throw new EmailAlreadyExistException(
@@ -86,7 +90,7 @@ public class AuthService {
         credentialsValidator.validateEmail(email);
         credentialsValidator.validatePassword(password);
 
-        Costumer cos = costumer_repository.findByEmail(email);
+        Costumer cos = user_repo.findByEmail(email);
 
         if(cos == null) {
             throw new ResourceNotFoundException("wrong credentials");
