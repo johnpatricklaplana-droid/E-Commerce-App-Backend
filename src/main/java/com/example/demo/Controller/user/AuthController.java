@@ -1,4 +1,4 @@
-package com.example.demo.Controller.costumer;
+package com.example.demo.Controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

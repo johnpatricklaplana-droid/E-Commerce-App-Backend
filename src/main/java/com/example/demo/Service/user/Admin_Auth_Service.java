@@ -1,13 +1,13 @@
 package com.example.demo.Service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Admin;
 import com.example.demo.enums.User_Role;
-import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.utils.CredentialsValidator;
 
@@ -28,6 +28,9 @@ public class Admin_Auth_Service {
     @Autowired
     AdminProperties adminProperties;
 
+    @Autowired
+    PasswordEncoder encoder;
+
     @PostConstruct
     public void createAdmin () {
 
@@ -40,7 +43,7 @@ public class Admin_Auth_Service {
             admin.setFirst_name("John patrick");
             admin.setLast_name("Laplana");
             admin.setEmail(email);
-            admin.setPassword(password);
+            admin.setPassword(encoder.encode(password));
             admin.setRole(User_Role.ADMIN);
             admin.setContact_number(contact_number);
             admin_Repo.save(admin);

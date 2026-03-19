@@ -1,51 +1,55 @@
 package com.example.demo.Service.user;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
-import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UnAuthorizedException;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
 
 @Service
 public class UserAuthService {
-    
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
-    Jwt jwt;
+    private AuthenticationManager authManager;
 
     @Autowired
-    CredentialsValidator credentialsValidator;
+    private Jwt jwt;
+
+    @Autowired
+    private CredentialsValidator credentialsValidator;
 
     public String login (User user, User_Role role) {
+          
+        credentialsValidator.validateEmail(user.getEmail());
+        credentialsValidator.validatePassword(user.getPassword());
+         
+        Authentication authentication = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+       
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
 
-        String email = user.getEmail();
-        String password = user.getPassword();
+        Set<String> authorities = userDetails.getAuthorities()
+                                    .stream()
+                                    .map(GrantedAuthority::getAuthority)
+                                    .collect(Collectors.toSet());
 
-        credentialsValidator.validateEmail(email);
-        credentialsValidator.validatePassword(password);
-
-        User userFromDB = userRepository.findByEmail(email);
-
-        if(userFromDB == null) {
-            throw new ResourceNotFoundException("wrong credentials");
-        }
-    
-        if(!password.equals(userFromDB.getPassword())) {
-            throw new ResourceNotFoundException("wrong credentials");
-        }
-
-        if(!userFromDB.getRole().equals(role)) {
+        if(!authorities.contains(role.toString())) {
             throw new UnAuthorizedException("no no no");
         }
 
-        return jwt.generateToken(userFromDB.getId().toString());
+        return jwt.generateToken(userDetails.getUserId());
 
     }
 

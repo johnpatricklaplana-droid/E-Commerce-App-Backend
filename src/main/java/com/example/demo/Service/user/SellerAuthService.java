@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Configuration.AdminProperties;
@@ -71,6 +72,9 @@ public class SellerAuthService {
     @Autowired
     AdminProperties adminProperties;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Transactional
     public void signup (SellerInfoDTO seller_info) {
         
@@ -137,7 +141,8 @@ public class SellerAuthService {
     private void save_seller (Seller seller, Integer location_id, Integer seller_paper_id) {
         List<User_Location> locations = new ArrayList<>();
         locations.add(entityManager.getReference(User_Location.class, location_id));
-
+        
+        seller.setPassword(passwordEncoder.encode(seller.getPassword()));
         seller.setSeller_location(locations);
         seller.setRole(User_Role.SELLER);
         seller.setPapers(entityManager.getReference(Sellers_Papers.class, seller_paper_id));

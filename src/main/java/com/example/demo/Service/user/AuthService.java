@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Controller.client.Location_external_API;
@@ -39,10 +40,14 @@ public class AuthService {
     @Autowired
     private Jwt jwt;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void signup(costumer_InfoDTO requestBody) {
         
         Costumer costumer = requestBody.getCostumer();
         costumer.setRole(User_Role.COSTUMER);
+        costumer.setPassword(passwordEncoder.encode(requestBody.getPassword()));
         User_Location location = requestBody.getLocation();
 
         List<LocationDTO> body = Location_external_API.getUserLocation(location);
