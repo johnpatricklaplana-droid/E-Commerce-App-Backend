@@ -58,7 +58,6 @@ public class AuthService {
        
         for (LocationDTO costumer_location : body) {
             location.setRegion(costumer_location.getAddress().getRegion());
-            location.setPostal_code(costumer_location.getAddress().getPostcode());
             location.setLat(costumer_location.getLat());
             location.setLon(costumer_location.getLon());
         }

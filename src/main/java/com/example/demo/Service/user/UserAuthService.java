@@ -37,7 +37,7 @@ public class UserAuthService {
         Authentication authentication = authManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
-       
+        
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
 
         Set<String> authorities = userDetails.getAuthorities()

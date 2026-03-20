@@ -15,7 +15,6 @@ public class costumer_InfoDTO {
     // Costumer
     private String first_name;
     private String last_name;
-    private String profile_pic;
     private String email;
     private String password;
 
@@ -33,7 +32,6 @@ public class costumer_InfoDTO {
         Costumer costumer = new Costumer();
         costumer.setFirst_name(first_name);
         costumer.setLast_name(last_name);
-        costumer.setProfile_pic(profile_pic);
         costumer.setEmail(email);
         costumer.setPassword(password);
 
@@ -45,6 +43,7 @@ public class costumer_InfoDTO {
         location.setStreet(street);
         location.setCity(city);
         location.setProvince(province);
+        location.setPostal_code(postcode);
         location.setCountry(country);
         location.setLat(lat);
         location.setLon(lon);

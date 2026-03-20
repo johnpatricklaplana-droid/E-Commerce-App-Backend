@@ -79,9 +79,7 @@ public class SellerAuthService {
     public void signup (SellerInfoDTO seller_info) {
         
         Seller seller = seller_info.toSeller();
-        Sellers_Papers sellers_Papers = seller_info.toSellers_Papers();
         User_Location location = seller_info.toSellerLocation();
-        Business_Registration_Documents documents = seller_info.toBusiness_Registration_Documents();
 
         credentialsValidator.validateEmail(seller.getEmail());
         credentialsValidator.validatePassword(seller.getPassword());    
@@ -90,19 +88,9 @@ public class SellerAuthService {
             throw new EmailAlreadyExistException("conflict");
         }
 
-        String admin_email = adminProperties.getEmail();
-
-        Integer admin_id = admin_repo.findByEmail(admin_email).getId();
-
         Integer location_id = save_location(location);
 
-        Integer document_id = save_document(documents);
-
-        Integer seller_paper_id = save_seller_paper(sellers_Papers, document_id);
-
-        save_seller(seller, location_id, seller_paper_id);
-
-        save_paper_storage(seller_paper_id, admin_id);
+        save_seller(seller, location_id);
      
     }
 
@@ -122,39 +110,15 @@ public class SellerAuthService {
         return location.getId();
     }
 
-    private Integer save_document (Business_Registration_Documents documents) {
-
-        documents.setStatus(Business_Registration_Document_Status.PENDING);
-        documents_repo.save(documents);
-
-        return documents.getId();
-    }
-
-    private Integer save_seller_paper (Sellers_Papers sellers_Papers, Integer document_id) {
-        sellers_Papers.setBusiness_registration_documents(
-                entityManager.getReference(Business_Registration_Documents.class, document_id));
-        seller_paper_repo.save(sellers_Papers);
-
-        return sellers_Papers.getId();
-    }
-
-    private void save_seller (Seller seller, Integer location_id, Integer seller_paper_id) {
+    private void save_seller (Seller seller, Integer location_id) {
         List<User_Location> locations = new ArrayList<>();
         locations.add(entityManager.getReference(User_Location.class, location_id));
         
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
         seller.setSeller_location(locations);
         seller.setRole(User_Role.SELLER);
-        seller.setPapers(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
         seller_repo.save(seller);
 
-    }
-
-    private void save_paper_storage (Integer seller_paper_id, Integer admin_id) {
-        Seller_Paper_Storage seller_File_Storage = new Seller_Paper_Storage();
-        seller_File_Storage.setAdmin(entityManager.getReference(Admin.class, admin_id));
-        seller_File_Storage.setSeller_paper_id(entityManager.getReference(Sellers_Papers.class, seller_paper_id));
-        seller_Paper_Storage_Repo.save(seller_File_Storage);
     }
 
 }
