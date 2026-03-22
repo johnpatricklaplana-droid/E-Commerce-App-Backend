@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.list-text-decoration-hover {
+    @apply hover:underline hover:text-blue-500
+}
+
+.scrollbar-none {
+    scrollbar-width: none;
+}

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/Frontend/public/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-project</title>
+  </head>
+  <body>
+    <nav class="z-10 flex items-center h-1 bg-blue-900 w-full justify-between px-3 py-8 fixed top-0">
+      <h1 class="text-white text-2xl font-bold tracking-wide cursor-pointer hover:text-blue-300 transition">
+        ShopEase
+      </h1>
+      <ul class="flex gap-10 text-white">
+        <li class="hidden sm:block sm:text-sm  list-text-decoration-hover"><a href="#">Home</a></li>
+        <li class="hidden sm:block sm:text-sm  list-text-decoration-hover"><a href="#">Services</a></li>
+        <li class="hidden sm:block sm:text-sm  list-text-decoration-hover"><a href="#">About</a></li>
+        <li class="hidden sm:block sm:text-sm  list-text-decoration-hover"><a href="#">Contact</a></li>
+        <li class="hidden sm:block sm:text-sm  list-text-decoration-hover"><a href="#">FAQ</a></li>
+      </ul>
+      <div class="flex gap-1 relative">
+        <button id="signupButton" class="bg-green-500 text-sm text-nowrap text-white px-2 py-3 sm:px-6 sm:py-2 w-24 font-bold rounded-2xl flex 
+              text-center justify-center hover:bg-green-600">Sign up</button>
+        <div id="signupChoicePopup"
+          class="absolute transition-opacity duration-300 ease-in-out flex gap-2.5 flex-col bg-white sm:px-2 rounded right-0 sm:p-2.5 mt-auto opacity-0 pointer-events-none">
+          <a href="seller-signup-page.html" class="sm:py-2 sm:px-2 hover:bg-blue-100 rounded text-sm text-nowrap">Signup as seller</a>
+          <a href="costumer-signup-page.html" class="sm:py-2 sm:px-2 hover:bg-blue-100 rounded text-sm text-nowrap">Signup as costumer</a>
+        </div>
+        <button id="loginButton" class="bg-green-500 text-sm text-nowrap text-white px-2 py-3 sm:px-6 sm:py-2 w-24 font-bold rounded-2xl flex 
+              text-center justify-center hover:bg-green-600">Login</button>
+        <div id="loginChoicePopup" class="absolute transition-opacity duration-300 ease-in-out flex gap-2.5 flex-col bg-white sm:px-2 rounded right-0 sm:p-2.5 mt-auto opacity-0 pointer-events-none">
+          <a href="seller-login-page.html" class="sm:py-2 sm:px-2 hover:bg-blue-100 rounded text-sm text-nowrap">Login as seller</a>
+          <a href="costumer-login-page.html" class="sm:py-2 sm:px-2 hover:bg-blue-100 rounded text-sm text-nowrap">Login as costumer</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="bg-[url('/hero_background.png')] bg-cover min-h-screen w-full
+    flex items-center justify-center px-6 sm:px-10 sm:py-10">
+      
+      <div class="sm:backdrop-blur-2xl w-full sm:w-auto flex gap-3 rounded-2xl lg:px-24 lg:py-24 sm:px-6 sm:py-6 items-center">
+        <div class="rounded-2xl flex items-center flex-col gap-2">
+          <h1 class="text-green-600 drop-shadow-lg text-2xl font-bold text-center sm:text-2xl md:text-4xl lg:text-5xl">Discover products instantly, save favorites, track orders in real-time, and checkout in seconds — all in one powerful
+          app.</h1>
+          <p class="text-center text-sm">Find what you need in seconds, enjoy seamless checkout, and track every order effortlessly.</p>
+          <span class= "md:px-4 md:py-2 md:text-lg bg-orange-500 hover:bg-orange-700 text-white px-6 rounded-2xl py-3 border-2 border-white"><a href="costumer-login-page.html">Shop now</a></span>
+          <div class="">
+            <span class="text-sm">✅ Free Shipping</span>
+            <span class="text-sm">🔒 Secure Payment</span>
+            <span class="text-sm">⚡Fast Delivery</span>
+          </div>
+        </div>
+      </div>
+     
+    </main>
+
+    <footer class="flex flex-col justify-between items-center gap-2 sm:gap-4 py-2.5 bg-blue-50 h-fit">
+      <div class="flex gap-2 sm:gap-4">
+        <ul class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-white">
+          <li class="text-xs text-black"><a href="#" class="hover:underline">Home</a></li>
+          <li class="text-xs text-black"><a href="#" class="hover:underline">Shop</a></li>
+          <li class="text-xs text-black"><a href="#" class="hover:underline">Services</a></li>
+          <li class="text-xs text-black"><a href="#" class="hover:underline">FAQ</a></li>
+        </ul>
+        <div class="text-white flex-col sm:flex-row flex gap-2 sm:gap-4">
+          <span class="text-xs text-black">📞 +63 912 345 6789</span>
+          <span class="text-xs text-black">✉️ support@shopease.com</span>
+          <span class="text-xs text-black">🏢 Urdaneta City, Philippines</span>
+        </div>
+        <div class="flex gap-2 sm:gap-4 flex-col sm:flex-row">
+          <a href="#" class="text-xs hover:text-blue-500">🐦 Twitter</a>
+          <a href="#" class="text-xs hover:text-blue-700">📘 Facebook</a>
+          <a href="#" class="text-xs hover:text-pink-500">📸 Instagram</a>
+        </div>
+      </div>
+      <div class="flex items-center sm:flex-row gap-2 sm:gap-4">
+        <input type="email" placeholder="Enter your email" class="bg-white p-2 rounded-l-lg border-none outline-none">
+        <button class="bg-green-500 text-white px-2 py-2 rounded-r-lg hover:bg-green-600">Subscribe</button>
+      </div>
+      <p class="text-gray-400 text-center text-xs mt-4">
+        &copy; 2026 ShopEase. All rights reserved. | <a href="#" class="hover:underline">Privacy Policy</a> | <a href="#"
+          class="hover:underline">Terms of Service</a>
+      </p>
+    </footer>
+
+    <script type="module" src="http://localhost:5173/src/main.js"></script>
+    <script type="module" src="/Frontend/src/pages/landing-page.js"></script>
+  </body>
+</html>

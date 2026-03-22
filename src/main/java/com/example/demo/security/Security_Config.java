@@ -31,7 +31,12 @@ public class Security_Config {
                                 "/login/costumer", 
                                 "/signup/seller", 
                                 "/login/seller",
-                                "/login/admin").permitAll()
+                                "/login/admin",
+                                "/Frontend/index.html",
+                                "/Frontend/src/pages/landing-page.js",
+                                "/Frontend/src/main.js",
+                                "/Frontend/public/vite.svg",
+                                "/Frontend/src/style.css").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);

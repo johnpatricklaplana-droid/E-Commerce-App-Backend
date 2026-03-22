@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.DTO.sellerDTO.SellerInfoDTO;
+import com.example.demo.DTO.ResponseDTO.AuthResponseDTO;
+import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerAuthService;
 import com.example.demo.Service.user.UserAuthService;
 import com.example.demo.entity.User;
@@ -23,19 +24,19 @@ public class SellerAuthController {
     UserAuthService userAuthService;
     
     @PostMapping("/signup/seller")
-    public ResponseEntity<String> signup (@RequestBody SellerInfoDTO seller_info) {
+    public ResponseEntity<AuthResponseDTO> signup (@RequestBody SellerSignUpFieldsDTO seller_info) {
         sellerAuthService.signup(seller_info);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("sign up success");
+            .body(new AuthResponseDTO("signup success", 201));
     }
 
     @PostMapping("/login/seller")
-    public ResponseEntity<String> login (@RequestBody User user) {
+    public ResponseEntity<AuthResponseDTO> login (@RequestBody User user) {
         userAuthService.login(user, User_Role.SELLER);
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body("login success");
+            .body(new AuthResponseDTO("login success", 200));
     }
 
 }

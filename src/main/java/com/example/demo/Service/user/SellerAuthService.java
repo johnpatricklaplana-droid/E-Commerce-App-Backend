@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
-import com.example.demo.DTO.sellerDTO.SellerInfoDTO;
+import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller;
@@ -76,7 +76,7 @@ public class SellerAuthService {
     PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signup (SellerInfoDTO seller_info) {
+    public void signup (SellerSignUpFieldsDTO seller_info) {
         
         Seller seller = seller_info.toSeller();
         User_Location location = seller_info.toSellerLocation();
