@@ -36,7 +36,21 @@ public class Security_Config {
                                 "/Frontend/src/pages/landing-page.js",
                                 "/Frontend/src/main.js",
                                 "/Frontend/public/vite.svg",
-                                "/Frontend/src/style.css").permitAll()
+                                "/Frontend/src/style.css",
+                                "/Frontend/seller-signup-page.html",
+                                "/Frontend/src/pages/seller_signup.js",
+                                "/Frontend/src/api/authAPI.js",
+                                "/Frontend/src/utils/boilerplate_code_handler.js",
+                                "/Frontend/costumer-signup-page.html",
+                                "/Frontend/src/pages/costumer_signup.js",
+                                "/Frontend/seller-login-page.html",
+                                "/Frontend/costumer-login-page.html",
+                                "/Frontend/public/cuties.png",
+                                "/Frontend/public/hero_background.png",
+                                "/Frontend/add-business-registration-file.html",
+                                "/Frontend/add-profile-seller.html",
+                                "/Frontend/src/pages/seller_signup.js",
+                                "/business-registration-file/seller").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
