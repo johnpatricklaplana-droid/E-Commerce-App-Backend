@@ -46,7 +46,7 @@ public class AuthService {
     public void signup(costumer_InfoDTO requestBody) {
         
         Costumer costumer = requestBody.getCostumer();
-        costumer.setRole(User_Role.COSTUMER);
+        costumer.setRole(User_Role.ROLE_COSTUMER);
         costumer.setPassword(passwordEncoder.encode(requestBody.getPassword()));
         User_Location location = requestBody.getLocation();
 

@@ -38,13 +38,13 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody User user, 
                                                HttpServletResponse response) {
 
-        String token = userAuthService.login(user, User_Role.COSTUMER);
+        String token = userAuthService.login(user, User_Role.ROLE_COSTUMER);
 
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
             .httpOnly(true)
             .secure(false)
             .path("/")
-            .maxAge(60 * 60)
+            .maxAge((long)60 * 60)
             .sameSite("Strict")
             .build();
         

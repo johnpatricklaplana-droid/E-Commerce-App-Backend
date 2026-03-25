@@ -44,7 +44,7 @@ public class Admin_Auth_Service {
             admin.setLast_name("Laplana");
             admin.setEmail(email);
             admin.setPassword(encoder.encode(password));
-            admin.setRole(User_Role.ADMIN);
+            admin.setRole(User_Role.ROLE_ADMIN);
             admin.setContact_number(contact_number);
             admin_Repo.save(admin);
         }

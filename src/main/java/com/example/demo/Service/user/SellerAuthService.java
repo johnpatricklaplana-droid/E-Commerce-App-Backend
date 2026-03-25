@@ -11,6 +11,7 @@ import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
+import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller;
@@ -22,7 +23,7 @@ import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.repository.Admin_Repository;
-import com.example.demo.repository.Business_Registration_Documents_Repository;
+import com.example.demo.repository.BusinessRegistrationDocumentsRepository;
 import com.example.demo.repository.Seller_Bank_Account_Repository;
 import com.example.demo.repository.Seller_Paper_Storage_Repository;
 import com.example.demo.repository.Seller_Papers_Repository;
@@ -52,7 +53,7 @@ public class SellerAuthService {
     EntityManager entityManager;
 
     @Autowired
-    Business_Registration_Documents_Repository documents_repo;
+    BusinessRegistrationDocumentsRepository documents_repo;
 
     @Autowired
     Seller_Papers_Repository seller_paper_repo;
@@ -75,8 +76,11 @@ public class SellerAuthService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    Jwt jwt;
+
     @Transactional
-    public void signup (SellerSignUpFieldsDTO seller_info) {
+    public String signup (SellerSignUpFieldsDTO seller_info) {
         
         Seller seller = seller_info.toSeller();
         User_Location location = seller_info.toSellerLocation();
@@ -91,6 +95,8 @@ public class SellerAuthService {
         Integer location_id = save_location(location);
 
         save_seller(seller, location_id);
+
+        return jwt.generateToken(seller.getId().toString());
      
     }
 
@@ -116,7 +122,7 @@ public class SellerAuthService {
         
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
         seller.setSeller_location(locations);
-        seller.setRole(User_Role.SELLER);
+        seller.setRole(User_Role.ROLE_SELLER);
         seller_repo.save(seller);
 
     }

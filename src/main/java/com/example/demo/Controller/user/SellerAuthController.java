@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,9 @@ import com.example.demo.Service.user.UserAuthService;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 public class SellerAuthController {
 
@@ -31,8 +36,21 @@ public class SellerAuthController {
     UserAuthService userAuthService;
     
     @PostMapping("/signup/seller")
-    public ResponseEntity<AuthResponseDTO> signup (@RequestBody SellerSignUpFieldsDTO seller_info) {
-        sellerAuthService.signup(seller_info);
+    public ResponseEntity<AuthResponseDTO> signup (@RequestBody SellerSignUpFieldsDTO sellerInfo,
+        HttpServletResponse response
+    ) {
+        String token = sellerAuthService.signup(sellerInfo);
+
+        ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
+            .httpOnly(true)
+            .secure(false)
+            .path("/")
+            .maxAge((long)60 * 60)
+            .sameSite("Strict")
+            .build();
+        
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(new AuthResponseDTO("signup success", 201));
@@ -40,7 +58,7 @@ public class SellerAuthController {
 
     @PostMapping("/login/seller")
     public ResponseEntity<AuthResponseDTO> login (@RequestBody User user) {
-        userAuthService.login(user, User_Role.SELLER);
+        userAuthService.login(user, User_Role.ROLE_SELLER);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new AuthResponseDTO("login success", 200));
@@ -55,7 +73,7 @@ public class SellerAuthController {
             Path path = Paths.get("uploads/", fileName);
             Files.createDirectories(path.getParent());
             Files.write(path, file.getBytes());
-        } catch (Exception e) {
+        } catch (IOException e) {
             return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new AuthResponseDTO("failed to upload file kasalanan mo to eh", 409));

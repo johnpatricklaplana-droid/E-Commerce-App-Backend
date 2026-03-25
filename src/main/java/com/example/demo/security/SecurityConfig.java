@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-public class Security_Config {
+public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,15 +48,23 @@ public class Security_Config {
                                 "/Frontend/costumer-login-page.html",
                                 "/Frontend/public/cuties.png",
                                 "/Frontend/public/hero_background.png",
-                                "/Frontend/add-business-registration-file.html",
-                                "/Frontend/add-profile-seller.html",
                                 "/Frontend/src/pages/seller_signup.js",
                                 "/business-registration-file/seller").permitAll()
+                .requestMatchers(
+                    "/Frontend/add-profile-seller.html",
+                    "/Frontend/add-business-registration-file.html"
+                )
+                .hasRole("SELLER")
             .anyRequest().authenticated()
         )
-        .addFilterBefore(new JwtAuthenticationService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
+        .addFilterBefore(jwtService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationService jwtService () {
+        return new JwtAuthenticationService();
     }
 
     @Bean

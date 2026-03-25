@@ -19,7 +19,7 @@ public class AdminAuthController {
     
     @PostMapping("/login/admin")
     public ResponseEntity<String> login (@RequestBody User user) {
-        String token = userAuthService.login(user, User_Role.ADMIN);
+        String token = userAuthService.login(user, User_Role.ROLE_ADMIN);
 
         String cookie = "token=" + token + "; httpOnly; path=/; Max-Age=3600; SameSite=Strict";
 
