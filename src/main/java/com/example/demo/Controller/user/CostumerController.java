@@ -18,7 +18,7 @@ import com.example.demo.enums.User_Role;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-public class AuthController {
+public class CostumerController {
 
     @Autowired
     AuthService service;

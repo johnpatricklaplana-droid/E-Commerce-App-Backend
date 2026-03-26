@@ -36,7 +36,7 @@ public class Admin_Auth_Service {
 
         String email = adminProperties.getEmail();
         String password = adminProperties.getPassword();
-        String contact_number = adminProperties.getContactNumber();
+        String contactNumber = adminProperties.getContactNumber();
 
         if(!admin_Repo.existsByEmail(email)) {
             Admin admin = new Admin();
@@ -45,7 +45,7 @@ public class Admin_Auth_Service {
             admin.setEmail(email);
             admin.setPassword(encoder.encode(password));
             admin.setRole(User_Role.ROLE_ADMIN);
-            admin.setContact_number(contact_number);
+            admin.setContact_number(contactNumber);
             admin_Repo.save(admin);
         }
     }

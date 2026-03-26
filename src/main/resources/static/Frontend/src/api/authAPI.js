@@ -22,9 +22,10 @@ export async function PostFile(url, file) {
             method: "POST",
             body: file
         });
-
-        const response = await result.json();
-        console.log(response);
+    
+        const response = await result.text();
+       console.log(response);
+        return response;
     } catch (error) {
         console.error(error);
     }

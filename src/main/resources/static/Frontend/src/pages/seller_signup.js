@@ -44,17 +44,22 @@ import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
         return;
     }
 
-    upload_business_registration_file_button.addEventListener("click", () => {
-        console.log("fafjsdal");
+    upload_business_registration_file_button.addEventListener("click", async () => {
+        
         const business_registration_file_input = document.getElementById("business_registration_file_input");
         const file_input = business_registration_file_input.files[0];
 
         const file = new FormData();
         file.append("file", file_input);
 
-        const url = "http://localhost:8080/business-registration-file/seller";
+        const url = "http://localhost:8080/seller/business-registration-file";
 
-        PostFile(url, file);
+        const result = await PostFile(url, file);
+       
+        if(result.status === 201) {
+            globalThis.location.href = "http://localhost:8080/Frontend/add-seller-paper.html";
+        }
+        
     });
 
 }) ();

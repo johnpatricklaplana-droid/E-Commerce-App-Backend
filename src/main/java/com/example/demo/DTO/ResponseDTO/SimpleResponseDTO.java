@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class AuthResponseDTO {
+public class SimpleResponseDTO {
     
     private String message;
     private int status;

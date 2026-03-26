@@ -12,7 +12,7 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
 
 @RestController
-public class AdminAuthController {
+public class AdminController {
 
     @Autowired
     UserAuthService userAuthService;
