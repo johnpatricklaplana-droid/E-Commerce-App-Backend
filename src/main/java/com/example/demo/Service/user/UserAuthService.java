@@ -49,7 +49,7 @@ public class UserAuthService {
             throw new UnAuthorizedException("no no no");
         }
 
-        return jwt.generateToken(userDetails.getUserId());
+        return jwt.generateToken(userDetails.getUserId().toString());
 
     }
 

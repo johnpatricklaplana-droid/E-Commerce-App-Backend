@@ -23,8 +23,8 @@ public class MyUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority(user.getRole().toString()));
     }
 
-    public String getUserId () {
-        return user.getId().toString();
+    public Integer getUserId () {
+        return user.getId();
     }
 
     @Override

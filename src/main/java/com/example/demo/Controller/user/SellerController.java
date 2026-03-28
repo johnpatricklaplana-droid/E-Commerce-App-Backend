@@ -17,6 +17,7 @@ import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
 import com.example.demo.entity.Business_Registration_Documents;
+import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
 
@@ -62,9 +63,9 @@ public class SellerController {
     }
 
     @PostMapping("/seller/business-registration-file")
-    public ResponseEntity<SimpleResponseDTO> insertBusinessRegistrationFile (@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    public ResponseEntity<SimpleResponseDTO> insertBusinessRegistrationFile (@RequestParam("file") MultipartFile file) {
         
-        if(!sellerService.saveBusinessRegistrationFile(file, request)) {
+        if(!sellerService.saveBusinessRegistrationFile(file)) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(new SimpleResponseDTO("failed to upload file kasalanan mo to eh", 409));
@@ -76,13 +77,21 @@ public class SellerController {
 
     }
 
-    @PostMapping("/seller/bank-account")
-    public ResponseEntity<SimpleResponseDTO> saveSellerBankAccount(@RequestBody SellerBankAccountDTO sellerBankAccount, HttpServletRequest request) {
-        sellerService.saveSellerBankAccount(sellerBankAccount, request);
-        
+    @PostMapping("/seller/add-profile-picture")
+    public ResponseEntity<SimpleResponseDTO> saveSellerProfilePicture(@RequestParam("file") MultipartFile file) {
+        sellerService.saveSellerProfilePicture(file);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new SimpleResponseDTO("created one", 201));
+            .body(new SimpleResponseDTO("success", 201));
     }
 
+    @PostMapping("/seller/bank-account")
+    public ResponseEntity<SimpleResponseDTO> saveSellerBankAccount(@RequestBody Seller_Bank_Account bankAccount) {
+        sellerService.saveSellerBankAccount(bankAccount);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new SimpleResponseDTO("successful one", 201));
+    }
+    
+    
 }

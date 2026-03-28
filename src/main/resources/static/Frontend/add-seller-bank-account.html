@@ -20,21 +20,22 @@
             </div>
             <div class="flex gap-1 flex-col">
                 <label class="text-sm" for="">Bank Account Number</label>
-                <input class="p-2.5 rounded bg-blue-100 outline-0" type="text" >
+                <input id="bankAccountNumber" class="p-2.5 rounded bg-blue-100 outline-0" type="text" >
             </div>
             <div class="flex gap-1 flex-col">
                 <label class="text-sm" for="">Account Type</label>
-                <select class="p-2.5 rounded bg-blue-100 appearance-none outline-0" type="text">
+                <select id="accountType" class="p-2.5 rounded bg-blue-100 appearance-none outline-0" type="text">
                     <option value="Savings Account">Savings</option>
                     <option value="Money Market Account">Money Market Account</option>
                     <option value="Certificates of Deposit">Certificates of Deposit</option>
                     <option value="Retirement Accounts">Retirement Accounts</option>
                 </select>
             </div>
-            <button class="bg-blue-400 mt-4 text-white hover:bg-blue-500 font-bold p-2.5 rounded">Submit</button>
+            <button id="submitBankAccountDetails" class="bg-blue-400 mt-4 text-white hover:bg-blue-500 font-bold p-2.5 rounded">Submit</button>
         </form>
     </div>
 
     <script type="module" src="http://localhost:5173/src/main.js"></script>
+    <script type="module" src="/Frontend/src/pages/seller_signup.js"></script>
 </body>
 </html>

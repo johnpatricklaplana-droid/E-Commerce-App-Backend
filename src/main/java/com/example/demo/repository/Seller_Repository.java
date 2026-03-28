@@ -21,7 +21,16 @@ public interface Seller_Repository extends JpaRepository<Seller, Integer> {
         UPDATE Seller s
         SET s.papers = :sellerPaper
         WHERE s.id = :sellerId
-        """)
+    """)
     void updateSeller(@Param("sellerPaper") Sellers_Papers sellerPaper, @Param("sellerId") Integer sellerId);
+
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE Seller s
+        SET s.profile_pic = :imageUrl
+        WHERE s.id = :sellerId
+    """)
+    void setSellerProfilePicture(@Param("sellerId") Integer sellerId, @Param("imageUrl") String imageUrl);
     
 }

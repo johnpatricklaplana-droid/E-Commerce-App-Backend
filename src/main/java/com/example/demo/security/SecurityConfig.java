@@ -50,13 +50,15 @@ public class SecurityConfig {
                                 "/Frontend/public/cuties.png",
                                 "/Frontend/public/hero_background.png",
                                 "/Frontend/src/pages/seller_signup.js",
-                                "/business-registration-file/seller").permitAll()
+                                "/business-registration-file/seller").permitAll() 
                 .requestMatchers(
                     "/Frontend/add-profile-seller.html",
                     "/Frontend/add-business-registration-file.html",
                     "/business-registration-file/seller",
                     "/seller/bank-account",
-                    "/Frontend/add-seller-paper.html"
+                    "/Frontend/add-seller-bank-account.html", 
+                    "/seller/add-profile-picture",
+                    "/Frontend/seller-dashboard.html"
                 )
                 .hasRole("SELLER")
             .anyRequest().authenticated()

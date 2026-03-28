@@ -63,3 +63,29 @@ import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
     });
 
 }) ();
+
+(() => {
+
+    const submitBankAccountDetails = document.getElementById("submitBankAccountDetails");
+
+    submitBankAccountDetails.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const bankAccountNumber = document.getElementById("bankAccountNumber").value.trim();
+        const accountType = document.getElementById("accountType").value.trim();
+        
+        const body = {
+            bank_account_number: bankAccountNumber,
+            account_type: accountType
+        };
+
+        const url = "http://localhost:8080/seller/bank-account";
+        const result = await POST(url, body);
+
+        if(result.status === 201) {
+            globalThis.location.href = "http://localhost:8080/Frontend/seller-dashboard.html";
+        }
+        
+    });
+
+}) ();

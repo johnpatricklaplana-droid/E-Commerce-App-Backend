@@ -10,6 +10,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +26,11 @@ import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
+import com.example.demo.entity.Seller_Paper_Storage;
 import com.example.demo.entity.Sellers_Papers;
+import com.example.demo.entity.User;
 import com.example.demo.entity.User_Location;
+import com.example.demo.enums.Bank_Account_status;
 import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
@@ -36,6 +41,7 @@ import com.example.demo.repository.Seller_Paper_Storage_Repository;
 import com.example.demo.repository.Seller_Papers_Repository;
 import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
+import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
 import com.example.demo.utils.JwtToken;
 
@@ -137,11 +143,14 @@ public class SellerService {
     }
 
     @Transactional
-    public boolean saveBusinessRegistrationFile(MultipartFile file, HttpServletRequest request) {
-        
-        String token = JwtToken.extractToken(request);
+    public boolean saveBusinessRegistrationFile(MultipartFile file) {
 
-        Integer sellerId = Integer.parseInt(jwt.extractUsername(token));
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        Integer sellerId = userDetails.getUserId();
 
         try {
             String fileName = file.getOriginalFilename();
@@ -163,6 +172,10 @@ public class SellerService {
 
             seller_Repo.updateSeller(sellersPapers, sellerId);
 
+            Seller_Paper_Storage paper_Storage = new Seller_Paper_Storage();
+            paper_Storage.setAdmin(admin_repo.findByEmail(adminProperties.getEmail())); 
+            paper_Storage.setSeller_paper_id(sellersPapers);
+
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -171,18 +184,55 @@ public class SellerService {
 
     }
 
-    public void saveSellerBankAccount(SellerBankAccountDTO sellerBankAccount, HttpServletRequest request) {
-      
-        String token = JwtToken.extractToken(request);
+    public boolean saveSellerProfilePicture(MultipartFile file) {
         
-        Integer sellerId = Integer.parseInt(jwt.extractUsername(token));
-        
-        Seller_Bank_Account bankAccount = new Seller_Bank_Account();
+        try {
+            String fileName = file.getOriginalFilename();
 
-        bankAccount.setBank_account_number(sellerBankAccount.getBankAccountNumber());
-        bankAccount.setAccount_type(sellerBankAccount.getAccountType());
+            Path path = Paths.get("profile_pictures/", fileName);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+            
+            MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+            Integer sellerId = userDetails.getUserId();
+
+            seller_Repo.setSellerProfilePicture(sellerId, path.toString());
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public void saveSellerBankAccount(Seller_Bank_Account bankAccount) {
+
+        if(bankAccount.getBank_account_number().equals("") ||
+           bankAccount.getBank_account_number() == null) 
+           {
+                throw new IllegalArgumentException("bad request body");
+           }
+        
+        if(bankAccount.getAccount_type().equals("") ||
+           bankAccount.getAccount_type() == null)
+           {
+                throw new IllegalArgumentException("super bad request");
+           }
+        
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+        
+        Integer sellerId = userDetails.getUserId();
+
+        bankAccount.setStatus(Bank_Account_status.ACTIVE);
         bankAccount.setSeller(entityManager.getReference(Seller.class, sellerId));
-
         bank_Account_Repo.save(bankAccount);
 
     }

@@ -23,7 +23,7 @@ export async function PostFile(url, file) {
             body: file
         });
     
-        const response = await result.text();
+        const response = await result.json();
        console.log(response);
         return response;
     } catch (error) {
