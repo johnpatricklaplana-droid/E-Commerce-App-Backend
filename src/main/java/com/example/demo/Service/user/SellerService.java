@@ -8,19 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
-import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.location.LocationDTO;
-import com.example.demo.DTO.sellerDTO.SellerBankAccountDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Business_Registration_Documents;
@@ -28,7 +23,6 @@ import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Seller_Paper_Storage;
 import com.example.demo.entity.Sellers_Papers;
-import com.example.demo.entity.User;
 import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Bank_Account_status;
 import com.example.demo.enums.Business_Registration_Document_Status;
@@ -43,10 +37,8 @@ import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
-import com.example.demo.utils.JwtToken;
 
 import jakarta.persistence.EntityManager;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service

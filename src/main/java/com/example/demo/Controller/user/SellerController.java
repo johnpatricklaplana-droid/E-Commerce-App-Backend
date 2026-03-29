@@ -12,16 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
-import com.example.demo.DTO.sellerDTO.SellerBankAccountDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
-import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -56,9 +53,19 @@ public class SellerController {
 
     @PostMapping("/login/seller")
     public ResponseEntity<SimpleResponseDTO> login (@RequestBody User user) {
-        userAuthService.login(user, User_Role.ROLE_SELLER);
+        String token = userAuthService.login(user, User_Role.ROLE_SELLER);
+
+        ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
+            .httpOnly(true)
+            .secure(false)
+            .path("/")
+            .maxAge((long)60 * 60)
+            .sameSite("Strict")
+            .build();
+
         return ResponseEntity
             .status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .body(new SimpleResponseDTO("login success", 200));
     }
 
