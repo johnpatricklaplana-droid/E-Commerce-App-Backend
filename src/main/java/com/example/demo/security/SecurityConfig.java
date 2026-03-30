@@ -58,7 +58,8 @@ public class SecurityConfig {
                     "/seller/bank-account",
                     "/Frontend/add-seller-bank-account.html", 
                     "/seller/add-profile-picture",
-                    "/Frontend/seller-dashboard.html"
+                    "/Frontend/seller-dashboard.html",
+                    "/seller/add-product"
                 )
                 .hasRole("SELLER")
             .anyRequest().authenticated()

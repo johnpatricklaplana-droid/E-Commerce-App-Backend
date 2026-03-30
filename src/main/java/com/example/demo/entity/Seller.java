@@ -31,5 +31,9 @@ public class Seller extends User {
     private List<User_Location> seller_location;
 
     @OneToMany(mappedBy="seller")
-    List<Seller_Bank_Account> seller_Bank_Accounts;
+    private List<Seller_Bank_Account> seller_Bank_Accounts;
+
+    @OneToMany(mappedBy = "seller")
+    private List<Product> products;
+
 }

@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import com.example.demo.entity.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,8 @@ import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Business_Registration_Documents;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductVariations;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Seller_Paper_Storage;
@@ -27,9 +31,12 @@ import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Bank_Account_status;
 import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.User_Role;
+import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.repository.BusinessRegistrationDocumentsRepository;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.ProductVariationRepository;
 import com.example.demo.repository.Seller_Bank_Account_Repository;
 import com.example.demo.repository.Seller_Paper_Storage_Repository;
 import com.example.demo.repository.Seller_Papers_Repository;
@@ -37,6 +44,7 @@ import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
+import com.example.demo.DTO.productDTO.ProductDTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -85,6 +93,12 @@ public class SellerService {
 
     @Autowired
     Jwt jwt;
+
+    @Autowired
+    ProductRepository productRepo;
+
+    @Autowired
+    ProductVariationRepository productVariationRepo;
 
     @Transactional
     public String signup (SellerSignUpFieldsDTO sellerInfo) {
@@ -229,6 +243,54 @@ public class SellerService {
 
     }
 
+    @Transactional
+    public void addProduct(ProductDTO product) {
+        
+        if(product.getProductName().equals("") || product.getProductName() == null) {
+            throw new IllegalArgumentException("product name is required");
+        }
+
+        if(product.getPrice() <= 0 ) {
+            throw new IllegalArgumentException("price must be greater than 0");
+        }
+
+        if(product.getColor().equals("") || product.getColor() == null) {
+            throw new IllegalArgumentException("color is required");
+        }
+
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        Integer sellerId = userDetails.getUserId();
+
+        Business_Registration_Documents sellerDocument = 
+            seller_paper_repo.findBySellerId(sellerId)
+            .getBusiness_registration_documents();
+
+        if(sellerDocument.getStatus() == Business_Registration_Document_Status.REJECTED) {
+            // TODO: add a way for the seller to know why his document was rejected and how to fix it
+        }
+
+        if(sellerDocument.getStatus() != Business_Registration_Document_Status.ACCEPTED) {
+            throw new ActionNotAllowedException("you are not authorized to do some things wait for the admin to approve some of yours before you can add products");
+        }
+
+        Product prod = product.toProduct();
+       
+        List<Category> categories = product.getCategory();
+
+        prod.setCategories(categories);
+
+        productRepo.save(prod);
+
+        ProductVariations productVariation = product.toProductVariations();
+        productVariation.setProduct(prod);
+        productVariation.setSku(UUID.randomUUID().toString()); // TODO: make the SKU more close to human language
+
+        productVariationRepo.save(productVariation);
+    }
 }
 
 

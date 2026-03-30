@@ -36,4 +36,11 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.UNAUTHORIZED)
             .body(ex.getMessage());
     }
+
+    @ExceptionHandler(ActionNotAllowedException.class)
+    public ResponseEntity<String> handleActionNotAllowed(ActionNotAllowedException ex) {
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(ex.getMessage());
+    }
 }

@@ -64,7 +64,7 @@ import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
         const result = await PostFile(url, file);
        
         if(result.status === 201) {
-            globalThis.location.href = "http://localhost:8080/Frontend/add-seller-paper.html";
+            globalThis.location.href = "http://localhost:8080/Frontend/add-seller-bank-account.html";
         }
         
     });

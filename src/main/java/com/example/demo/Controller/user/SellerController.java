@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
+import com.example.demo.DTO.productDTO.ProductDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
@@ -100,5 +102,12 @@ public class SellerController {
             .body(new SimpleResponseDTO("successful one", 201));
     }
     
+    @PostMapping("/seller/add-product")
+    public ResponseEntity<SimpleResponseDTO> addProduct(@RequestBody ProductDTO product) {
+        sellerService.addProduct(product);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new SimpleResponseDTO("product added successfully", 201));
+    }
     
 }
