@@ -4,6 +4,10 @@
     @apply hover:underline hover:text-blue-500
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 .scrollbar-none {
     scrollbar-width: none;
 }
