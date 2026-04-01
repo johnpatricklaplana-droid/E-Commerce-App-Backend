@@ -51,17 +51,19 @@ public class SecurityConfig {
                                 "/Frontend/public/hero_background.png",
                                 "/Frontend/src/pages/seller_signup.js",
                                 "/business-registration-file/seller").permitAll() 
-                .requestMatchers(
-                    "/Frontend/add-profile-seller.html",
-                    "/Frontend/add-business-registration-file.html",
-                    "/business-registration-file/seller",
-                    "/seller/bank-account",
-                    "/Frontend/add-seller-bank-account.html", 
-                    "/seller/add-profile-picture",
-                    "/Frontend/seller-dashboard.html",
-                    "/seller/add-product"
-                )
-                .hasRole("SELLER")
+            .requestMatchers(
+                "/Frontend/add-profile-seller.html",
+                "/Frontend/add-business-registration-file.html",
+                "/business-registration-file/seller",
+                "/seller/bank-account",
+                "/Frontend/add-seller-bank-account.html", 
+                "/seller/add-profile-picture",
+                "/Frontend/seller-dashboard.html",
+                "/seller/add-product"
+            )
+            .hasRole("SELLER")
+            .requestMatchers("/seller/business-registration-file")
+            .hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
