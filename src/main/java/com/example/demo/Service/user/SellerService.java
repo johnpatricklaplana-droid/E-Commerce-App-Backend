@@ -167,7 +167,7 @@ public class SellerService {
             
             Business_Registration_Documents businessRegistrationDocuments =
                 new Business_Registration_Documents();
-            businessRegistrationDocuments.setFile_url(path.toString());
+            businessRegistrationDocuments.setFile_url(fileName);
             businessRegistrationDocuments.setStatus(Business_Registration_Document_Status.PENDING);
     
             documents_repo.save(businessRegistrationDocuments);
@@ -178,9 +178,9 @@ public class SellerService {
 
             seller_Repo.updateSeller(sellersPapers, sellerId);
 
-            Seller_Paper_Storage paper_Storage = new Seller_Paper_Storage();
-            paper_Storage.setAdmin(admin_repo.findByEmail(adminProperties.getEmail())); 
-            paper_Storage.setSeller_paper_id(sellersPapers);
+            Seller_Paper_Storage paperStorage = new Seller_Paper_Storage();
+            paperStorage.setAdmin(admin_repo.findByEmail(adminProperties.getEmail())); 
+            paperStorage.setSeller_paper_id(sellersPapers);
 
             return true;
         } catch (IOException e) {

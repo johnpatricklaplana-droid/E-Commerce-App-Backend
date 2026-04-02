@@ -1,4 +1,4 @@
-import { POST, PostFile } from "../api/authAPI.js";
+import { POST, PostFile } from "../api/api.js";
 import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
 
 // This is for handling the seller signup process. The seller signup process is a multi-step process and this code is responsible for handling the first step of the seller signup process which is the basic details of the seller.

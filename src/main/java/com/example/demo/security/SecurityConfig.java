@@ -41,7 +41,7 @@ public class SecurityConfig {
                                 "/Frontend/src/style.css",
                                 "/Frontend/seller-signup-page.html",
                                 "/Frontend/src/pages/seller_signup.js",
-                                "/Frontend/src/api/authAPI.js",
+                                "/Frontend/src/api/api.js",
                                 "/Frontend/src/utils/boilerplate_code_handler.js",
                                 "/Frontend/costumer-signup-page.html",
                                 "/Frontend/src/pages/costumer_signup.js",
@@ -61,11 +61,13 @@ public class SecurityConfig {
                 "/Frontend/add-seller-bank-account.html", 
                 "/seller/add-profile-picture",
                 "/Frontend/seller-dashboard.html",
-                "/seller/add-product"
+                "/seller/add-product",
+                "/seller/business-registration-file"
             )
             .hasRole("SELLER")
             .requestMatchers(
-                "/seller/business-registration-file",
+                "/admin/business-registration-file",
+                "/business-registration-file/{fileName}",
                 "/Frontend/admin-seller-registration-document-storage.html"
             )
             .hasRole("ADMIN")

@@ -42,7 +42,7 @@ public class AdminController {
             .body(new SimpleResponseDTO("login success", 200));
     }
 
-    @GetMapping("/seller/business-registration-file")
+    @GetMapping("/admin/business-registration-file")
     public ResponseEntity<List<businessRegistrationDocumentDTO>> getSellerBusinessRegistrationFile(Pageable pageable) {
         return ResponseEntity
             .status(HttpStatus.OK)
