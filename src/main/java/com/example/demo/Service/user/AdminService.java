@@ -1,5 +1,6 @@
 package com.example.demo.Service.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page; 
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Configuration.AdminProperties;
+import com.example.demo.DTO.ResponseDTO.businessRegistrationDocumentDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Business_Registration_Documents;
@@ -59,9 +61,24 @@ public class AdminService {
         }
     }
 
-    public Page<Business_Registration_Documents> getSellerBusinessRegistrationFile(Pageable pageable) {
+    public List<businessRegistrationDocumentDTO> getSellerBusinessRegistrationFile(Pageable pageable) {
 
-        return documentsRepo.findAll(pageable);
+        Page<Business_Registration_Documents> page = documentsRepo.findAll(pageable);
+
+        List<Business_Registration_Documents> documents = page.getContent();
+
+        List<businessRegistrationDocumentDTO> dto = new ArrayList<>();
+
+        for (Business_Registration_Documents docs: documents) {
+            businessRegistrationDocumentDTO docsDTO =
+                new businessRegistrationDocumentDTO(
+                    docs.getId(), docs.getFile_url().replace("\\", "/"), docs.getStatus().toString()
+                );
+            dto.add(docsDTO);
+        }
+
+        return dto;
+        
     }
 
 }

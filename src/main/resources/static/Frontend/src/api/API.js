@@ -30,3 +30,19 @@ export async function PostFile(url, file) {
         console.error(error);
     }
 }
+
+export async function GET(url) {
+    try {
+        const result = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const response = await result.json();
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}

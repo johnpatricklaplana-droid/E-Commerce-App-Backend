@@ -1,4 +1,4 @@
-import { POST } from "../api/authAPI.js";
+import { POST } from "..API.js";
 import { getSignupFormFields } from "../utils/boilerplate_code_handler.js";
 
 // costumer signup

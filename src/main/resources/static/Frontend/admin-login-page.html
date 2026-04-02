@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin login</title>
+</head>
+<body>
+    <div class="h-screen w-screen flex justify-center items-center bg-blue-100">
+        <div class="bg-white flex p-5 mw-[100%] items-center w-96 flex-col gap-2 rounded-2xl">
+            <h1 class="font-bold text-2xl text-center">
+                TODO: SOME LOGO
+            </h1>
+            <h1 class="text-3xl font-bold text-center">Admin Login</h1>
+            <div class="w-full flex gap-1.5 flex-col">
+                <div>
+                    <label class="text-[14px]" for="">Email address</label>
+                    <div class="flex bg-blue-100 rounded gap-1.5 items-center px-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="2" />
+                                <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        <input id="adminEmail" class="w-full outline-0 py-2.5" type="email" placeholder="admin@example.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[14px]" for="">Password</label>
+                    <div class="flex bg-blue-100 rounded gap-1.5 items-center px-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="6" y="10" width="12" height="10" rx="2" stroke="currentColor" stroke-width="2" />
+                            <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" />
+                            <circle cx="12" cy="15" r="1.5" fill="currentColor" />
+                        </svg>
+                        <input id="adminPassword" class="w-full outline-0 py-2.5" type="password" placeholder="************">
+                    </div>
+                </div>
+                <p class="text-sm text-blue-600">Forgot password?</p>
+                <button id="adminLoginButotn" class="px-5 hover:bg-blue-600 py-1.5 rounded bg-blue-500 text-white font-bold">Login</button>
+            </div>
+            <div><span class="text-[12px]">Privacy Policy</span> <span class="text-[12px]">|</span> <span class="text-[12px]">Terms of Service</span></div>
+        </div>
+    </div>
+    <script type="module" src="http://localhost:5173/src/main.js"></script>
+    <script type="module" src="src/pages/admin_login.js"></script>
+</body>
+</html>

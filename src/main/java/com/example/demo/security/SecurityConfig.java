@@ -50,7 +50,9 @@ public class SecurityConfig {
                                 "/Frontend/public/cuties.png",
                                 "/Frontend/public/hero_background.png",
                                 "/Frontend/src/pages/seller_signup.js",
-                                "/business-registration-file/seller").permitAll() 
+                                "/business-registration-file/seller",
+                                "/Frontend/admin-login-page.html",
+                                "/Frontend/src/pages/admin_login.js").permitAll() 
             .requestMatchers(
                 "/Frontend/add-profile-seller.html",
                 "/Frontend/add-business-registration-file.html",
@@ -62,7 +64,10 @@ public class SecurityConfig {
                 "/seller/add-product"
             )
             .hasRole("SELLER")
-            .requestMatchers("/seller/business-registration-file")
+            .requestMatchers(
+                "/seller/business-registration-file",
+                "/Frontend/admin-seller-registration-document-storage.html"
+            )
             .hasRole("ADMIN")
             .anyRequest().authenticated()
         )
