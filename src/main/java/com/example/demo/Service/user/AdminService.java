@@ -14,7 +14,10 @@ import com.example.demo.DTO.ResponseDTO.businessRegistrationDocumentDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Business_Registration_Documents;
+import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.User_Role;
+import com.example.demo.exceptions.ActionNotAllowedException;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.repository.BusinessRegistrationDocumentsRepository;
 import com.example.demo.utils.CredentialsValidator;
@@ -79,6 +82,54 @@ public class AdminService {
 
         return dto;
         
+    }
+
+    public void acceptSellerBusinessRegistrationFile(int id) {
+        
+        Business_Registration_Documents documents = documentsRepo.findById(id)
+            .orElse(null);
+
+        if(documents == null) {
+            throw new ResourceNotFoundException("the file your updating don't exist?");
+        }
+
+        if(documents.getStatus().toString().equals("REJECTED")) {
+            throw new ActionNotAllowedException(
+                "You rejected this one before and your accepting it now why would you do that? it's now allowed buddy"
+            );
+        }
+
+        if(documents.getStatus().toString().equals("ACCEPTED")) {
+            throw new ActionNotAllowedException("this one is already ACCEPTED BUDDY");
+        }
+
+        documents.setStatus(Business_Registration_Document_Status.ACCEPTED);
+        documentsRepo.save(documents);
+
+    }
+
+    public void rejectSellerBusinessRegistrationFile(int id) {
+        
+        Business_Registration_Documents documents = documentsRepo.findById(id)
+                .orElse(null);
+
+        if (documents == null) {
+            throw new ResourceNotFoundException("the file your updating don't exist?");
+        }
+
+        if (documents.getStatus().toString().equals("ACCEPTED")) {
+            throw new ActionNotAllowedException(
+                "You accepted this one before and your rejecting it now? why would you do that? it's now allowed buddy"
+            );
+        }
+
+        if (documents.getStatus().toString().equals("REJECTED")) {
+            throw new ActionNotAllowedException("this one is already REJECTED BUDDY have some mercy");
+        }
+
+        documents.setStatus(Business_Registration_Document_Status.REJECTED);
+        documentsRepo.save(documents);
+
     }
 
 }

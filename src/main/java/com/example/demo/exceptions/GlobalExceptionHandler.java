@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
+
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,10 +26,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<SimpleResponseDTO> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .body(ex.getMessage());
+            .body(new SimpleResponseDTO(ex.getMessage(), 404));
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
@@ -38,9 +40,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ActionNotAllowedException.class)
-    public ResponseEntity<String> handleActionNotAllowed(ActionNotAllowedException ex) {
+    public ResponseEntity<SimpleResponseDTO> handleActionNotAllowed(ActionNotAllowedException ex) {
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
-            .body(ex.getMessage());
+            .body(new SimpleResponseDTO(ex.getMessage(), 403));
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    public ResponseEntity<SimpleResponseDTO> handleResourceAlreadyExist(ResourceAlreadyExistException ex) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(new SimpleResponseDTO(ex.getMessage(), 409));
     }
 }

@@ -33,6 +33,7 @@ import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.exceptions.EmailAlreadyExistException;
+import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.repository.Admin_Repository;
 import com.example.demo.repository.BusinessRegistrationDocumentsRepository;
 import com.example.demo.repository.ProductRepository;
@@ -160,17 +161,29 @@ public class SellerService {
 
         try {
             String fileName = file.getOriginalFilename();
-           
-            Path path = Paths.get("uploads/", fileName);
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
-            
+
             Business_Registration_Documents businessRegistrationDocuments =
                 new Business_Registration_Documents();
             businessRegistrationDocuments.setFile_url(fileName);
             businessRegistrationDocuments.setStatus(Business_Registration_Document_Status.PENDING);
+
+            Seller seller = seller_Repo.findById(sellerId)
+                .orElse(null);
+
+            if(seller.getPapers() != null) {
+                Sellers_Papers sellers_Papers = seller_paper_repo.findById(seller.getPapers().getId())
+                        .orElse(null);
+
+                if (sellers_Papers.getBusiness_registration_documents() != null) {
+                    throw new ResourceAlreadyExistException("User already has documents. Do you want to continue?");
+                }
+            }
     
             documents_repo.save(businessRegistrationDocuments);
+           
+            Path path = Paths.get("uploads/", fileName);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
 
             Sellers_Papers sellersPapers = new Sellers_Papers();
             sellersPapers.setBusiness_registration_documents(businessRegistrationDocuments);

@@ -68,7 +68,9 @@ public class SecurityConfig {
             .requestMatchers(
                 "/admin/business-registration-file",
                 "/business-registration-file/{fileName}",
-                "/Frontend/admin-seller-registration-document-storage.html"
+                "/Frontend/admin-seller-registration-document-storage.html",
+                "/admin/business-registration-file/{id}/accept",
+                "/admin/business-registration-file/{id}/reject"
             )
             .hasRole("ADMIN")
             .anyRequest().authenticated()

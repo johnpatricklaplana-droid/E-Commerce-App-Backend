@@ -46,3 +46,16 @@ export async function GET(url) {
         console.error(error);
     }
 }
+
+export async function PATCH(url) {
+    try {
+        const result = await fetch(url, {
+            method: "PATCH"
+        });
+
+        const response = await result.json();
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
