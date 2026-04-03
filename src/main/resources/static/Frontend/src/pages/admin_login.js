@@ -44,23 +44,23 @@
             status: file.status
         };
 
-        const html = `<div id="actualFile" class="flex cursor-pointer justify-between px-1.5 py-0.5 border-b border-gray-400 hover:bg-gray-300 items-center w-full">
-            <div>
-                <h1 class="text-[14px] truncate max-w-25">${fileinformation.fileUrl}</h1>
-                <span class="text-[12px]">september 17 2004</span>
-            </div>
-            <div class="flex px-1.5 py-1.5 justify-between w-1/2">
-                <span class="text-[14px] w-10">${fileinformation.fileName}</span>
-                <span class="text-[14px] w-10">100gb</span>
-                <div class="w-10 flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 20 20">
-                        <circle cx="10" cy="3.6" r="2" fill="black" />
-                        <circle cx="10" cy="8.6" r="2" fill="black" />
-                        <circle cx="10" cy="13.6" r="2" fill="black" />
-                    </svg>
-                </div>
-            </div>
-        </div>`;
+        const html=`<div id="actualFile" class="flex cursor-pointer justify-between px-1.5 py-0.5 border-b border-gray-400 hover:bg-gray-300 items-center w-full">
+                        <div>
+                            <h1 class="text-[14px] truncate max-w-25">${fileinformation.fileUrl}</h1>
+                            <span class="text-[12px]">september 17 2004</span>
+                        </div>
+                        <div class="flex px-1.5 py-1.5 justify-between w-1/2">
+                            <span class="text-[14px] w-10">${fileinformation.fileName}</span>
+                            <span class="text-[14px] w-10">100gb</span>
+                            <div class="w-10 flex items-center justify-center">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="3.6" r="2" fill="black" />
+                                    <circle cx="10" cy="8.6" r="2" fill="black" />
+                                    <circle cx="10" cy="13.6" r="2" fill="black" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>`;
 
         document.getElementById("sellerDocumentContainer").insertAdjacentHTML("beforeend", html);
           
@@ -76,7 +76,6 @@
         return;
     }
      
-    // TODO: understand what is happening here
     sellerDocumentContainer.addEventListener("click", async (event) => {
         
         if (event.target.closest("#actualFile")) {
@@ -89,8 +88,52 @@
                 method: "GET"
             });
 
+            const blob = await result.blob();
+
+            // Create a URL for the blob
+            const imageUrl = URL.createObjectURL(blob);
+    
+            const html=`<div id="fileOverlayContainer" class="absolute flex flex-col items-center bg-black/80 w-screen h-screen">
+                            <div class="flex p-3.5 items-center justify-between w-full gap-1">
+                                <div class="flex items-center gap-1">
+                                    <svg id="closeFileButton" xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5 cursor-pointer hover:opacity-55"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="white"
+                                        stroke-width="3">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                    </svg> 
+                                    <h1 class="text-white">TODO: FILENAME</h1>
+                                </div>
+                                <div>
+                                    <button class="bg-white hover:bg-gray-300 px-2.5 py-1 font-bold rounded text-blue-700">
+                                        Accept
+                                    </button>
+                                    <button class="bg-gray-600 hover:bg-gray-500 px-2.5 py-1 font-bold rounded text-white">
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="max-h-[90%] gap-2.5 max-w-[90%] flex flex-col shadow-lg rounded">
+                                <img class="max-w-full rounded-2xl max-h-full w-full h-125" src="${imageUrl}" alt="">
+                            </div>
+                        </div>`;
+                        
+            document.getElementById("mainContainer").insertAdjacentHTML("afterbegin", html);
+
         }
 
+    });
+
+}) ();
+
+(() => {
+
+    document.addEventListener("click", (event) => {
+        if (event.target.closest("#closeFileButton"))
+            document.getElementById("fileOverlayContainer").remove();
     });
 
 }) ();
