@@ -45,23 +45,26 @@ import { GET, PATCH, POST } from "../api/api.js";
             status: file.status
         };
 
-        const html=`<div id="actualFile" data-file-id="${fileinformation.fileId}" class="flex cursor-pointer justify-between px-1.5 py-0.5 border-b border-gray-400 hover:bg-gray-300 items-center w-full">
-                        <div>
-                            <h1 class="text-[14px] truncate max-w-25">${fileinformation.fileUrl}</h1>
-                            <span class="text-[12px]">september 17 2004</span>
-                        </div>
-                        <div class="flex px-1.5 py-1.5 justify-between w-1/2">
-                            <span class="text-[14px] w-10">${fileinformation.fileId}</span>
-                            <span class="text-[14px] w-10">100gb</span>
-                            <div class="w-10 flex items-center justify-center">
-                                <svg width="20" height="20" viewBox="0 0 20 20">
-                                    <circle cx="10" cy="3.6" r="2" fill="black" />
-                                    <circle cx="10" cy="8.6" r="2" fill="black" />
-                                    <circle cx="10" cy="13.6" r="2" fill="black" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>`;
+        let backgroundColor = "";
+        let textColor = "";
+
+        if(fileinformation.status === "PENDING") {
+            backgroundColor = "bg-amber-100";
+            textColor = "text-amber-900";
+        } else if(fileinformation.status === "ACCEPTED") {
+            backgroundColor = "bg-emerald-100";
+            textColor = "text-emerald-900";
+        } else {
+            backgroundColor = "bg-rose-100";
+            textColor = "text-rose-900";
+        }
+
+        const html =`<tr class="rounded-[26px] bg-slate-50 shadow-sm">
+                        <td id="actualFile" data-file-id="${fileinformation.fileId}" class="px-4 py-4 text-sm hover:bg-blue-100 cursor-pointer font-semibold text-slate-950">${fileinformation.fileUrl}</td>
+                        <td class="px-4 py-4 text-sm text-slate-700">${fileinformation.fileId}</td>
+                        <td class="px-4 py-4 text-sm text-slate-700">1.2 MB</td>
+                        <td class="px-4 py-4"><span class="inline-flex rounded-full ${backgroundColor} px-3 py-1 text-xs font-semibold ${textColor}">${fileinformation.status}</span></td>
+                    </tr>`
 
         document.getElementById("sellerDocumentContainer").insertAdjacentHTML("beforeend", html);
           
@@ -84,7 +87,7 @@ import { GET, PATCH, POST } from "../api/api.js";
             
             const fileId = event.target.closest("#actualFile").dataset.fileId;
 
-            const fileName = event.target.closest("#actualFile").querySelector("h1").innerText;
+            const fileName = event.target.closest("#actualFile").innerText;
            
             const url = `http://localhost:8080/business-registration-file/${fileName}`;
 
@@ -97,31 +100,31 @@ import { GET, PATCH, POST } from "../api/api.js";
             // Create a URL for the blob
             const imageUrl = URL.createObjectURL(blob);
     
-            const html=`<div id="fileOverlayContainer" class="absolute flex flex-col items-center bg-black/80 w-screen h-screen">
-                            <div class="flex p-3.5 items-center justify-between w-[90%] gap-1">
-                                <div class="flex items-center gap-1">
+            const html=`<div id="fileOverlayContainer" class="absolute inset-0 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm w-full h-full z-50">
+                            <div class="flex items-center justify-between w-[95%] max-w-4xl p-4 bg-slate-800/95 rounded-2xl shadow-2xl border border-slate-700">
+                                <div class="flex items-center gap-3">
                                     <svg id="closeFileButton" xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5 cursor-pointer hover:opacity-55"
+                                        class="w-6 h-6 cursor-pointer text-slate-300 hover:text-white transition-colors"
                                         fill="none"
                                         viewBox="0 0 24 24"
-                                        stroke="white"
-                                        stroke-width="3">
+                                        stroke="currentColor"
+                                        stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M6 18L18 6M6 6l12 12" />
                                     </svg> 
-                                    <h1 class="text-white">TODO: FILENAME</h1>
+                                    <h1 class="text-white font-semibold text-lg">TODO: FILENAME</h1>
                                 </div>
-                                <div>
-                                    <button id="openAcceptSellerPopup" class="bg-white hover:bg-gray-300 px-2.5 py-1 font-bold rounded text-blue-700">
+                                <div class="flex gap-3">
+                                    <button id="openAcceptSellerPopup" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 font-semibold rounded-xl text-white transition-colors shadow-lg">
                                         Accept
                                     </button>
-                                    <button id="openRejectSellerPopup" class="bg-gray-600 hover:bg-gray-500 px-2.5 py-1 font-bold rounded text-white">
+                                    <button id="openRejectSellerPopup" class="bg-rose-600 hover:bg-rose-500 px-4 py-2 font-semibold rounded-xl text-white transition-colors shadow-lg">
                                         Reject
                                     </button>
                                 </div>
                             </div>
-                            <div class="max-h-[90%] gap-2.5 max-w-[90%] flex flex-col shadow-lg rounded">
-                                <img id="filePreview" data-file-id="${fileId}" class="max-w-full rounded-2xl max-h-full w-full h-125" src="${imageUrl}" alt="">
+                            <div class="max-h-[85%] max-w-[95%] flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-slate-900/50 border border-slate-700">
+                                <img id="filePreview" data-file-id="${fileId}" class="max-w-full max-h-full w-full h-auto object-contain rounded-2xl" src="${imageUrl}" alt="">
                             </div>
                         </div>`;
                         
@@ -150,11 +153,13 @@ import { GET, PATCH, POST } from "../api/api.js";
         if (event.target.closest("#openAcceptSellerPopup")) {
             
             const html = `
-                <div id="popupAcceptSeller" class="absolute transition-opacity duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-white p-5 top-1/2 left-1/2 flex flex-col gap-4 rounded-2xl -translate-x-1/2 -translate-y-1/2 bg-blue-700/90">
-                    <h1 class="text-3xl drop-shadow-md font-sans font-semibold text-white">Are you sure about this?</h1>
-                    <div class="flex gap-1.5 justify-between">
-                        <button id="acceptSeller" class="text-black font-bold px-4 rounded-2xl w-[50%] py-2 bg-green-300 transition-colors duration-200 hover:bg-green-500">Yes</button>
-                        <button id="cancelAcceptSeller" class="text-white font-bold px-4 rounded-2xl w-[50%] py-2 bg-gray-700 hover:bg-gray-600">Cancel</button>
+                <div id="popupAcceptSeller" class="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+                    <div class="bg-slate-800/95 border border-slate-700 rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4">
+                        <h1 class="text-2xl font-bold text-white text-center mb-6">Are you sure about this?</h1>
+                        <div class="flex gap-4 justify-center">
+                            <button id="acceptSeller" class="bg-emerald-600 hover:bg-emerald-500 w-[100px] text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-colors duration-200">Yes</button>
+                            <button id="cancelAcceptSeller" class="bg-slate-600 hover:bg-slate-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-colors duration-200">Cancel</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -197,17 +202,18 @@ import { GET, PATCH, POST } from "../api/api.js";
 }) ();
 
 
-// reject the sellers registration document
 (() => {
 
     document.addEventListener("click", async (event) => {
         if (event.target.closest("#openRejectSellerPopup")) {
             const html = `
-                <div id="popupRejectSeller" class="absolute transition-opacity duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-white p-5 top-1/2 left-1/2 flex flex-col gap-4 rounded-2xl -translate-x-1/2 -translate-y-1/2 bg-red-700/90">
-                    <h1 class="text-3xl drop-shadow-md font-sans font-semibold text-white">Are you sure about this?</h1>
-                    <div class="flex gap-1.5 justify-between">
-                        <button id="rejectSeller" class="text-black font-bold px-4 rounded-2xl w-[50%] py-2 bg-blue-400 transition-colors duration-200 hover:bg-blue-500">Yes</button>
-                        <button id="cancelRejectSeller" class="text-white font-bold px-4 rounded-2xl w-[50%] py-2 bg-gray-700 hover:bg-gray-600">Cancel</button>
+                <div id="popupRejectSeller" class="backdrop-blur-sm h-full w-full absolute bg-black/80">
+                    <div class="absolute transition-opacity duration-300 ease-out border-slate-700 rounded-3xl shadow-2xl p-8 focus:outline-none top-1/2 left-1/2 flex items-center flex-col gap-4 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-slate-800/95">
+                        <h1 class="text-2xl drop-shadow-md font-sans font-semibold text-white">Are you sure about this?</h1>
+                        <div class="flex gap-1.5 justify-arround">
+                            <button id="rejectSeller" class="text-black font-bold px-6 rounded-2xl w-[100px] py-3 bg-blue-400 transition-colors duration-200 hover:bg-blue-500">Yes</button>
+                            <button id="cancelRejectSeller" class="text-white font-bold px-6 rounded-2xl w-[100px] py-3 bg-gray-700 hover:bg-gray-600">Cancel</button>
+                        </div>
                     </div>
                 </div>
             `;

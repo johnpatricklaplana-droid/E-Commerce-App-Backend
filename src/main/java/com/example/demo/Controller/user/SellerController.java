@@ -102,7 +102,7 @@ public class SellerController {
             .body(new SimpleResponseDTO("successful one", 201));
     }
     
-    @PostMapping("/seller/add-product")
+    @PostMapping("/seller/product")
     public ResponseEntity<SimpleResponseDTO> addProduct(@RequestBody ProductDTO product) {
         sellerService.addProduct(product);
         return ResponseEntity
