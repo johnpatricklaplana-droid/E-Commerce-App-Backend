@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product_ratings")
+@Table(name = "product_variations")
 @Getter
 @Setter
 @NoArgsConstructor

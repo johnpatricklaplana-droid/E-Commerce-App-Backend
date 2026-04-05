@@ -20,8 +20,10 @@ import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.Jwt;
+import com.example.demo.Service.product.ProductService;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
@@ -46,7 +48,6 @@ import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
 import com.example.demo.DTO.productDTO.ProductDTO;
-
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
@@ -100,6 +101,9 @@ public class SellerService {
 
     @Autowired
     ProductVariationRepository productVariationRepo;
+
+    @Autowired
+    ProductService productService;
 
     @Transactional
     public String signup (SellerSignUpFieldsDTO sellerInfo) {
@@ -257,7 +261,7 @@ public class SellerService {
     }
 
     @Transactional
-    public void addProduct(ProductDTO product) {
+    public void addProduct(List<MultipartFile> files ,ProductDTO product) throws IOException {
         
         if(product.getProductName().equals("") || product.getProductName() == null) {
             throw new IllegalArgumentException("product name is required");
@@ -295,14 +299,17 @@ public class SellerService {
         List<Category> categories = product.getCategory();
 
         prod.setCategories(categories);
-
+        prod.setSeller(entityManager.getReference(Seller.class, sellerId));
         productRepo.save(prod);
 
+        productService.saveProductImages(prod.getId(), files);
+      
         ProductVariations productVariation = product.toProductVariations();
         productVariation.setProduct(prod);
         productVariation.setSku(UUID.randomUUID().toString()); // TODO: make the SKU more close to human language
-
+        
         productVariationRepo.save(productVariation);
+       
     }
     
 }

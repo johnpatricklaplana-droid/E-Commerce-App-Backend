@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,19 +35,22 @@ public class Product {
     @Column(name = "price", nullable = false)
     private double price;
 
+    @Column(name = "product_description")
+    private String productDescription;
+
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
-    @Column(name = "product_description")
-    private String productDescription;
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "product_category",
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    @ManyToMany
     private List<Category> categories;
 
     @OneToMany(mappedBy = "product")

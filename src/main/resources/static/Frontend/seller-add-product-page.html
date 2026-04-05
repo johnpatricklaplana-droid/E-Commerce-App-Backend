@@ -134,7 +134,7 @@
                 <main class="bg-white p-5 rounded-2xl">
                     <div>
                         <div class="p-2.5 flex gap-4 flex-col">
-                            <div class="grid gap-3 grid-cols-[550px_1fr]"> 
+                            <div class="grid gap-3 sm:grid-cols-[550px_1fr]"> 
                                 <div class="flex p-3 border-r border-slate-400 flex-col gap-3">
                                     <div class="">
                                         <label class="text-[14px] font-semibold" for="">Product Name<span class="text-red-600">*</span></label>
@@ -204,53 +204,10 @@
                                         <p class="text-[14px]">Click me to browse file</p>
                                         <p class="text-[12px]">PNG, JPG up to 5mb</p>
                                     </label>
-                                    <input id="imageInput" class="hidden" type="file">
-                                    <div class="flex gap-1.5 p-1.5 rounded-2xl border-dashed sm:w-62.5 border border-gray-400 sm:h-25 items-center overflow-x-auto justify-start">
-                                        <div class="h-full rounded-2xl relative bg-blue-100 sm:w-25 shrink-0">
-                                            <button class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                </svg>
-                                            </button>
-                                            <img class="h-full w-[90%]" src="image_product_placeholder.png" alt="">
-                                        </div>
-                                        <div class="h-full relative bg-blue-100 rounded-2xl sm:w-25 shrink-0">
-                                            <button class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                </svg>
-                                            </button>
-                                            <img class="h-full w-[90%]" src="image_product_placeholder.png" alt="">
-                                        </div>
-                                        <div class="h-full relative bg-blue-100 rounded-2xl sm:w-25 shrink-0">
-                                            <button class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                </svg>
-                                            </button>
-                                            <img class="h-full w-[90%]" src="image_product_placeholder.png" alt="">
-                                        </div>
-                                        <div class="h-full relative bg-blue-100 rounded-2xl sm:w-25 shrink-0">
-                                            <button class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                </svg>
-                                            </button>
-                                            <img class="h-full w-[90%]" src="image_product_placeholder.png" alt="">
-                                        </div>
-                                        <div class="h-full relative bg-blue-100 rounded-2xl sm:w-25 shrink-0">
-                                            <button class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                                                </svg>
-                                            </button>
-                                            <img class="h-full w-[90%]" src="image_product_placeholder.png" alt="">
-                                        </div>
+                                    <input id="imageInput" class="hidden" type="file" multiple>
+                                    <div id="imagesPreviewContainer" class="flex gap-1.5 p-1.5 rounded-2xl border-dashed sm:w-62.5 border border-gray-400 sm:h-25 items-center overflow-x-auto justify-start">
+                                        <!-- IMAGES PREVIEW -->
+                                         <p class="text-sm text-center w-full">Selected images will appear here</p>
                                     </div>
                                 </div>
                             </div>
@@ -279,5 +236,6 @@
     </div>
     
     <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/pages/seller_add_product.js"></script>
 </body>
 </html>

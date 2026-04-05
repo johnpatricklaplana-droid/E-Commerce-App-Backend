@@ -61,7 +61,7 @@ public class SecurityConfig {
                 "/Frontend/add-seller-bank-account.html", 
                 "/seller/add-profile-picture",
                 "/Frontend/seller-dashboard.html",
-                "/seller/product",
+                "/seller/product", 
                 "/seller/business-registration-file"
             )
             .hasRole("SELLER")

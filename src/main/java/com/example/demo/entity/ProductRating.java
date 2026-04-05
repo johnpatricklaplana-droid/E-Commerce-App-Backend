@@ -29,7 +29,7 @@ public class ProductRating {
     @ManyToOne
     private Product product;
 
-    @Column(name = "raing", nullable = false)
+    @Column(name = "raing", nullable = true)
     private double rating;
 
     @Column(name = "review", nullable = true)

@@ -1,5 +1,9 @@
 package com.example.demo.Controller.user;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +21,6 @@ import com.example.demo.DTO.productDTO.ProductDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
-import com.example.demo.entity.Product;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
@@ -102,9 +106,11 @@ public class SellerController {
             .body(new SimpleResponseDTO("successful one", 201));
     }
     
-    @PostMapping("/seller/product")
-    public ResponseEntity<SimpleResponseDTO> addProduct(@RequestBody ProductDTO product) {
-        sellerService.addProduct(product);
+    @PostMapping("/seller/product") 
+    public ResponseEntity<SimpleResponseDTO> addProduct(
+        @RequestPart("files") List<MultipartFile> files, @RequestPart("productData") ProductDTO product
+    ) throws IOException {
+        sellerService.addProduct(files, product);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(new SimpleResponseDTO("product added successfully", 201));

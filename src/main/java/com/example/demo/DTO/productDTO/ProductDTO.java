@@ -1,6 +1,10 @@
 package com.example.demo.DTO.productDTO;
 
+import java.lang.invoke.MutableCallSite;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Category;
 
