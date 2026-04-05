@@ -38,6 +38,9 @@ public class Product {
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
+    @Column(name = "product_description")
+    private String productDescription;
+
     @JoinTable(
         name = "product_category",
         joinColumns = @JoinColumn(name = "product_id"),

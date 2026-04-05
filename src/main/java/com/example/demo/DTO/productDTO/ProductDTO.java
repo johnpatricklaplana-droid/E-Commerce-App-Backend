@@ -18,6 +18,7 @@ public class ProductDTO {
     private double price;
     private String color;
     private String variant;
+    private String productDescription;
     
     private List<Category> category;
 
