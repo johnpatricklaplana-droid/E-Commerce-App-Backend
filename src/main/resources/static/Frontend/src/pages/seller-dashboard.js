@@ -8,12 +8,6 @@ const canvasHeight = canvas.getBoundingClientRect().height;
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
-// c.fillStyle = 'rgba(226, 134, 28, 0.5)';
-// c.fillRect(100, 100, 100, 100);
-// c.fillRect(200, 200, 100, 100);
-// c.fillRect(300, 300, 100, 100);
-// c.fillRect(400, 400, 100, 100);
-
 c.font = "12px Arial";
 
 c.beginPath();

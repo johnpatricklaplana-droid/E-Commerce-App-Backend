@@ -1,29 +1,6 @@
 import { POST, PostFile } from "../api/api.js";
 import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
 
-// This is for handling the seller signup process. The seller signup process is a multi-step process and this code is responsible for handling the first step of the seller signup process which is the basic details of the seller.
-(() => {
-
-    const signupSubmitButton = document.getElementById("signupSubmitButton");
-
-    if(!signupSubmitButton) {
-        return;
-    }
-
-    signupSubmitButton.addEventListener("click", async (event) => {
-        event.preventDefault();
-        
-        const signup_fields = getSellerSignupFields();
-        const url = "http://localhost:8080/signup/seller";
-
-        const result = await POST(url, signup_fields);
-
-        if(result.status === 201) {
-            globalThis.location.href = "http://localhost:8080/Frontend/add-profile-seller.html";
-        }
-    });
-
-}) ();
 
 // This is for skipping the profile creation step of the seller signup process. 
 (() => {
@@ -98,37 +75,6 @@ import { getSellerSignupFields } from "../utils/boilerplate_code_handler.js";
             globalThis.location.href = "http://localhost:8080/Frontend/seller-dashboard.html";
         }
         
-    });
-
-}) ();
-
-// This is for handling the seller login process.
-(() => {
-
-    const sellerLoginButton = document.getElementById("sellerLoginButton");
-
-    if(!sellerLoginButton) {
-        return;
-    }
-
-    sellerLoginButton.addEventListener("click", async (event) => {
-        event.preventDefault();
-
-        const sellerEmail = document.getElementById("sellerEmail");
-        const sellerPassword = document.getElementById("sellerPassword");
-
-        const body = {
-            email: sellerEmail.value.trim(),
-            password: sellerPassword.value.trim()
-        };
-
-        const url = "http://localhost:8080/login/seller"
-
-        const result = await POST(url, body);
-
-        if(result.status === 200) {
-            globalThis.location.href = "http://localhost:8080/Frontend/seller-dashboard.html";
-        }
     });
 
 }) ();

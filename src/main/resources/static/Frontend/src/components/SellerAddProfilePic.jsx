@@ -1,0 +1,38 @@
+export default function SellerAddProfilePic () {
+    return (
+        <div className="w-screen bg-blue-100 h-screen flex items-center justify-center">
+            <div className="shadow-2xl bg-white rounded-2xl h-full justify-center p-5 flex flex-col gap-3 items-center
+            sm:h-auto">
+                <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="clipCircle">
+                            <circle cx="60" cy="60" r="55" />
+                        </clipPath>
+                    </defs>
+                    <circle cx="60" cy="60" r="55" stroke="#D1D5DB" strokeWidth="2" fill="none" />
+                    <g clipPath="url(#clipCircle)" fill="#9CA3AF">
+                        <circle cx="60" cy="42" r="18" />
+                        <path d="M10 110c5-30 30-45 50-45s45 15 50 45V120H10z" />
+                    </g>
+
+                    <circle cx="90" cy="90" r="15" fill="#2563EB" />
+
+                    <g fill="white">
+                        <rect x="82" y="86" width="16" height="10" rx="2" />
+                        <circle cx="90" cy="91" r="3" fill="#2563EB" />
+                        <rect x="86" y="83" width="8" height="3" rx="1" />
+                    </g>
+                </svg>
+
+                <h1 className="text-2xl font-bold ">Complete Your Profile</h1>
+                <hr className="w-full text-gray-300" />
+                    <p className="text-center text-sm">upload a profile photo. This is required for some reason you can escape it for now but you need it before you can sell products</p>
+                    <p className="text-center text-sm"> ljflkajfk jaj kjsklfj klajf kasjfk jslj lksj fjs kjflsk jfj slfj ksaj j kajfl jak </p>
+                    <div>
+                        <button id="skip_now_signup" className="border p-2.5 rounded font-semibold hover:bg-gray-300">Skip for Now</button>
+                        <button className="border p-2.5 rounded font-semibold bg-blue-400 text-white hover:bg-blue-500">Upload Photo</button>
+                    </div>
+            </div>
+        </div>
+    );
+}

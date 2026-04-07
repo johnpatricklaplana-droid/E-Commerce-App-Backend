@@ -1,0 +1,75 @@
+import { useState } from "react";
+
+export default function ImageUploader() {
+
+    const [files, setFiles] = useState([]);
+      
+    const holdFiles = (e) => {
+        const newFiles = Array.from(e.target.files);
+ 
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    };  
+
+    const removeImage = (indexToRemove) => {
+        setFiles(prevFiles => prevFiles.filter((_, i) => i !== indexToRemove));
+    };
+
+    return (
+        <div class="p-3 overflow-hidden flex flex-col items-start gap-1.5">
+            <div>
+                <h1 class="text-lg font-bold">Product Image</h1>
+                <p class="text-sm font-light">Upload a clear image of your product</p>
+            </div>
+            <label for="imageInput" class="border cursor-pointer border-dashed flex flex-col items-center p-3 rounded-2xl w-full border-gray-400">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5" />
+
+
+                    <path d="M4 16L9 11L13 15L16 12L20 16" stroke="currentColor" stroke-width="1.5" fill="none" />
+
+
+                    <path d="M12 14V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M9.5 8.5L12 6L14.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <p class="text-[14px]">Click me to browse file</p>
+                <p class="text-[12px]">PNG, JPG up to 5mb</p>
+            </label>
+            <input id="imageInput" onChange={holdFiles} class="hidden" type="file" multiple />
+            <div id="imagesPreviewContainer" class="flex gap-1.5 p-1.5 rounded-2xl border-dashed sm:w-62.5 border border-gray-400 sm:h-25 items-center overflow-x-auto justify-start">
+                
+                {files.length === 0 && <p class="text-sm text-center w-full">Selected images will appear here</p>}
+
+                {Array.from(files).map((file, index) => (
+                    <div 
+                        key={index}
+                        id="imagePreview" 
+                        data-image-id={index} 
+                        className="h-full opacity-100 scale-100 transition-all duration-300 rounded-2xl relative bg-blue-100 sm:w-25 shrink-0"
+                    >
+                        <button 
+                            onClick={() => removeImage(index)}
+                            class="absolute cursor-pointer p-1 hover:bg-red-600 rounded-[50%] hover:scale-125 transition duration-300 top-1 right-1"
+                        >
+                            <svg 
+                                width="12" height="12"
+                                viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                                <path d="M6 6L18 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                            </svg>
+                        </button>
+                        <img 
+                            class="h-full w-full object-cover rounded-2xl" 
+                            src={URL.createObjectURL(file)} alt="" 
+                        />
+                    </div>
+                ))}
+                
+            </div>
+        </div>
+    );
+
+}

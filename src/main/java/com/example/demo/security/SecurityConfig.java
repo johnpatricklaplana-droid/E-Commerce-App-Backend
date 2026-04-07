@@ -29,51 +29,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .cors(cors -> cors.configurationSource(CORSConfiguration()))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/signup/costumer", 
-                                "/login/costumer", 
-                                "/signup/seller", 
-                                "/login/seller",
-                                "/login/admin",
-                                "/Frontend/index.html",
-                                "/Frontend/src/pages/landing-page.js",
-                                "/Frontend/src/main.js",
-                                "/Frontend/public/vite.svg",
-                                "/Frontend/src/style.css",
-                                "/Frontend/seller-signup-page.html",
-                                "/Frontend/src/pages/seller_signup.js",
-                                "/Frontend/src/api/api.js",
-                                "/Frontend/src/utils/boilerplate_code_handler.js",
-                                "/Frontend/costumer-signup-page.html",
-                                "/Frontend/src/pages/costumer_signup.js",
-                                "/Frontend/seller-login-page.html",
-                                "/Frontend/costumer-login-page.html",
-                                "/Frontend/public/cuties.png",
-                                "/Frontend/public/hero_background.png",
-                                "/Frontend/src/pages/seller_signup.js",
-                                "/business-registration-file/seller",
-                                "/Frontend/admin-login-page.html",
-                                "/Frontend/src/pages/admin_login.js").permitAll() 
-            .requestMatchers(
-                "/Frontend/add-profile-seller.html",
-                "/Frontend/add-business-registration-file.html",
-                "/business-registration-file/seller",
-                "/seller/bank-account",
-                "/Frontend/add-seller-bank-account.html", 
-                "/seller/add-profile-picture",
-                "/Frontend/seller-dashboard.html",
-                "/seller/product", 
-                "/seller/business-registration-file"
-            )
-            .hasRole("SELLER")
-            .requestMatchers(
-                "/admin/business-registration-file",
-                "/business-registration-file/{fileName}",
-                "/Frontend/admin-seller-registration-document-storage.html",
-                "/admin/business-registration-file/{id}/accept",
-                "/admin/business-registration-file/{id}/reject"
-            )
-            .hasRole("ADMIN")
-            .anyRequest().authenticated()
+            .requestMatchers("/**").permitAll()
         )
         .addFilterBefore(jwtService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
 
