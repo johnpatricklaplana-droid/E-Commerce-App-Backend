@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import com.example.demo.entity.Category;
 
@@ -122,7 +124,10 @@ public class SellerService {
 
         saveSeller(seller, locationId);
 
-        return jwt.generateToken(seller.getId().toString());
+        Set<String> roles = new HashSet<>();
+        roles.add(User_Role.ROLE_SELLER.toString());
+
+        return jwt.generateToken(seller.getId().toString(), roles);
      
     }
 

@@ -19,7 +19,6 @@ import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.ResponseDTO.businessRegistrationDocumentDTO;
 import com.example.demo.Service.user.AdminService;
 import com.example.demo.Service.user.UserAuthService;
-import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.User;
 import com.example.demo.enums.User_Role;
 
@@ -31,27 +30,15 @@ public class AdminController {
 
     @Autowired
     AdminService adminService;
-    
-    @PostMapping("/login/admin")
-    public ResponseEntity<SimpleResponseDTO> login (@RequestBody User user) {
-        String token = userAuthService.login(user, User_Role.ROLE_ADMIN);
 
-        String cookie = "jwt-token=" + token + "; httpOnly; path=/; Max-Age=3600; SameSite=Strict";
-
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .header("Set-Cookie", cookie)
-            .body(new SimpleResponseDTO("login success", 200));
-    }
-
-    @GetMapping("/admin/business-registration-file")
+    @GetMapping("/api/admin/business-registration-file")
     public ResponseEntity<List<businessRegistrationDocumentDTO>> getSellerBusinessRegistrationFile(Pageable pageable) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(adminService.getSellerBusinessRegistrationFile(pageable));
     }
 
-    @PatchMapping("/admin/business-registration-file/{id}/accept")
+    @PatchMapping("/api/admin/business-registration-file/{id}/accept")
     public ResponseEntity<SimpleResponseDTO> acceptSellerBusinessRegistrationFile (@PathVariable int id) {
         adminService.acceptSellerBusinessRegistrationFile(id);
         return ResponseEntity
@@ -59,7 +46,7 @@ public class AdminController {
             .body(new SimpleResponseDTO("seller accepted seller can now sell some products", 200));
     }
 
-    @PatchMapping("/admin/business-registration-file/{id}/reject")
+    @PatchMapping("/api/admin/business-registration-file/{id}/reject")
     public ResponseEntity<SimpleResponseDTO> rejectSellerBusinessRegistrationFile (@PathVariable int id) {
         adminService.rejectSellerBusinessRegistrationFile(id);
         return ResponseEntity

@@ -15,11 +15,14 @@ export default function AdminLogin () {
 
     const login = async () => {
         
-        const url = "http://localhost:8080/login/admin";
+        const url = "http://localhost:8080/api/auth/login";
         const body = formData;
 
-        await POST(url, body);
-
+        const result = await POST(url, body);
+ 
+        if(result.status === 200) {
+            // TODO: 
+        }
     };
 
     return (

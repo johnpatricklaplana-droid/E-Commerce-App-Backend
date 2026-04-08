@@ -17,7 +17,7 @@ import com.example.demo.exceptions.ResourceNotFoundException;
 @Controller
 public class FileController {
     
-    @GetMapping("/business-registration-file/{fileName}")
+    @GetMapping("/api/admin/business-registration-file/{fileName}")
     public ResponseEntity<UrlResource> getMethodName(@PathVariable String fileName) throws IOException {
         
         Path filePath = Paths.get("./uploads", fileName);

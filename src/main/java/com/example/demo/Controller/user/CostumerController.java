@@ -26,33 +26,12 @@ public class CostumerController {
     @Autowired
     UserAuthService userAuthService;
     
-    @PostMapping("/signup/costumer")
+    @PostMapping("/api/auth/costumer-signup")
     public ResponseEntity<String> signup (@RequestBody costumer_InfoDTO dto) {
         service.signup(dto);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body("sign up successfully");
-    }
-
-    @PostMapping("/login/costumer")
-    public ResponseEntity<String> login(@RequestBody User user, 
-                                               HttpServletResponse response) {
-
-        String token = userAuthService.login(user, User_Role.ROLE_COSTUMER);
-
-        ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
-            .httpOnly(true)
-            .secure(false)
-            .path("/")
-            .maxAge((long)60 * 60)
-            .sameSite("Strict")
-            .build();
-        
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        return ResponseEntity
-            .status(200)
-            .body("login success");
     }
 
 }

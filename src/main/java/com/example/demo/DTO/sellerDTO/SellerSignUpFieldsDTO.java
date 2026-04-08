@@ -11,8 +11,8 @@ import lombok.Setter;
 public class SellerSignUpFieldsDTO {
     
     // Seller
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 
@@ -25,8 +25,8 @@ public class SellerSignUpFieldsDTO {
 
     public Seller toSeller () {
         Seller seller = new Seller();
-        seller.setFirst_name(first_name);
-        seller.setLast_name(last_name);
+        seller.setFirst_name(firstName);
+        seller.setLast_name(lastName);
         seller.setEmail(email);
         seller.setPassword(password);
 

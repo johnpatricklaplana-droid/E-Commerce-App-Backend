@@ -36,7 +36,7 @@ public class SellerController {
     @Autowired
     UserAuthService userAuthService;
     
-    @PostMapping("/signup/seller")
+    @PostMapping("/api/auth/seller-signup")
     public ResponseEntity<SimpleResponseDTO> signup (@RequestBody SellerSignUpFieldsDTO sellerInfo,
         HttpServletResponse response
     ) {
@@ -57,25 +57,7 @@ public class SellerController {
             .body(new SimpleResponseDTO("signup success", 201));
     }
 
-    @PostMapping("/login/seller")
-    public ResponseEntity<SimpleResponseDTO> login (@RequestBody User user) {
-        String token = userAuthService.login(user, User_Role.ROLE_SELLER);
-
-        ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
-            .httpOnly(true)
-            .secure(false)
-            .path("/")
-            .maxAge((long)60 * 60)
-            .sameSite("Strict")
-            .build();
-
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .body(new SimpleResponseDTO("login success", 200));
-    }
-
-    @PostMapping("/seller/business-registration-file")
+    @PostMapping("/api/seller/business-registration-file")
     public ResponseEntity<SimpleResponseDTO> insertBusinessRegistrationFile (@RequestParam("file") MultipartFile file) {
         
         if(!sellerService.saveBusinessRegistrationFile(file)) {
@@ -90,7 +72,7 @@ public class SellerController {
 
     }
 
-    @PostMapping("/seller/add-profile-picture")
+    @PostMapping("/api/seller/profile-picture")
     public ResponseEntity<SimpleResponseDTO> saveSellerProfilePicture(@RequestParam("file") MultipartFile file) {
         sellerService.saveSellerProfilePicture(file);
         return ResponseEntity
@@ -98,7 +80,7 @@ public class SellerController {
             .body(new SimpleResponseDTO("success", 201));
     }
 
-    @PostMapping("/seller/bank-account")
+    @PostMapping("/api/seller/bank-account")
     public ResponseEntity<SimpleResponseDTO> saveSellerBankAccount(@RequestBody Seller_Bank_Account bankAccount) {
         sellerService.saveSellerBankAccount(bankAccount);
         return ResponseEntity
@@ -106,7 +88,7 @@ public class SellerController {
             .body(new SimpleResponseDTO("successful one", 201));
     }
     
-    @PostMapping("/seller/product") 
+    @PostMapping("/api/seller/product") 
     public ResponseEntity<SimpleResponseDTO> addProduct(
         @RequestPart("files") List<MultipartFile> files, @RequestPart("productData") ProductDTO product
     ) throws IOException {

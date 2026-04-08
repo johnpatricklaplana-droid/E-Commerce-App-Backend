@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.crypto.SecretKey;
 
@@ -21,11 +22,12 @@ public class Jwt {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
    
-    public String generateToken (String userId) {
+    public String generateToken (String userId, Set<String> role) {
         long expiration_time = 3600000;
 
         return Jwts.builder()
             .subject(userId)
+            .claim("role", role)
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + expiration_time))
             .signWith(getSigningKey())

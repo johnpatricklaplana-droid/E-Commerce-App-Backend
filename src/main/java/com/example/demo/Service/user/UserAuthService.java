@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Service.Jwt;
 import com.example.demo.entity.User;
-import com.example.demo.enums.User_Role;
-import com.example.demo.exceptions.UnAuthorizedException;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
 
@@ -29,7 +27,7 @@ public class UserAuthService {
     @Autowired
     private CredentialsValidator credentialsValidator;
 
-    public String login (User user, User_Role role) {
+    public String login (User user) {
           
         credentialsValidator.validateEmail(user.getEmail());
         credentialsValidator.validatePassword(user.getPassword());
@@ -40,16 +38,14 @@ public class UserAuthService {
         
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
 
-        Set<String> authorities = userDetails.getAuthorities()
+        Set<String> roles = userDetails.getAuthorities()
                                     .stream()
                                     .map(GrantedAuthority::getAuthority)
                                     .collect(Collectors.toSet());
 
-        if(!authorities.contains(role.toString())) {
-            throw new UnAuthorizedException("no no no");
-        }
+        String userId = userDetails.getUserId().toString();
 
-        return jwt.generateToken(userDetails.getUserId().toString());
+        return jwt.generateToken(userId, roles);
 
     }
 

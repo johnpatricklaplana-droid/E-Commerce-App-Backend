@@ -11,6 +11,7 @@ import SellerAddProfilePic from "./components/SellerAddProfilePic";
 import SellerLogin from "./components/SellerLogin";
 import SellerSignup from "./components/SellerSignup";
 import CostumerLogin from "./components/CostumerLogin";
+import AddSellerBankAccount from "./components/AddSellerBankAccount";
 
 export default function App() {
     return (
@@ -28,6 +29,7 @@ export default function App() {
                 <Route path="/seller-login" element={<SellerLogin/>} />
                 <Route path="/seller-signup" element={<SellerSignup/>} />
                 <Route path="/costumer-login" element={<CostumerLogin/>} />
+                <Route path="/seller-bank-account" element={<AddSellerBankAccount/>} />
             </Routes>
         </BrowserRouter>
     );

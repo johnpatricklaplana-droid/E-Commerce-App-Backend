@@ -29,7 +29,19 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .cors(cors -> cors.configurationSource(CORSConfiguration()))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/**").permitAll()
+            .requestMatchers(
+                "/api/auth/**",
+                "/api/public/**"
+            ).permitAll()
+            .requestMatchers(
+                "/api/seller/**"
+            ).hasRole("SELLER")
+            .requestMatchers(
+                "/api/costumer/**"
+            ).hasRole("COSTUMER")
+            .requestMatchers(
+                "/api/admin/**"
+            ).hasRole("ADMIN")
         )
         .addFilterBefore(jwtService(), org.springframework.security.web.access.intercept.AuthorizationFilter.class);
 
@@ -57,7 +69,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        config.setAllowedMethods(List.of("*"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(List.of("*"));
 

@@ -7,8 +7,8 @@ export default function Documents() {
 
     useEffect(() => {
         const getFiles = async () => {
-            const result = await GET("http://localhost:8080/admin/business-registration-file?page=0&size=10");
-       console.log(result);
+            const result = await GET("http://localhost:8080/api/admin/business-registration-file?page=0&size=10");
+       
             setFiles((prevFiles) => [...prevFiles, ...result]);
         };
         

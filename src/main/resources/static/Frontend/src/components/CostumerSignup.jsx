@@ -21,16 +21,17 @@ export default function CostumerSignup () {
         setFormData(prev => ({...prev, [id]: value}));
     };
 
-    const signUp = () => {
+    const signUp = (e) => {
+        e.preventDefault();
         const requestBody = formData;
-        const url = "http://localhost:8080/signup/costumer"
+        const url = "http://localhost:8080/api/auth/costumer-signup"
 
         POST(url, requestBody);
     }
 
     return (
         <div className="h-screen justify-center flex items-center bg-blue-950">
-        <form id="costumer_signup_form" className="flex sm:w-96 h-150 sm:rounded-2xl sm:px-5 items-center gap-1.5 py-2.5 shadow-2xl px-1.5 w-screen flex-col" action="">
+        <form onSubmit={signUp} id="costumer_signup_form" className="flex sm:w-96 h-150 sm:rounded-2xl sm:px-5 items-center gap-1.5 py-2.5 shadow-2xl px-1.5 w-screen flex-col" action="">
             <h1 
                 className="text-white text-center text-lg sm:text-2xl font-bold"
             >Create
@@ -98,6 +99,7 @@ export default function CostumerSignup () {
                     className="bg-white w-full outline-none rounded border-gray-400 border px-2.5 py-2.5"
                 >
 
+                    <option value="">Select your City</option>
                     <option value="Cebu City">Cebu City</option>
                     <option value="Davao City">Davao City</option>
                     <option value="Makati City">Makati City</option>
@@ -119,6 +121,7 @@ export default function CostumerSignup () {
                     className="text-black w-full outline-none rounded border-gray-400 border px-2.5 py-2.5 bg-white"
                 >
 
+                    <option value="">Select a province</option>
                     <option value="Cebu">Cebu</option>
                     <option value="Davao del Sur">Davao del Sur</option>
                     <option value="Metro Manila">Metro Manila</option>
@@ -148,9 +151,11 @@ export default function CostumerSignup () {
                     value={formData.country} 
                     onChange={handleChange}
                     type="text" 
+                    required
                     className="bg-white w-full outline-none rounded border-gray-400 border px-2.5 py-2.5" placeholder="country"
                 >
 
+                    <option value="">Select your country</option>
                     <option value="Philippines">Philippines</option>
 
                 </select>
@@ -196,7 +201,6 @@ export default function CostumerSignup () {
             </div>
 
             <button 
-                onClick={() => signUp()} 
                 type="submit" 
                 className="w-full px-2.5 py-2.5 hover:bg-blue-600 bg-blue-500 mt-1.5 text-white"
             >Register</button>

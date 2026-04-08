@@ -13,11 +13,15 @@ export default function SellerLogin () {
         setFormData(prev => ({...prev, [id]: value}));
     };
 
-    const login = () => {
-        const url = "http://localhost:8080/login/seller";
+    const login = async () => {
+        const url = "http://localhost:8080/api/auth/login";
         const body = formData;
-        console.log(body);
-        POST(url, body);
+        
+        const result = await POST(url, body);
+
+        if(result.status === 200) {
+            globalThis.location.href = "/seller-dashboard";
+        }
     };
 
     return (
@@ -119,10 +123,9 @@ export default function SellerLogin () {
                     
                     don't have an account?
                     <a  
-                        className="text-blue-600 hover:underline" href="#"
+                        className="text-blue-600 hover:underline" href="seller-signup"
                     > 
                         Sign up
-
                     </a>
                 </p>
             </div>

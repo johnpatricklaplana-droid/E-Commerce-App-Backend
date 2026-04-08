@@ -23,7 +23,7 @@ export default function SellerSignup () {
     };
 
     const login = () => {
-        const url = "http://localhost:8080/signup/seller";
+        const url = "http://localhost:8080/api/auth/seller-signup";
         const body = formData;
 
         POST(url, body);

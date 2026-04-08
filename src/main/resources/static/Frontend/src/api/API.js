@@ -5,7 +5,8 @@ export async function POST (url, request_body) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(request_body)
+            body: JSON.stringify(request_body),
+            credentials: "include"
         });
 
         const response = await result.json();
@@ -20,7 +21,8 @@ export async function PostFile(url, file) {
     try {
         const result = await fetch(url, {
             method: "POST",
-            body: file
+            body: file,
+            credentials: "include"
         });
     
         const response = await result.json();
@@ -37,7 +39,8 @@ export async function GET(url) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            credentials: "include"
         });
 
         const response = await result.json();
@@ -50,7 +53,8 @@ export async function GET(url) {
 export async function PATCH(url) {
     try {
         const result = await fetch(url, {
-            method: "PATCH"
+            method: "PATCH",
+            credentials: "include"
         });
 
         const response = await result.json();
