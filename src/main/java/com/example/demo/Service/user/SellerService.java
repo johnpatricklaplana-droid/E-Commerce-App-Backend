@@ -49,7 +49,7 @@ import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
-import com.example.demo.DTO.productDTO.ProductDTO;
+import com.example.demo.DTO.productDTO.CreateProductRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
@@ -266,7 +266,7 @@ public class SellerService {
     }
 
     @Transactional
-    public void addProduct(List<MultipartFile> files ,ProductDTO product) throws IOException {
+    public void addProduct(List<MultipartFile> files ,CreateProductRequest product) throws IOException {
         
         if(product.getProductName().equals("") || product.getProductName() == null) {
             throw new IllegalArgumentException("product name is required");

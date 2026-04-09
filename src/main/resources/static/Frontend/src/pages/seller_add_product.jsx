@@ -72,7 +72,7 @@ export default function SellerAddProduct() {
                                     <div className="flex p-3 border-r border-slate-400 flex-col gap-3">
                                         <div className="">
                                             <Text variant={"label"}>Product Name</Text>
-                                            <Input id={"productName"} variant={"default"} placeholder={"Enter product name"} fullWidth={true}></Input>
+                                            <Input id={"productName"} handleChange={handleChange} variant={"default"} placeholder={"Enter product name"} fullWidth={true}></Input>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
-import com.example.demo.DTO.productDTO.ProductDTO;
+import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
@@ -90,7 +90,7 @@ public class SellerController {
     
     @PostMapping("/api/seller/product") 
     public ResponseEntity<SimpleResponseDTO> addProduct(
-        @RequestPart("files") List<MultipartFile> files, @RequestPart("productData") ProductDTO product
+        @RequestPart("files") List<MultipartFile> files, @RequestPart("productData") CreateProductRequest product
     ) throws IOException {
         sellerService.addProduct(files, product);
         return ResponseEntity

@@ -1,8 +1,37 @@
 import Sidebar from "../components/Sidebar";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import Text from "../components/Text";
+import CommonSvgIcon from "../components/CommonIcon";
+import { useEffect, useState } from "react";
+import { GET } from "../api/API";
 
 export default function SellerProducts () {
+
+    const [product, setProduct] = useState([]);
+
+    useEffect(() => {
+        const url = "http://localhost:8080/api/seller/product";
+
+        const fetchProduct = async () => {
+           const result = await GET(url);
+           const cleanResult  = result.map(res => {
+                return {
+                    productName: res.productName,
+                    price: res.price,
+                    productDescription: res.productDescription,
+                    categories: res.categories || [],
+                    images: res.images || [],
+                    variantions: res.variantions
+                }
+           });
+           setProduct(prev => [...prev, ...cleanResult]);
+        }
+        
+        fetchProduct();
+    }, []);
+
+    console.log(product);
 
     return (
         <div className="bg-blue-100 grid grid-cols-[270px_1fr] h-screen">
@@ -10,10 +39,10 @@ export default function SellerProducts () {
             <div className="h-full overflow-auto w-full">
                 <div className="flex p-4 bg-white z-50 sticky top-0 items-center justify-between w-full">
                     <h1 className="text-2xl font-semibold font-sans">Manage Products</h1>
-                    <a href="" className="bg-slate-900 cursor-pointer transition-transform duration-500 hover:-translate-y-1.5 hover:bg-slate-700 font-sans text-slate-300 flex py-1.5 px-3 rounded-[10px]">
+                    <a href="/add-product" className="bg-slate-900 cursor-pointer transition-transform duration-500 hover:-translate-y-1.5 hover:bg-slate-700 font-sans text-slate-300 flex py-1.5 px-3 rounded-[10px]">
                         <svg className="h-6 w-6 flex-none text-slate-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                            <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                            <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         </svg>
                         Add New Product
                     </a>
@@ -23,8 +52,8 @@ export default function SellerProducts () {
                         <div className="w-60 border-2 bg-white rounded-2xl shadow-2xl p-4 border-slate-800">
                             <div className="flex items-center gap-1.5">
                                 <svg className="h-6 w-6 flex-none mb-2 text-slate-800" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M6 6H21L20 14H7L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-                                    <path d="M6 6L5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M6 6H21L20 14H7L6 6Z" stroke="currentColor" strokeWidth="2" stroke-linejoin="round" />
+                                    <path d="M6 6L5 3H2" stroke="currentColor" strokeWidth="2" stroke-linecap="round" />
                                     <circle cx="9" cy="20" r="1.5" fill="currentColor" />
                                     <circle cx="18" cy="20" r="1.5" fill="currentColor" />
                                 </svg>
@@ -36,11 +65,11 @@ export default function SellerProducts () {
                             <div className="flex items-center gap-1.5">
                                 <svg className="h-6 w-6 flex-none text-slate-800" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 
-                                    <path d="M4 7L12 3L20 7V17L12 21L4 17V7Z" stroke="currentColor" stroke-width="2"
-                                        stroke-linejoin="round" />
+                                    <path d="M4 7L12 3L20 7V17L12 21L4 17V7Z" stroke="currentColor" strokeWidth="2"
+                                        strokeLinejoin="round" />
 
-                                    <path d="M8 9L16 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M16 9L8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M8 9L16 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                    <path d="M16 9L8 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                                 </svg>
                                 <p className="font-semibold">Out of Stock</p>
                             </div>
@@ -70,42 +99,18 @@ export default function SellerProducts () {
                             <Button>Search</Button>
                         </div>
                         <div className="grid grid-cols-3 mt-10 gap-4">
-                            <div className="bg-red-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-orange-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-blue-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-green-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-pink-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
-                            <div className="bg-yellow-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">
-
-                            </div>
+                            {product.map((prod, i) => 
+                                <div key={i} className="rounded-2xl flex flex-col items-center justify-start h-87.5 transition duration-500 hover:scale-105 shadow-2xl">
+                                    <img className="w-full rounded-t-2xl h-[70%]" src={`http://localhost:8080/api/seller/product-image/${prod.images[0].imagesUrl}`}  alt=""/>
+                                    <div className="w-full p-3">
+                                        <Text position={"start"} variant={"semiSmall"}>{prod.productName}</Text>
+                                        <Text color={"orange"} variant={"bold"}>{`$${prod.price}`}</Text>
+                                    </div>
+                                    <div className="flex justify-end w-full px-3">
+                                        <CommonSvgIcon width={28} height={28} type={"threeDot"}></CommonSvgIcon>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
