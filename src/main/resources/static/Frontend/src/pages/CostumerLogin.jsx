@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { POST } from "../api/api";
+import { POST } from "../api/API";
+import Button from "../components/Button";
 
 export default function CostumerLogin () {
 
@@ -17,7 +18,7 @@ export default function CostumerLogin () {
         e.preventDefault();
         const url = "http://localhost:8080/api/auth/login";
         const body = formData;
-          console.log(body);
+         
         POST(url, body);
     };
 
@@ -41,7 +42,7 @@ export default function CostumerLogin () {
                     <input onChange={handleChange} id="email" className="py-3 bg-blue-100 w-full px-6 rounded-2xl outline-0" type="email" placeholder="Email address" />
                     <input onChange={handleChange} id="password" className="py-3 bg-blue-100 w-full px-6 rounded-2xl outline-0" type="password" name="" placeholder="Password" />
                             <p className="text-end text-xs">Forgot passowrd?</p>
-                            <button type="submit" className="font-bold bg-blue-600 py-3 px-6 rounded-2xl text-white hover:bg-blue-700">Login</button>
+                            <Button onClick={login}>Login</Button>
                             <div className="flex gap-3 justify-center items-center w-full px-4">
                                 <hr className="w-full" /><span className="whitespace-nowrap text-sm">Or login with</span>
                                     <hr className="w-full" />

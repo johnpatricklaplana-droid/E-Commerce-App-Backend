@@ -1,17 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SellerAddProduct from "./components/seller_add_product";
-import SellerBusinessRegistrationFile from "./components/sellerBusinessRegistrationFIle";
-import SellerRegistrationFileStorage from "./components/AdminSellerRegistrationFileStorage";
-import SellerDashBoard from "./components/SellerDashboard";
-import Orders from "./components/SellerOrders";
-import SellerProducts from "./components/SellerProducts";
-import CostumerSignup from "./components/CostumerSignup";
-import AdminLogin from "./components/AdminLogin";
-import SellerAddProfilePic from "./components/SellerAddProfilePic";
-import SellerLogin from "./components/SellerLogin";
-import SellerSignup from "./components/SellerSignup";
-import CostumerLogin from "./components/CostumerLogin";
-import AddSellerBankAccount from "./components/AddSellerBankAccount";
+import SellerAddProduct from "./pages/seller_add_product";
+import SellerBusinessRegistrationFile from "./pages/sellerBusinessRegistrationFIle";
+import SellerRegistrationFileStorage from "./pages/AdminSellerRegistrationFileStorage";
+import SellerDashBoard from "./pages/SellerDashboard";
+import Orders from "./pages/SellerOrders";
+import SellerProducts from "./pages/SellerProducts";
+import CostumerSignup from "./pages/CostumerSignup";
+import AdminLogin from "./pages/AdminLogin";
+import SellerAddProfilePic from "./pages/SellerAddProfilePic";
+import SellerLogin from "./pages/SellerLogin";
+import SellerSignup from "./pages/SellerSignup";
+import CostumerLogin from "./pages/CostumerLogin";
+import AddSellerBankAccount from "./pages/AddSellerBankAccount";
 
 export default function App() {
     return (

@@ -1,6 +1,11 @@
-import Sidebar from "./AddProductSidebar";
+import Sidebar from "../components/Sidebar";
 import ImageUploader from "./ImageUploader";
 import { useState } from "react";
+import { PostFile } from "../api/API"
+import Button from "../components/Button";
+import LeftArrow from "../components/LeftArrow";
+import Text from "../components/Text";
+import Input from "../components/Input";
 
 export default function SellerAddProduct() {
 
@@ -24,7 +29,26 @@ export default function SellerAddProduct() {
     };
     
     const submit = () => {
-        console.log(formData);
+        const url = "http://localhost:8080/api/seller/product"
+        const body = new FormData();
+        
+        formData.images.forEach(image => {
+            body.append("files", image);
+        });
+        
+        body.append(
+            "productData",
+            new Blob([JSON.stringify({
+                "productName": formData.productName,
+                "price": formData.price,
+                "color": formData.color,
+                "variant": formData.variant,
+                "categories": formData.categories,
+                "description": formData.description
+            })], { type: "application/json" })
+        );
+     console.log(formData);
+        PostFile(url, body);
     };
 
     return (
@@ -35,18 +59,10 @@ export default function SellerAddProduct() {
             <div className="p-5 w-full flex min-h-0">
                 <div className="bg-white/50 p-5 min-h-0 h-full flex overflow-auto flex-col gap-4 w-full rounded-2xl">
                     <div className="relative">
-                        <button
-                            className="flex bg-white transition hover:scale-105 duration-300 hover:bg-blue-100 cursor-pointer absolute text-[14px] items-center text-slate-800 border-slate-400 rounded-2xl px-4 py-1.5 border gap-1.5"
-                            onclick="history.back()">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Back to Products
-                        </button>
+                        <LeftArrow hover={"grow"} className="w-8 h-8" label={"Back to products"} />
                         <div>
-                            <h1 className="text-center font-bold font-sans text-slate-800 text-[24px]">Add New Product</h1>
-                            <p className="text-center text-sm">Fill in the details below to add new product to your store</p>
+                            <Text position={"center"} variant={"heading1"}>Add New Product</Text>
+                            <Text position={"center"} variant={"small"}>Fill in the details below to add new product to your store</Text>
                         </div>
                     </div>
                     <main className="bg-white p-5 rounded-2xl">
@@ -55,43 +71,38 @@ export default function SellerAddProduct() {
                                 <div className="grid gap-3 sm:grid-cols-[550px_1fr]">
                                     <div className="flex p-3 border-r border-slate-400 flex-col gap-3">
                                         <div className="">
-                                            <label className="text-[14px] font-semibold" htmlFor="">Product Name<span className="text-red-600">*</span></label>
-                                            <input id="productName" onChange={handleChange} className="w-full border-slate-400 border text-sm p-1.5 rounded-[10px] outline-0" type="text"
-                                                placeholder="Enter product name" />
+                                            <Text variant={"label"}>Product Name</Text>
+                                            <Input id={"productName"} variant={"default"} placeholder={"Enter product name"} fullWidth={true}></Input>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
-                                                <label className="text-[14px] font-semibold" htmlFor="">Price <span className="text-red-600">*</span></label>
+                                                <Text variant={"label"}>Price</Text>
                                                 <div className="flex">
                                                     <span className="bg-gray-200 rounded-l-[10px] flex items-center px-2">$</span>
-                                                    <input id="price" onChange={handleChange} className="w-full border-slate-400 text-sm border-l-0 p-1.5 rounded-r-[10px] outline-0 border"
-                                                        type="text" placeholder="0.00" />
+                                                    <Input id={"price"} handleChange={handleChange} placeholder={"Enter price"} fullWidth={true} variant={"default"}>Price</Input>
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="text-[14px] font-semibold" htmlFor="">Color</label>
-                                                <input id="color" onChange={handleChange} className="w-full border-slate-400 text-sm outline-0 p-1.5 rounded-[10px] border" type="text"
-                                                    placeholder="Enter color (e.g.., Red, Blue)" />
+                                                <Text variant={"label"}>Color</Text>
+                                                <Input id={"color"} handleChange={handleChange} placeholder={"Enter color"} variant={"default"} fullWidth={true}></Input>
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-[14px] font-semibold" htmlFor="">Variant</label>
+                                            <Text variant={"label"}>Variant</Text>
                                             <div>
-                                                <input id="variant" onChange={handleChange} className="w-full border-slate-400 text-sm outline-0 p-1.5 rounded-[10px] border" type="text"
-                                                    placeholder="Enter variant (e.g.., Small, 32gb)" />
-                                                    <p className="text-[12px] font-extralight">Examples Size, Storage, Style, etc.</p>
+                                                <Input id={"variant"} placeholder={"Enter some"} fullWidth={true} handleChange={handleChange} variant={"default"}></Input>
+                                                <Text variant={"muted"}>Examples Size, Storage, Style, etc.</Text>
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-[14px] font-semibold" htmlFor="">Categories <span className="text-red-600">*</span></label>
-                                            <p className="text-[12px] font-extralight">Select one or more categories that apply to this product.</p>
-                                            <select id="categories" onChange={handleChange} className="w-full text-sm border-slate-400 outline-0 p-1.5 rounded-[10px] border">
+                                            <Text variant={"label"}>categories</Text>
+                                            <Text variant={"muted"}>Select one or more categories that apply to this product.</Text>
+                                            <Input id={"categories"} variant={"default"} fullWidth={true} type={"select"}>
                                                 <option value="TODO">TODO</option>
                                                 <option value="TODO">TODO</option>
                                                 <option value="TODO">TODO</option>
-                                                <option value="TODO">TODO</option>
-                                            </select>
-                                            <div className="mt-3">
+                                            </Input>
+                                            <div className="mt-3 flex gap-1">
                                                 <span className="text-[12px] font-semibold font-sans text-blue-500 bg-blue-200/80 rounded-2xl p-2.5">Electronics
                                                     <span>X</span></span>
                                                 <span className="text-[12px] font-semibold font-sans text-blue-500 bg-blue-200/80 rounded-2xl p-2.5">Clothing
@@ -106,12 +117,12 @@ export default function SellerAddProduct() {
 
                                 </div>
                                 <div>
-                                    <label htmlFor="">Description</label>
-                                    <textarea id="description" onChange={handleChange} className="border-slate-400 rounded-[10px] p-3 text-sm border w-full h-32 resize-none outline-0" placeholder="Enter product description, features, and other important details..." maxlength="500"></textarea>
+                                    <Text variant={"label"}>description</Text>
+                                    <Input id={"description"} type={"textarea"} handleChange={handleChange} variant={"default"} fullWidth={true}></Input>
                                 </div>
                                 <div className="flex gap-3 justify-end">
-                                    <button className="cursor-pointer shadow-2xl hover:bg-blue-100 border-slate-400 border-2 rounded-[10px] transition hover:scale-105 duration-300 px-4 py-2">Cancel</button>
-                                    <button onClick={submit} className="cursor-pointer shadow-2xl hover:bg-black border-slate-400 bg-slate-900 text-white transition hover:scale-105 duration-300 border-2 rounded-[10px] px-4 py-2">Save Product</button>
+                                    <Button variant="secondary">Cancel</Button>
+                                    <Button onClick={submit}>Submit</Button>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { GET } from "../api/api";
+import { GET } from "../api/API";
+import Button from "../components/Button";
 
 export default function Documents() {
 
@@ -12,7 +13,7 @@ export default function Documents() {
             setFiles((prevFiles) => [...prevFiles, ...result]);
         };
         
-        getFiles();
+        // getFiles();
     }, []);
 
     return (
@@ -35,7 +36,7 @@ export default function Documents() {
                         <option value="accepted">Accepted</option>
                         <option value="rejected">Rejected</option>
                     </select>
-                    <button className="rounded-2xl bg-blue-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800">Search</button>
+                    <Button>Search</Button>
                 </div>
             </div>
 

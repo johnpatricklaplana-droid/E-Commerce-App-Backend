@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { POST } from "../api/api";
+import { POST } from "../api/API";
+import Button  from "../components/Button";
+import Text from "../components/Text";
+import Input from "../components/Input";
 
 export default function AddSellerBankAccount () {
 
@@ -32,23 +35,23 @@ export default function AddSellerBankAccount () {
                         <rect x="5" ry="2" rx="2" y="15" width="24" height="3" fill="#93c5fd" />
                         <rect x="5" ry="2" rx="2" y="20" width="24" height="3" fill="#93c5fd" />
                     </svg>
-                    <h1 className="text-2xl">Bank Account Details</h1>
+                    <Text variant={"heading3"}>Bank Account Details</Text>
                 </div>
                 <div className="flex gap-1 flex-col">
-                    <label className="text-sm" htmlFor="">Bank Account Number</label>
-                    <input onChange={handleChange} required id="bank_account_number" className="p-2.5 rounded bg-blue-100 outline-0" type="text" />
+                    <Text variant={"label"}>Bank Account Number</Text>
+                    <Input handleChange={handleChange} variant={"default"} id="bank_account_number" type={"text"} />
                 </div>
                 <div className="flex gap-1 flex-col">
-                    <label className="text-sm" htmlFor="">Account Type</label>
-                    <select onChange={handleChange} required id="account_type" className="p-2.5 rounded bg-blue-100 appearance-none outline-0" type="text">
+                    <Text variant={"label"}>Account type</Text>
+                    <Input handleChange={handleChange} id="account_type" variant={"default"} type={"select"}>
                         <option value="">choose some</option>
                         <option value="Savings Account">Savings</option>
                         <option value="Money Market Account">Money Market Account</option>
                         <option value="Certificates of Deposit">Certificates of Deposit</option>
                         <option value="Retirement Accounts">Retirement Accounts</option>
-                    </select>
+                    </Input>
                 </div>
-                <button type="submit" className="bg-blue-400 mt-4 text-white hover:bg-blue-500 font-bold p-2.5 rounded">Submit</button>
+                <Button onClick={submit}>Submit</Button>
             </form>
         </div>
     );

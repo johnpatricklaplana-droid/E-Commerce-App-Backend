@@ -1,9 +1,11 @@
-import Sidebar from "./AddProductSidebar";
+import Sidebar from "../components/Sidebar";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function SellerProducts () {
 
     return (
-        <div className="bg-blue-100 flex h-screen">
+        <div className="bg-blue-100 grid grid-cols-[270px_1fr] h-screen">
             <Sidebar />
             <div className="h-full overflow-auto w-full">
                 <div className="flex p-4 bg-white z-50 sticky top-0 items-center justify-between w-full">
@@ -64,8 +66,8 @@ export default function SellerProducts () {
                             </div>
                         </div>
                         <div className="flex mt-2.5">
-                            <input className="w-full px-3 py-1.5 outline-none bg-white rounded flex-1" type="search" placeholder="search some product" />
-                                <button className="px-3 py-1.5 bg-slate-800 text-white font-bold">Search</button>
+                            <Input variant={"default"} placeholder={"Search some products"} fullWidth={true}></Input>
+                            <Button>Search</Button>
                         </div>
                         <div className="grid grid-cols-3 mt-10 gap-4">
                             <div className="bg-red-600 rounded-2xl h-[350px] transition duration-500 hover:scale-105 shadow-2xl">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { POST } from "../api/api";
+import { POST } from "../api/API";
 
 export default function SellerLogin () {
 

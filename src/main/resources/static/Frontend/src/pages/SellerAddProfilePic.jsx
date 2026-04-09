@@ -1,3 +1,5 @@
+import Button from "../components/Button";
+
 export default function SellerAddProfilePic () {
     return (
         <div className="w-screen bg-blue-100 h-screen flex items-center justify-center">
@@ -28,9 +30,9 @@ export default function SellerAddProfilePic () {
                 <hr className="w-full text-gray-300" />
                     <p className="text-center text-sm">upload a profile photo. This is required for some reason you can escape it for now but you need it before you can sell products</p>
                     <p className="text-center text-sm"> ljflkajfk jaj kjsklfj klajf kasjfk jslj lksj fjs kjflsk jfj slfj ksaj j kajfl jak </p>
-                    <div>
-                        <button id="skip_now_signup" className="border p-2.5 rounded font-semibold hover:bg-gray-300">Skip for Now</button>
-                        <button className="border p-2.5 rounded font-semibold bg-blue-400 text-white hover:bg-blue-500">Upload Photo</button>
+                    <div className="flex gap-2">
+                        <Button variant="secondary">Skip Now</Button>
+                        <Button>Upload photo</Button>
                     </div>
             </div>
         </div>

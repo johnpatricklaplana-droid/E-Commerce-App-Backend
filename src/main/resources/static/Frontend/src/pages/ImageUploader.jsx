@@ -1,3 +1,5 @@
+import Text from "../components/Text";
+
 export default function ImageUploader({images, setImages}) {
 
     const handleChange = (e) => {
@@ -13,8 +15,8 @@ export default function ImageUploader({images, setImages}) {
     return (
         <div className="p-3 overflow-hidden flex flex-col items-start gap-1.5">
             <div>
-                <h1 className="text-lg font-bold">Product Image</h1>
-                <p className="text-sm font-light">Upload a clear image of your product</p>
+                <Text variant={"heading3"}>Product Image</Text>
+                <Text variant={"muted"}>Upload a clear image of your product</Text>
             </div>
             <label htmlFor="imageInput" className="border cursor-pointer border-dashed flex flex-col items-center p-3 rounded-2xl w-full border-gray-400">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,13 +31,13 @@ export default function ImageUploader({images, setImages}) {
                     <path d="M9.5 8.5L12 6L14.5 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
                         strokeLinejoin="round" />
                 </svg>
-                <p className="text-[14px]">Click me to browse file</p>
-                <p className="text-[12px]">PNG, JPG up to 5mb</p>
+                <Text variant={"info"}>Click me to browse file</Text>
+                <Text variant={"muted"}>PNG, JPG up to 5mb</Text>
             </label>
             <input id="imageInput" onChange={handleChange} className="hidden" type="file" multiple />
             <div id="imagesPreviewContainer" className="flex gap-1.5 p-1.5 rounded-2xl border-dashed sm:w-62.5 border border-gray-400 sm:h-25 items-center overflow-x-auto justify-start">
                 
-                {images.length === 0 && <p className="text-sm text-center w-full">Selected images will appear here</p>}
+                {images.length === 0 && <Text position={"center"} variant={"muted"}>Selected images will appear here</Text>}
 
                 {Array.from(images).map((file, index) => (
                     <div 

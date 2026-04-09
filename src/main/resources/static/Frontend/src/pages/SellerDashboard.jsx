@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useRef } from "react";
-import Sidebar from "./AddProductSidebar";
+import Sidebar from "../components/Sidebar";
 
 export default function SellerDashBoard() {
     const canvasRef = useRef(null);

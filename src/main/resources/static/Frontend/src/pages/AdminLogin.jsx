@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { POST } from "../api/api";
+import { POST } from "../api/API";
+import Button from "../components/Button";
 
 export default function AdminLogin () {
 
@@ -55,7 +56,7 @@ export default function AdminLogin () {
                         </div>
                     </div>
                     <p className="text-sm text-blue-600">Forgot password?</p>
-                    <button onClick={login} className="px-5 hover:bg-blue-600 py-1.5 rounded bg-blue-500 text-white font-bold">Login</button>
+                    <Button onClick={login}>Login</Button>
                 </div>
                 <div><span className="text-[12px]">Privacy Policy</span> <span className="text-[12px]">|</span> <span className="text-[12px]">Terms of Service</span></div>
             </div>

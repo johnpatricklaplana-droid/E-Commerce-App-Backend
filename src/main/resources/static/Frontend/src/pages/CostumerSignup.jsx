@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { POST } from "../api/api";
+import { POST } from "../api/API";
+import Button from "../components/Button";
 
 export default function CostumerSignup () {
 
@@ -200,10 +201,7 @@ export default function CostumerSignup () {
                 />
             </div>
 
-            <button 
-                type="submit" 
-                className="w-full px-2.5 py-2.5 hover:bg-blue-600 bg-blue-500 mt-1.5 text-white"
-            >Register</button>
+            <Button fullWidth={true}>Register</Button>
 
             <div 
                 className="flex gap-3 justify-center items-center w-full px-4"
@@ -258,7 +256,7 @@ export default function CostumerSignup () {
 
             <a 
                 className="text-black hover:bg-orange-500 bg-orange-400 text-center rounded-2xl py-1.5 px-2.5 w-40"
-                href="costumer-login-page.html"
+                href="costumer-login"
             >login</a>
         </form>
         </div>

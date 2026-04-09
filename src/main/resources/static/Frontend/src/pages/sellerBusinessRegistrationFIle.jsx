@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "../components/Button";
 
 export default function SellerBusinessRegistrationFile() {
 
@@ -84,17 +85,8 @@ export default function SellerBusinessRegistrationFile() {
                 <div 
                     className="w-full flex gap-2.5"
                 >
-                    <button 
-                        className="w-1/2 py-1 bg-gray-200 hover:bg-gray-300 rounded border-gray-300 border-2"
-                    >
-                        Cancel
-                    </button>
-                    <button 
-                        id="upload_business_registration_file_button" 
-                        className="w-1/2 py-1 bg-blue-800 text-white hover:bg-blue-900 rounded border"
-                    >
-                        Upload
-                    </button>
+                    <Button fullWidth={true} variant="secondary">Cancel</Button>
+                    <Button fullWidth={true}>Upload</Button>
                 </div>
             </div>
         </div>

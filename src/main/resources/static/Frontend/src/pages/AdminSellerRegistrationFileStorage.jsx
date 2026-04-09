@@ -1,4 +1,5 @@
 import Documents from "./SellerRegistrationDocuments";
+import Button from "../components/Button";
 
 export default function SellerRegistrationFileStorage() {
     return (
@@ -40,7 +41,7 @@ export default function SellerRegistrationFileStorage() {
                         <svg className="h-5 w-5 flex-none text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><path d="M19.4 15a7.9 7.9 0 0 0 .6-3 7.9 7.9 0 0 0-.6-3L21 7.5l-2-3-2 .8a8 8 0 0 0-2-.7L14.5 2h-5l-.5 2.6a8 8 0 0 0-2 .7L5 4.5 3 7.5l1.6 1.5A7.9 7.9 0 0 0 4 12a7.9 7.9 0 0 0 .6 3L3 16.5l2 3 2-.8a8 8 0 0 0 2 .7L9.5 22h5l.5-2.6a8 8 0 0 0 2-.7l2 .8 2-3-1.6-1.5z" /></svg>
                         Settings
                     </a>
-                    <button className="w-full rounded-2xl bg-white py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200">Log out</button>
+                    <Button fullWidth={true}>Search</Button>
                 </div>
             </aside>
 
