@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.Service.product.ProductService;
+import com.example.demo.entity.Product;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -53,6 +55,11 @@ public class productController {
             .contentType(MediaType.IMAGE_PNG)
             .body(resource);
     }
-    
+
+    // @GetMapping("/api/seller/product/{productId}")
+    // public ResponseEntity<?> getProduct (@PathVariable int productId) {
+    //     ProductResponse productResponse = productService.getProduct(productId);
+    //     return null;
+    // }
 
 }

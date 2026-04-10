@@ -5,10 +5,12 @@ import Text from "../components/Text";
 import CommonSvgIcon from "../components/CommonIcon";
 import { useEffect, useState } from "react";
 import { GET } from "../api/API";
+import { useNavigate } from "react-router-dom";
 
 export default function SellerProducts () {
 
     const [product, setProduct] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const url = "http://localhost:8080/api/seller/product";
@@ -16,17 +18,20 @@ export default function SellerProducts () {
         const fetchProduct = async () => {
            const result = await GET(url);
            const cleanResult  = result.map(res => {
+            console.log(result);
                 return {
-                    productName: res.productName,
+                    id: res.id,
+                    productname: res.productName,
                     price: res.price,
-                    productDescription: res.productDescription,
+                    productdescription: res.productDescription,
                     categories: res.categories || [],
                     images: res.images || [],
-                    variantions: res.variantions
+                    variantions: res.variantions,
+                    thumbnail: res.thumbNailUrl
                 }
            });
            setProduct(prev => [...prev, ...cleanResult]);
-        }
+        }   
         
         fetchProduct();
     }, []);
@@ -52,8 +57,8 @@ export default function SellerProducts () {
                         <div className="w-60 border-2 bg-white rounded-2xl shadow-2xl p-4 border-slate-800">
                             <div className="flex items-center gap-1.5">
                                 <svg className="h-6 w-6 flex-none mb-2 text-slate-800" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M6 6H21L20 14H7L6 6Z" stroke="currentColor" strokeWidth="2" stroke-linejoin="round" />
-                                    <path d="M6 6L5 3H2" stroke="currentColor" strokeWidth="2" stroke-linecap="round" />
+                                    <path d="M6 6H21L20 14H7L6 6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                                    <path d="M6 6L5 3H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                                     <circle cx="9" cy="20" r="1.5" fill="currentColor" />
                                     <circle cx="18" cy="20" r="1.5" fill="currentColor" />
                                 </svg>
@@ -99,15 +104,20 @@ export default function SellerProducts () {
                             <Button>Search</Button>
                         </div>
                         <div className="grid grid-cols-3 mt-10 gap-4">
-                            {product.map((prod, i) => 
-                                <div key={i} className="rounded-2xl flex flex-col items-center justify-start h-87.5 transition duration-500 hover:scale-105 shadow-2xl">
-                                    <img className="w-full rounded-t-2xl h-[70%]" src={`http://localhost:8080/api/seller/product-image/${prod.images[0].imagesUrl}`}  alt=""/>
+                            {product.map(prod => 
+                                <div 
+                                    key={prod.id} 
+                                    className="rounded-2xl flex flex-col items-center justify-start h-87.5 cursor-pointer transition duration-500 hover:scale-105 shadow-2xl"
+                                    onClick={() => navigate(`/seller-product/${prod.id}`)}
+                                >
+
+                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.thumbnail? `http://localhost:8080/api/seller/product-image/${prod.thumbnail}` : "/icons8-default-images-48.png"}  alt=""/>
                                     <div className="w-full p-3">
                                         <Text position={"start"} variant={"semiSmall"}>{prod.productName}</Text>
                                         <Text color={"orange"} variant={"bold"}>{`$${prod.price}`}</Text>
                                     </div>
                                     <div className="flex justify-end w-full px-3">
-                                        <CommonSvgIcon width={28} height={28} type={"threeDot"}></CommonSvgIcon>
+                                        <CommonSvgIcon hover={"grow"} width={28} height={28} type={"threeDot"}></CommonSvgIcon>
                                     </div>
                                 </div>
                             )}

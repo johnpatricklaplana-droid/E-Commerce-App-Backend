@@ -9,9 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductResponse {
+    private int id;
     private String productName;
     private double price;
     private String productDescription;
+    
+    private String thumbNailUrl;
 
     // category
     private List<ProductCategoryDTO> categories;

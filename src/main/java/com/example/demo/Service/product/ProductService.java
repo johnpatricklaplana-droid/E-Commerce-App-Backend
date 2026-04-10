@@ -23,11 +23,13 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
+import com.example.demo.enums.ImageType;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.security.MyUserDetails;
 
 import jakarta.persistence.EntityManager;
+import lombok.NonNull;
 
 @Service
 public class ProductService {
@@ -81,10 +83,26 @@ public class ProductService {
 
             List<ProductImage> imagesUrl = prod.getImages();
 
+            ProductImage thumbnailsUrl = productRepo.getThumbnail(prod.getId(), ImageType.THUMBNAIL);
+
             ProductResponse prodResponse = new ProductResponse();
+            prodResponse.setId(prod.getId());
             prodResponse.setProductName(prod.getProductName());
             prodResponse.setPrice(prod.getPrice());
             prodResponse.setProductDescription(prod.getProductDescription());
+            
+            if(thumbnailsUrl != null) {
+                prodResponse.setThumbNailUrl(thumbnailsUrl.getImageUrl());
+            }
+
+            List<ProductImagesDTO> images = new ArrayList<>();
+            for (ProductImage pi : imagesUrl) {
+                ProductImagesDTO productImagesDto = new ProductImagesDTO();
+                productImagesDto.setImagesUrl(pi.getImageUrl());
+                images.add(productImagesDto);
+            }
+
+            prodResponse.setImages(images);
 
             List<ProductCategoryDTO> categoriesDto = new ArrayList<>();
             for (Category c : categories) {
@@ -118,19 +136,50 @@ public class ProductService {
 
             prodResponse.setRatings(ratings);
 
-            List<ProductImagesDTO> images = new ArrayList<>();
-            for (ProductImage pi : imagesUrl) {
-                ProductImagesDTO productImagesDto = new ProductImagesDTO();
-                productImagesDto.setImagesUrl(pi.getImageUrl());
-                images.add(productImagesDto);
-            }
-
-            prodResponse.setImages(images);
-
             productResponse.add(prodResponse);
         }
 
         return productResponse;
     }
+
+    // i might not need this one 
+    // public ProductResponse getProduct(int productId) {
+        
+    //     MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+    //         .getContext()
+    //         .getAuthentication()
+    //         .getPrincipal();
+
+    //     int sellerId = userDetails.getUserId();
+
+    //     Product product = productRepo.getProduct(productId, sellerId);
+
+    //     ProductResponse productResponse = new ProductResponse();
+    //     productResponse.setId(product.getId());
+    //     productResponse.setProductName(product.getProductName());
+    //     productResponse.setPrice(product.getPrice());
+    //     productResponse.setProductDescription(product.getProductDescription());
+        
+    //     List<ProductCategoryDTO> categories = new ArrayList<>();
+    //     for (Category category : product.getCategories()) {
+    //         ProductCategoryDTO dto = new ProductCategoryDTO();
+    //         dto.setCategoryName(category.getCategoryName());
+    //         dto.setCategoryDescription(category.getDescription());
+    //         categories.add(dto);
+    //     }
+
+    //     productResponse.setCategories(categories);
+
+    //     List<ProductImagesDTO> images = new ArrayList<>();
+    //     for (ProductImage productImage : product.getImages()) {
+    //         ProductImagesDTO dto = new ProductImagesDTO();
+    //         dto.setImagesUrl(productImage.getImageUrl());
+    //         images.add(dto);
+    //     }
+
+    //     productResponse.setImages(images);
+
+    //     return null;
+    // }
 
 }
