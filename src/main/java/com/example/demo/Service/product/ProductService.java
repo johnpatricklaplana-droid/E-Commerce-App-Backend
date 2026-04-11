@@ -142,44 +142,54 @@ public class ProductService {
         return productResponse;
     }
 
-    // i might not need this one 
-    // public ProductResponse getProduct(int productId) {
+    public ProductResponse getProduct(int productId) {
         
-    //     MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
-    //         .getContext()
-    //         .getAuthentication()
-    //         .getPrincipal();
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
 
-    //     int sellerId = userDetails.getUserId();
+        int sellerId = userDetails.getUserId();
 
-    //     Product product = productRepo.getProduct(productId, sellerId);
+        Product product = productRepo.getProduct(productId, sellerId);
 
-    //     ProductResponse productResponse = new ProductResponse();
-    //     productResponse.setId(product.getId());
-    //     productResponse.setProductName(product.getProductName());
-    //     productResponse.setPrice(product.getPrice());
-    //     productResponse.setProductDescription(product.getProductDescription());
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(product.getId());
+        productResponse.setProductName(product.getProductName());
+        productResponse.setPrice(product.getPrice());
+        productResponse.setProductDescription(product.getProductDescription());
         
-    //     List<ProductCategoryDTO> categories = new ArrayList<>();
-    //     for (Category category : product.getCategories()) {
-    //         ProductCategoryDTO dto = new ProductCategoryDTO();
-    //         dto.setCategoryName(category.getCategoryName());
-    //         dto.setCategoryDescription(category.getDescription());
-    //         categories.add(dto);
-    //     }
+        List<ProductCategoryDTO> categories = new ArrayList<>();
+        for (Category category : product.getCategories()) {
+            ProductCategoryDTO dto = new ProductCategoryDTO();
+            dto.setCategoryName(category.getCategoryName());
+            dto.setCategoryDescription(category.getDescription());
+            categories.add(dto);
+        }
 
-    //     productResponse.setCategories(categories);
+        productResponse.setCategories(categories);
 
-    //     List<ProductImagesDTO> images = new ArrayList<>();
-    //     for (ProductImage productImage : product.getImages()) {
-    //         ProductImagesDTO dto = new ProductImagesDTO();
-    //         dto.setImagesUrl(productImage.getImageUrl());
-    //         images.add(dto);
-    //     }
+        List<ProductImagesDTO> images = new ArrayList<>();
+        for (ProductImage productImage : product.getImages()) {
+            ProductImagesDTO dto = new ProductImagesDTO();
+            dto.setImagesUrl(productImage.getImageUrl());
+            images.add(dto);
+        }
 
-    //     productResponse.setImages(images);
+        productResponse.setImages(images);
 
-    //     return null;
-    // }
+        List<ProductVariationsDTO> variations = new ArrayList<>();
+        for (ProductVariations pv: product.getVariations()) {
+            ProductVariationsDTO dto = new ProductVariationsDTO();
+            dto.setColor(pv.getColor());
+            dto.setVariationName(pv.getVariationName());
+            dto.setSku(pv.getSku());
+            variations.add(dto);
+        }
+
+        productResponse.setVariations(variations);
+
+        return productResponse;
+    }
 
 }

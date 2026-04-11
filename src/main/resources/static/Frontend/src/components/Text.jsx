@@ -11,6 +11,7 @@ export default function Text ({variant, children, position, color}) {
         muted: "text-sm text-gray-500",
         error: "text-sm text-red-600 font-medium",
         info: "text-sm text-blue-600 font-medium",
+        h3: "text-sm uppercase tracking-[0.2em] text-slate-400"
     };
 
     const colors = {

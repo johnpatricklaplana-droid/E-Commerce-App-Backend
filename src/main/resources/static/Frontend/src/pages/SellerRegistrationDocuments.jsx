@@ -13,7 +13,7 @@ export default function Documents() {
             setFiles((prevFiles) => [...prevFiles, ...result]);
         };
         
-        // getFiles();
+        getFiles();
     }, []);
 
     return (

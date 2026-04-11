@@ -56,10 +56,12 @@ public class productController {
             .body(resource);
     }
 
-    // @GetMapping("/api/seller/product/{productId}")
-    // public ResponseEntity<?> getProduct (@PathVariable int productId) {
-    //     ProductResponse productResponse = productService.getProduct(productId);
-    //     return null;
-    // }
+    @GetMapping("/api/seller/product/{productId}")
+    public ResponseEntity<ProductResponse> getProduct (@PathVariable int productId) {
+        ProductResponse productResponse = productService.getProduct(productId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(productResponse);
+    }
 
 }

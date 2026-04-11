@@ -23,4 +23,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     """)
     ProductImage getThumbnail(@Param("productId") int productId, @Param("type") ImageType type);
 
+    @Query("""
+        SELECT p
+        FROM Product p
+        WHERE p.id = :productId
+        AND p.seller.id = :sellerId
+    """)
+    Product getProduct(@Param("productId") int productId, @Param("sellerId") int sellerId);
+
 }
