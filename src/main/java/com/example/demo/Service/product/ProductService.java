@@ -14,22 +14,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.productDTO.ProductCategoryDTO;
-import com.example.demo.DTO.productDTO.ProductImagesDTO;
 import com.example.demo.DTO.productDTO.ProductRatingDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
+import com.example.demo.Mapper.ProductMapper;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.enums.ImageType;
+import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.ProductVariationRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.security.MyUserDetails;
 
 import jakarta.persistence.EntityManager;
-import lombok.NonNull;
 
 @Service
 public class ProductService {
@@ -43,21 +45,45 @@ public class ProductService {
     @Autowired
     ProductRepository productRepo;
 
-    public void saveProductImages (Integer productId, List<MultipartFile> files) throws IOException {
+    @Autowired
+    ProductVariationRepository variationRepo;
 
-            for (MultipartFile file : files) {
-                String fileName = file.getOriginalFilename();
+    @Autowired
+    UserRepository userRepo;
 
-                ProductImage image = new ProductImage();
-                image.setImageUrl(fileName);
-                image.setProduct(entityManager.getReference(Product.class, productId));
+    @Autowired
+    ProductMapper  productMapper;
 
-                productImageRepository.save(image);
+    public void saveProductImages (Integer variationId, List<MultipartFile> files) throws IOException {
 
-                Path path = Paths.get("product_images/", fileName);
-                Files.createDirectories(path.getParent());
-                Files.write(path, file.getBytes());
-            }
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        int sellerId = userDetails.getUserId();
+
+        ProductVariations variations = variationRepo.findById(variationId).orElse(null);
+
+        Product product = variations.getProduct();
+
+        if(product.getSeller().getId() != sellerId) {
+            throw new ActionNotAllowedException("oops that's bad");
+        }
+        
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+
+            ProductImage image = new ProductImage();
+            image.setImageUrl(fileName);
+            image.setProductVariations(entityManager.getReference(ProductVariations.class, variationId));
+            image.setImageType(ImageType.PHOTOS);
+            productImageRepository.save(image);
+
+            Path path = Paths.get("product_images/", fileName);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        }
 
     }
 
@@ -71,78 +97,11 @@ public class ProductService {
         int sellerId = userDetails.getUserId();
 
         List<Product> product = productRepo.findBySellerId(sellerId);
-
-        List<ProductResponse> productResponse = new ArrayList<>();
-
-        for (Product prod: product) {
-            List<ProductVariations> productVariations = prod.getVariations();
-
-            List<Category> categories = prod.getCategories();
-
-            List<ProductRating> rating = prod.getRatings();
-
-            List<ProductImage> imagesUrl = prod.getImages();
-
-            ProductImage thumbnailsUrl = productRepo.getThumbnail(prod.getId(), ImageType.THUMBNAIL);
-
-            ProductResponse prodResponse = new ProductResponse();
-            prodResponse.setId(prod.getId());
-            prodResponse.setProductName(prod.getProductName());
-            prodResponse.setPrice(prod.getPrice());
-            prodResponse.setProductDescription(prod.getProductDescription());
-            
-            if(thumbnailsUrl != null) {
-                prodResponse.setThumbNailUrl(thumbnailsUrl.getImageUrl());
-            }
-
-            List<ProductImagesDTO> images = new ArrayList<>();
-            for (ProductImage pi : imagesUrl) {
-                ProductImagesDTO productImagesDto = new ProductImagesDTO();
-                productImagesDto.setImagesUrl(pi.getImageUrl());
-                images.add(productImagesDto);
-            }
-
-            prodResponse.setImages(images);
-
-            List<ProductCategoryDTO> categoriesDto = new ArrayList<>();
-            for (Category c : categories) {
-                ProductCategoryDTO productCategory = new ProductCategoryDTO();
-                productCategory.setCategoryName(c.getCategoryName());
-                productCategory.setCategoryDescription(c.getDescription());
-                categoriesDto.add(productCategory);
-            }
-
-            prodResponse.setCategories(categoriesDto);
-
-            List<ProductVariationsDTO> productVariationsDTO = new ArrayList<>();
-            for (ProductVariations pv : productVariations) {
-                ProductVariationsDTO variations = new ProductVariationsDTO();
-                variations.setVariationName(pv.getVariationName());
-                variations.setColor(pv.getColor());
-                variations.setSku(pv.getSku());
-                productVariationsDTO.add(variations);
-            }
-
-            prodResponse.setVariations(productVariationsDTO);
-
-            List<ProductRatingDTO> ratings = new ArrayList<>();
-            for (ProductRating pr : rating) {
-                ProductRatingDTO productRatingDTO = new ProductRatingDTO();
-                productRatingDTO.setRating(pr.getRating());
-                productRatingDTO.setReview(pr.getReview());
-                productRatingDTO.setCreatedAt(pr.getCreatedAt());
-                productRatingDTO.setUpdatedAt(pr.getUpdatedAt());
-            }
-
-            prodResponse.setRatings(ratings);
-
-            productResponse.add(prodResponse);
-        }
-
-        return productResponse;
+    
+        return productMapper.toProductResponse(product);
     }
 
-    public ProductResponse getProduct(int productId) {
+    public List<ProductResponse> getProduct(int productId) {
         
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
             .getContext()
@@ -153,41 +112,10 @@ public class ProductService {
 
         Product product = productRepo.getProduct(productId, sellerId);
 
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setId(product.getId());
-        productResponse.setProductName(product.getProductName());
-        productResponse.setPrice(product.getPrice());
-        productResponse.setProductDescription(product.getProductDescription());
-        
-        List<ProductCategoryDTO> categories = new ArrayList<>();
-        for (Category category : product.getCategories()) {
-            ProductCategoryDTO dto = new ProductCategoryDTO();
-            dto.setCategoryName(category.getCategoryName());
-            dto.setCategoryDescription(category.getDescription());
-            categories.add(dto);
-        }
+        List<Product> products = new ArrayList<>();
+        products.add(product);
 
-        productResponse.setCategories(categories);
-
-        List<ProductImagesDTO> images = new ArrayList<>();
-        for (ProductImage productImage : product.getImages()) {
-            ProductImagesDTO dto = new ProductImagesDTO();
-            dto.setImagesUrl(productImage.getImageUrl());
-            images.add(dto);
-        }
-
-        productResponse.setImages(images);
-
-        List<ProductVariationsDTO> variations = new ArrayList<>();
-        for (ProductVariations pv: product.getVariations()) {
-            ProductVariationsDTO dto = new ProductVariationsDTO();
-            dto.setColor(pv.getColor());
-            dto.setVariationName(pv.getVariationName());
-            dto.setSku(pv.getSku());
-            variations.add(dto);
-        }
-
-        productResponse.setVariations(variations);
+        List<ProductResponse> productResponse = productMapper.toProductResponse(products);
 
         return productResponse;
     }

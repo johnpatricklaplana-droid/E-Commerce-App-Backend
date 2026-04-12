@@ -32,18 +32,12 @@ public class Product {
     @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "price", nullable = false)
-    private double price;
-
     @Column(name = "product_description")
     private String productDescription;
 
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductImage> images;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -58,5 +52,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductVariations> variations;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductRates> rates;
 
 }

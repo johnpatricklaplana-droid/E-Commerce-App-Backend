@@ -4,7 +4,8 @@ export default function CommonSvgIcon ({
     height="24", 
     hover, 
     color,
-    action 
+    action,
+    fill
 }) {
     
     const hovers = {
@@ -35,6 +36,20 @@ export default function CommonSvgIcon ({
                         d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
+        );
+    }
+
+    if(type === "heart") {
+        return (
+            <svg width={width} height={height} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                2 6 4 4 6.5 4
+                8.24 4 9.91 5.01 10.6 6.5
+                11.29 5.01 12.96 4 14.7 4
+                17.2 4 19.2 6 19.2 8.5
+                19.2 12.28 15.8 15.36 10.65 20.04
+                L12 21.35z"/>
+            </svg>
         );
     }
 

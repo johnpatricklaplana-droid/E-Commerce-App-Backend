@@ -22,12 +22,9 @@ export default function SellerProducts () {
                 return {
                     id: res.id,
                     productname: res.productName,
-                    price: res.price,
                     productdescription: res.productDescription,
                     categories: res.categories || [],
-                    images: res.images || [],
-                    variantions: res.variantions,
-                    thumbnail: res.thumbNailUrl
+                    variations: res.variations || [], 
                 }
            });
            setProduct(prev => [...prev, ...cleanResult]);
@@ -35,8 +32,6 @@ export default function SellerProducts () {
         
         fetchProduct();
     }, []);
-
-    console.log(product);
 
     return (
         <div className="bg-blue-100 grid grid-cols-[270px_1fr] h-screen">
@@ -111,10 +106,10 @@ export default function SellerProducts () {
                                     onClick={() => navigate(`/seller-product/${prod.id}`)}
                                 >
 
-                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.thumbnail? `http://localhost:8080/api/seller/product-image/${prod.thumbnail}` : "/icons8-default-images-48.png"}  alt=""/>
+                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/seller/product-image/${prod.variations[0].imagesUrl[0]}` : "error"} alt="" />
                                     <div className="w-full p-3">
-                                        <Text position={"start"} variant={"semiSmall"}>{prod.productName}</Text>
-                                        <Text color={"orange"} variant={"bold"}>{`$${prod.price}`}</Text>
+                                        <Text position={"start"} variant={"semiSmall"}>{prod.productname}</Text>
+                                        <Text color={"orange"} variant={"bold"}>{prod.variations[0] ? prod.variations[0].price : "00.00"}</Text>
                                     </div>
                                     <div className="flex justify-end w-full px-3">
                                         <CommonSvgIcon hover={"grow"} width={28} height={28} type={"threeDot"}></CommonSvgIcon>

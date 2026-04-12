@@ -1,11 +1,8 @@
 package com.example.demo.entity;
 
-import com.example.demo.enums.ImageType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,25 +13,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Table(name = "product_rates")
 @Entity
-@Table(name = "product_image")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductImage {
+public class ProductRates {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JoinColumn(name = "variation_id")
+    @Column(name = "rate")
+    private double rate;
+
+    @JoinColumn(name = "product_id")
     @ManyToOne
-    private ProductVariations productVariations;
-
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "image_type")
-    private ImageType imageType;
+    private Product product;
+    
 }

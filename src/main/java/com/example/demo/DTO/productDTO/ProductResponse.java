@@ -11,7 +11,6 @@ import lombok.Setter;
 public class ProductResponse {
     private int id;
     private String productName;
-    private double price;
     private String productDescription;
     
     private String thumbNailUrl;
@@ -24,7 +23,6 @@ public class ProductResponse {
 
     private List<ProductRatingDTO> ratings;
 
-    private List<ProductImagesDTO> images;
 }
 
 

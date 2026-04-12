@@ -10,7 +10,7 @@ export default function Sidebar() {
     };
 
     return (
-        <div>
+        <div className="hidden sm:block">
             <div className={`absolute transition-all duration-500 bg-slate-950 h-screen left-0 top-0 w-[50px] ${isOpen ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="absolute z-50 top-3 right-3">
                     <CommonSvgIcon action={closeOpen} hover={"grow"} type={"menu"} color={"white"}></CommonSvgIcon>

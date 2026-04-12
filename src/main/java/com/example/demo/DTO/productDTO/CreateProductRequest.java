@@ -1,15 +1,9 @@
 package com.example.demo.DTO.productDTO;
 
-import java.lang.invoke.MutableCallSite;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.demo.entity.Category;
-
 import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductVariations;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,29 +11,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateProductRequest {
-    
+  
     private String productName;
-    private double price;
-    private String color;
-    private String variant;
     private String productDescription;
-    
+
     private List<Category> category;
 
     public Product toProduct() {
         Product product = new Product();
         product.setProductName(productName);
-        product.setPrice(price);
 
         return product;
-    }
-
-    public ProductVariations toProductVariations () {
-        ProductVariations productVariation = new ProductVariations();
-        productVariation.setColor(color);
-        productVariation.setVariationName(variant);
-
-        return productVariation;
     }
 
     public List<Category> getCategory () {

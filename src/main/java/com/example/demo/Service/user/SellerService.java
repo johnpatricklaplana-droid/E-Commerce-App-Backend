@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import com.example.demo.entity.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,12 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
+import com.example.demo.DTO.productDTO.CreateProductRequest;
+import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.Jwt;
 import com.example.demo.Service.product.ProductService;
 import com.example.demo.entity.Business_Registration_Documents;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
@@ -49,7 +50,7 @@ import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
-import com.example.demo.DTO.productDTO.CreateProductRequest;
+
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
@@ -266,18 +267,10 @@ public class SellerService {
     }
 
     @Transactional
-    public void addProduct(List<MultipartFile> files ,CreateProductRequest product) throws IOException {
+    public Integer addProduct(CreateProductRequest product) throws IOException {
         
         if(product.getProductName().equals("") || product.getProductName() == null) {
             throw new IllegalArgumentException("product name is required");
-        }
-
-        if(product.getPrice() <= 0 ) {
-            throw new IllegalArgumentException("price must be greater than 0");
-        }
-
-        if(product.getColor().equals("") || product.getColor() == null) {
-            throw new IllegalArgumentException("color is required");
         }
 
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
@@ -305,16 +298,39 @@ public class SellerService {
 
         prod.setCategories(categories);
         prod.setSeller(entityManager.getReference(Seller.class, sellerId));
-        productRepo.save(prod);
-
-        productService.saveProductImages(prod.getId(), files);
-      
-        ProductVariations productVariation = product.toProductVariations();
-        productVariation.setProduct(prod);
-        productVariation.setSku(UUID.randomUUID().toString()); // TODO: make the SKU more close to human language
-        
-        productVariationRepo.save(productVariation);
+        prod.setProductDescription(product.getProductDescription());
+        productRepo.save(prod);   
        
+        return prod.getId();
+    }
+
+    public Integer saveVariant (int productId, ProductVariationsDTO product, List<MultipartFile> images) throws IOException {
+
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        Integer sellerId = userDetails.getUserId();
+
+        Product prod = productRepo.getProduct(productId, sellerId);
+
+        if(prod == null) {
+            throw new ActionNotAllowedException("opps that's bad");
+        }
+
+        ProductVariationsDTO productVariation = product;
+        ProductVariations variations = new ProductVariations();
+        variations.setProduct(entityManager.getReference(Product.class, productId));
+        variations.setColor(productVariation.getColor());
+        variations.setSku(UUID.randomUUID().toString());
+        variations.setVariationName(productVariation.getVariationName());
+        variations.setPrice(productVariation.getPrice());
+        productVariationRepo.save(variations);  
+
+        productService.saveProductImages(variations.getId(), images);
+
+        return null;
     }
     
 }

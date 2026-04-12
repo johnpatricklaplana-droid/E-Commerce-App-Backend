@@ -1,6 +1,15 @@
 import { Children } from "react";
 
-export default function Input ({ type="text", children, variant, handleChange, id, fullWidth, placeholder}) {
+export default function Input ({ 
+    type="text", 
+    children, 
+    variant, 
+    handleChange, 
+    id, 
+    fullWidth, 
+    placeholder,
+    height
+}) {
 
     const variants = {
         default: "border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400",
@@ -26,7 +35,7 @@ export default function Input ({ type="text", children, variant, handleChange, i
 
     if(type === "textarea") {
         return (
-            <textarea id={id} onChange={handleChange} className={`${variants[variant]} ${width}`}></textarea>
+            <textarea id={id} onChange={handleChange} className={`${variants[variant]} ${height} ${width}`}></textarea>
         );
     }
 }

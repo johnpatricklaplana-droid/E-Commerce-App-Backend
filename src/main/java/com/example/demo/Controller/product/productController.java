@@ -57,11 +57,22 @@ public class productController {
     }
 
     @GetMapping("/api/seller/product/{productId}")
-    public ResponseEntity<ProductResponse> getProduct (@PathVariable int productId) {
-        ProductResponse productResponse = productService.getProduct(productId);
+    public ResponseEntity<List<ProductResponse>> getProduct (@PathVariable int productId) {
+        List<ProductResponse> productResponse = productService.getProduct(productId);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);
     }
+
+    // @PostMapping("/api/seller/product-variation-images/{variationId}")
+    // public ResponseEntity<SimpleResponseDTO> saveProdVariantsImages(@PathVariable int variationId, @RequestParam("images") List<MultipartFile> file) throws IOException {
+    //     productService.saveProductImages(variationId, file);
+        
+    //     return ResponseEntity
+    //         .status(HttpStatus.CREATED)
+    //         .body(new SimpleResponseDTO("images saved", 201));
+    // }
+    
+    
 
 }

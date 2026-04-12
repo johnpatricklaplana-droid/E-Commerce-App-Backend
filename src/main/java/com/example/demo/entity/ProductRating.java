@@ -32,9 +32,6 @@ public class ProductRating {
     @Column(name = "raing", nullable = true)
     private double rating;
 
-    @Column(name = "review", nullable = true)
-    private String review;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
