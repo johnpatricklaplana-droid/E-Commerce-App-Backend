@@ -21,7 +21,7 @@ public class ProductResponse {
     // variations
     private List<ProductVariationsDTO> variations;
 
-    private List<ProductRatingDTO> ratings;
+    private ProductRatingDTO ratings;
 
 }
 

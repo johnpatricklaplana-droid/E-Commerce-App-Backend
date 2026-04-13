@@ -9,7 +9,5 @@ import lombok.Setter;
 @Getter
 public class ProductRatingDTO {
     private double rating;
-    private String review;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private int numberOfRaters;
 }

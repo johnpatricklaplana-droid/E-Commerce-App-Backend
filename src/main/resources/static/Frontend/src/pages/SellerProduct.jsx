@@ -1,55 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Text from "../components/Text";
 import CommonSvgIcon from "../components/CommonIcon";
 import { useParams } from "react-router-dom";
 import { GET } from "../api/API";
+import { useSwipeable } from "react-swipeable";
 
 export default function SellerProductInspect() {
   const { id } = useParams();
   const [expanded, setExpanded] = useState(false);
   const [product, setProduct] = useState({});
 
-  const cleanProduct = {
-    id: product.id,
-    productName: product.productName,
-    productDescription: product.productDescription,
-  };
-
-  const categories = product.categories?.reduce((acc, item) => {
-    return [...acc, item.categoryName];
-  }, []);
-
-  const variations = product?.variations;
-
-  const images = variations?.map((variant) => ({
-    id: variant.variantId,
-    image: variant.imagesUrl
-  }));
-
-  const imagesClean = images
-    ?.flatMap(item =>
-      item.image.map(img => ({
-        id: item.id,
-        image: img
-      }))
-    )
-    .map((item, index) => ({
-      ...item,
-      index
-    }));
-
-  console.log(imagesClean);
-
-  const [currentVariant, setcurrentVariant] = useState({
-    variantId: "",
-    currentImg: "",
-    variantName: "",
-    price: "",
-    name: "",
-    index: ""
-  });
-  
   useEffect(() => {
     const fetchProduct = async () => {
       const url = `http://localhost:8080/api/seller/product/${id}`;
@@ -60,6 +21,80 @@ export default function SellerProductInspect() {
 
     fetchProduct();
   }, [id]);
+
+  const categories = useMemo(() => {
+    return product?.categories?.reduce((acc, category) => {
+      return [...acc, category.categoryName]
+    }, []);
+  }, [product]);
+
+  console.log(product);
+
+  const cleanProduct = {
+    id: product.id,
+    productName: product.productName,
+    productDescription: product.productDescription,
+  };
+
+  // BOUND TO BE DELETED
+  const variations = useMemo(() => {
+    return product?.variations;
+  }, [product]);
+
+  // REFACTOR READY METHOD I JUST NEED SOME REST
+  const forRefactor = useMemo(() => {
+    return product?.variations?.reduce((acc, item) => {
+      const imgs = item.imagesUrl.map((img) => {
+        return {
+          id: item.variantId,
+          color: item.color,
+          image: img,
+          price: item.price,
+          sku: item.sku,
+          variantName: item.variationName
+        }
+      })
+      return [...acc, imgs]
+    }, []).flat()
+  }, [product]);
+
+  console.log(forRefactor);
+
+  const images = useMemo(() => {
+    return variations?.map((variant) => ({
+      id: variant.variantId,
+      image: variant.imagesUrl
+    }))
+  }, [variations]);
+
+  const ratings = useMemo(() => {
+    return product.ratings
+  }, [product]);
+
+  console.log(ratings);
+
+  const imagesClean = useMemo(() => {
+    return images
+      ?.flatMap(item =>
+        item.image.map(img => ({
+          id: item.id,
+          image: img
+        }))
+      )
+      .map((item, index) => ({
+        ...item,
+        index
+      }));
+  }, [images]);
+
+  const [currentVariant, setcurrentVariant] = useState({
+    variantId: "",
+    currentImg: "",
+    variantName: "",
+    price: "",
+    name: "",
+    index: ""
+  });
 
   const expandDescription = () => {
     setExpanded(prev => prev ? false : true);
@@ -77,9 +112,26 @@ export default function SellerProductInspect() {
     });
   };
 
-  const nextImage = (index) => {
-    const image = imagesClean.find((img) => Number(img.index) === ((imagesClean.length - 1) <= index ? 0 : (index + 1)));
-    const currentVar = variations?.find((v) => Number(v.variantId) === Number(image.id));
+  useEffect(() => {
+    if (imagesClean?.length > 0) {
+      const first = imagesClean[0];
+      changeImage(first.id, first.image, first.index);
+    }
+  }, [imagesClean]);
+
+  const nextImage = (index, id) => {
+    let image;
+    let currentVar;
+
+    if(id === "nextImage") {
+      image = imagesClean.find((img) => Number(img.index) === ((imagesClean.length - 1) <= index ? 0 : (index + 1)));
+      currentVar = variations?.find((v) => Number(v.variantId) === Number(image.id));
+    }
+
+    if(id === "prevImage") {
+      image = imagesClean.find((img) => Number(img.index) === (index > 0? (index - 1) : imagesClean.length - 1));
+      currentVar = variations?.find((v) => Number(v.variantId) === Number(image.id));
+    }
     
     setcurrentVariant({
       variantId: image.id,
@@ -90,7 +142,13 @@ export default function SellerProductInspect() {
       variantName: currentVar.variationName
     });
   };
- 
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => nextImage(currentVariant.index, "nextImage"),
+    onSwipedRight: () => nextImage(currentVariant.index, "prevImage"),
+    trackMouse: true
+  });
+
   return (
     <div className="min-h-screen flex">
       <Sidebar />
@@ -106,9 +164,15 @@ export default function SellerProductInspect() {
         <main className="gap-6 sm:p-6 lg:p-8">
           <section className="sm:space-y-6">
             <div className="sm:grid sm:gap-4 flex flex-col sm:grid-cols-[1fr_96px]">
-              <div className="sm:rounded-[1.75rem] relative sm:h-125 bg-blue-50 sm:p-4 shadow-inner">
+              <div 
+                {...swipeHandlers} 
+                className="sm:rounded-[1.75rem] relative sm:h-125 bg-blue-50 sm:p-4 shadow-inner"
+              >
                 <div className="h-full absolute opacity-0 transition duration-500 hover:opacity-100 top-0 left-0 w-full">
-                  <button className="absolute hover:opacity-50 cursor-pointer top-1/2 -translate-y-1/2 left-6">
+                  <button 
+                    className="absolute hover:opacity-50 cursor-pointer top-1/2 -translate-y-1/2 left-6"
+                    onClick={() => nextImage(currentVariant.index, "prevImage")}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -122,7 +186,7 @@ export default function SellerProductInspect() {
                   </button>
                   <button 
                     className="absolute hover:opacity-50 cursor-pointer top-1/2 -translate-y-1/2 right-6"
-                    onClick={()=> nextImage(currentVariant.index)}
+                    onClick={()=> nextImage(currentVariant.index, "nextImage")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -142,12 +206,12 @@ export default function SellerProductInspect() {
                   alt=""
                 />
               </div>
-              <div className="overflow-x-auto h-28 flex flex-nowrap sm:block rounded-2xl p-2 sm:overflow-auto sm:h-125">
+              <div className="overflow-x-auto h-28 flex flex-nowrap gap-1.5 sm:block rounded-2xl p-2 sm:overflow-auto sm:h-125">
                 {
                  imagesClean?.map((current) => 
                    <button
                      key={`${id}`}
-                     className="rounded-[1.75rem]"
+                     className={`rounded-[1.75rem] border-blue-500 ${current.index === currentVariant.index ? "border-4" : "border-0"}`}
                      onClick={() => changeImage(current.id, current.image, current.index)}
                    >
                      <img
@@ -164,12 +228,68 @@ export default function SellerProductInspect() {
               <div className="flex justify-between w-fit flex-col">
                 <p className="mt-2 text-2xl font-semibold text-red-600">${currentVariant.price}</p>
                 <p className="mt-2 font-semibold text-slate-900">{currentVariant.variantName}</p>
-                <div className="flex gap-3">
-                  <p className="mt-2 font-semibold text-slate-900">sku</p>
-                  <p className="mt-2 font-semibold text-slate-900">red</p>
-                  <p className="mt-2 font-semibold text-slate-900">10</p>
-                  <p className="mt-2 font-semibold text-slate-900">v3</p>
-                  <p className="mt-2 font-semibold text-slate-900">best</p>
+                <div className="flex items-center gap-1">
+                  <svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fff7b0" />
+                        <stop offset="35%" stop-color="#ffd700" />
+                        <stop offset="70%" stop-color="#ffb800" />
+                        <stop offset="100%" stop-color="#ff8c00" />
+                      </linearGradient>
+
+                      <linearGradient id="shine" x1="0%" y1="0%" x2="200%" y2="0%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                        <stop offset="45%" stop-color="rgba(255,255,255,0.6)" />
+                        <stop offset="55%" stop-color="rgba(255,255,255,0.8)" />
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                        <animateTransform
+                          attributeName="gradientTransform"
+                          type="translate"
+                          from="-1 0"
+                          to="1 0"
+                          dur="2.2s"
+                          repeatCount="indefinite" />
+                      </linearGradient>
+
+                      <filter id="glow">
+                        <feGaussianBlur stdDeviation="0.8" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+
+                    <path d="M12 2
+           L15 9
+           L22 9.5
+           L17 14
+           L18.5 21.5
+           L12 17.8
+           L5.5 21.5
+           L7 14
+           L2 9.5
+           L9 9"
+                      fill="url(#goldGrad)"
+                      stroke="#ffcc33"
+                      stroke-width="0.6"
+                      filter="url(#glow)" />
+
+                    <path d="M12 2
+           L15 9
+           L22 9.5
+           L17 14
+           L18.5 21.5
+           L12 17.8
+           L5.5 21.5
+           L7 14
+           L2 9.5
+           L9 9"
+                      fill="url(#shine)"
+                      opacity="0.6" />
+                  </svg>
+                  <p className={`${ratings?.numberOfRaters === 0 ? "text-[#B0B0B0]" : "text-[#333333]"}`}>{ratings?.numberOfRaters === 0 ? "no rating" : ratings?.rating}</p>
                 </div>
               </div>
               <CommonSvgIcon width={"40"} height={"40"} color={"red"} type={"heart"}></CommonSvgIcon>

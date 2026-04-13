@@ -115,9 +115,7 @@ public class ProductService {
         List<Product> products = new ArrayList<>();
         products.add(product);
 
-        List<ProductResponse> productResponse = productMapper.toProductResponse(products);
-
-        return productResponse;
+        return productMapper.toProductResponse(products);
     }
 
 }

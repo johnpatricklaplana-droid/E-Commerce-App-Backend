@@ -35,7 +35,7 @@ public class ProductMapper {
             prodResponse.setRatings(toProductRatings(prod.getRatings()));
 
             productResponses.add(prodResponse);
-        }
+        } 
 
         return productResponses;
     }
@@ -70,18 +70,20 @@ public class ProductMapper {
         return productVariations;
     }
 
-    public List<ProductRatingDTO> toProductRatings (List<ProductRating> ratings) {
+    public ProductRatingDTO toProductRatings (List<ProductRating> ratings) {
 
-        List<ProductRatingDTO> ratingsDtos = new ArrayList<>();
+        double rating = 0;
+        int numberOfRaters = ratings.size();
+
+        ProductRatingDTO ratingDTO = new ProductRatingDTO();
+        ratingDTO.setNumberOfRaters(numberOfRaters);
+        ratingDTO.setRating(rating);
+
         for (ProductRating pr : ratings) {
-            ProductRatingDTO productRatingDTO = new ProductRatingDTO();
-            productRatingDTO.setRating(pr.getRating());
-            productRatingDTO.setCreatedAt(pr.getCreatedAt());
-            productRatingDTO.setUpdatedAt(pr.getUpdatedAt());
-            ratingsDtos.add(productRatingDTO);
+            rating += pr.getRating();
         }
 
-        return ratingsDtos;
+        return ratingDTO;
     }
 
     public List<String> toImagesUrl(List<ProductImage> images) {
