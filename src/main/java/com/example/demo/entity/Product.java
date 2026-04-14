@@ -53,7 +53,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductVariations> variations;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductRates> rates;
+    // @OneToMany(mappedBy = "product")
+    // private List<ProductRates> rates;
 
 }

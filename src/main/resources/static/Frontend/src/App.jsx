@@ -14,6 +14,7 @@ import CostumerLogin from "./pages/CostumerLogin";
 import AddSellerBankAccount from "./pages/AddSellerBankAccount";
 import ProductInspect from "./pages/ProductInspect";
 import SellerProductInspect from "./pages/SellerProduct";
+import CostumerFeed from "./pages/CostumerFeed";
 
 export default function App() {
     return (
@@ -34,6 +35,7 @@ export default function App() {
                 <Route path="/seller-bank-account" element={<AddSellerBankAccount/>} />
                 <Route path="/costumer-product" element={<ProductInspect/>} />
                 <Route path="/seller-product/:id" element={<SellerProductInspect/>} />
+                <Route path="/costumer-feed" element={<CostumerFeed/>} />
             </Routes>
         </BrowserRouter>
     );

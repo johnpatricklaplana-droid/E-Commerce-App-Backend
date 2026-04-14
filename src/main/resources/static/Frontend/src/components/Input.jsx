@@ -38,4 +38,37 @@ export default function Input ({
             <textarea id={id} onChange={handleChange} className={`${variants[variant]} ${height} ${width}`}></textarea>
         );
     }
+
+    if(type === "search") {
+        return (
+            <div className={`flex overflow-hidden gap-1.5 items-center border rounded border-slate-300 ${width}`}>
+                <div className="px-3 py-1.5">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    className={`${width} outline-0`}
+                />
+                <button className="hover:bg-blue-100 hover:scale-110 border-slate-400 px-3 py-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        );
+    }
 }

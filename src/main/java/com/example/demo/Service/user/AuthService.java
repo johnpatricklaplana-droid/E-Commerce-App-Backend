@@ -17,7 +17,7 @@ import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.EmailAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UnAuthorizedException;
-import com.example.demo.repository.Costumer_Repository;
+import com.example.demo.repository.CostumerRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.utils.CredentialsValidator;
@@ -26,7 +26,7 @@ import com.example.demo.utils.CredentialsValidator;
 public class AuthService {
 
     @Autowired
-    private Costumer_Repository costumer_repository;
+    private CostumerRepository costumer_repository;
 
     @Autowired
     private User_LocationRepository location_repository;

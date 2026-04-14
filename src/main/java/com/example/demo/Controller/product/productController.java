@@ -62,17 +62,6 @@ public class productController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);
-    }
-
-    // @PostMapping("/api/seller/product-variation-images/{variationId}")
-    // public ResponseEntity<SimpleResponseDTO> saveProdVariantsImages(@PathVariable int variationId, @RequestParam("images") List<MultipartFile> file) throws IOException {
-    //     productService.saveProductImages(variationId, file);
-        
-    //     return ResponseEntity
-    //         .status(HttpStatus.CREATED)
-    //         .body(new SimpleResponseDTO("images saved", 201));
-    // }
+    }    
     
-    
-
 }

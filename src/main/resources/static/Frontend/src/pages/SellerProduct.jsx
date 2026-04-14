@@ -10,6 +10,16 @@ export default function SellerProductInspect() {
   const { id } = useParams();
   const [expanded, setExpanded] = useState(false);
   const [product, setProduct] = useState({});
+  const [variants, setvariants] = useState([]);
+  const [activeVariant, setactiveVariant] = useState({
+    id: "",
+    color: "",
+    image: "",
+    price: "",
+    sku: "",
+    variantName: "",
+    index: ""
+  });
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,20 +38,12 @@ export default function SellerProductInspect() {
     }, []);
   }, [product]);
 
-  console.log(product);
-
   const cleanProduct = {
     id: product.id,
     productName: product.productName,
     productDescription: product.productDescription,
   };
 
-  // BOUND TO BE DELETED
-  const variations = useMemo(() => {
-    return product?.variations;
-  }, [product]);
-
-  // REFACTOR READY METHOD I JUST NEED SOME REST
   const forRefactor = useMemo(() => {
     return product?.variations?.reduce((acc, item) => {
       const imgs = item.imagesUrl.map((img) => {
@@ -55,97 +57,59 @@ export default function SellerProductInspect() {
         }
       })
       return [...acc, imgs]
-    }, []).flat()
+    }, []).flat().map((vary, i) => ({...vary, index: i}))
   }, [product]);
 
-  console.log(forRefactor);
+  useEffect(() => {
+    setactiveVariant(forRefactor?.[0]);
+  }, [forRefactor]);
 
-  const images = useMemo(() => {
-    return variations?.map((variant) => ({
-      id: variant.variantId,
-      image: variant.imagesUrl
-    }))
-  }, [variations]);
+  useEffect(() => {
+    setvariants(forRefactor);
+  }, [product]);
+
+  const goNext = () => {
+    const highIndex = variants.length - 1;
+    const currentOne = activeVariant.index;
+
+    const nextOne = currentOne + 1 > highIndex ? 0 : currentOne + 1;
+    
+    const realOne = variants.find(vary => vary.index === nextOne);
+    
+    setactiveVariant(realOne);
+  };
+
+  const goPrev = () => {
+    const highIndex = variants.length - 1;
+    const lowIndex = 0;
+    const currentOne = activeVariant.index;
+
+    const nextOne = currentOne - 1 < lowIndex ? highIndex : currentOne - 1;
+
+    const realOne = variants.find(vary => vary.index === nextOne);
+
+    setactiveVariant(realOne);
+  };
+
+  const jump = (index) => {
+    const jumpTo = index;
+
+    const realOne = variants.find(vary => vary.index === jumpTo);
+
+    setactiveVariant(realOne);
+  };
 
   const ratings = useMemo(() => {
     return product.ratings
   }, [product]);
 
-  console.log(ratings);
-
-  const imagesClean = useMemo(() => {
-    return images
-      ?.flatMap(item =>
-        item.image.map(img => ({
-          id: item.id,
-          image: img
-        }))
-      )
-      .map((item, index) => ({
-        ...item,
-        index
-      }));
-  }, [images]);
-
-  const [currentVariant, setcurrentVariant] = useState({
-    variantId: "",
-    currentImg: "",
-    variantName: "",
-    price: "",
-    name: "",
-    index: ""
-  });
-
   const expandDescription = () => {
     setExpanded(prev => prev ? false : true);
   };
 
-  const changeImage = (id, image, index) => {
-    const currentVar = variations?.find((v) => Number(v.variantId) === Number(id));
-    setcurrentVariant({
-      variantId: id, 
-      currentImg: image,
-      color: currentVar.color,
-      price: currentVar.price,
-      index: index,
-      variantName: currentVar.variationName
-    });
-  };
-
-  useEffect(() => {
-    if (imagesClean?.length > 0) {
-      const first = imagesClean[0];
-      changeImage(first.id, first.image, first.index);
-    }
-  }, [imagesClean]);
-
-  const nextImage = (index, id) => {
-    let image;
-    let currentVar;
-
-    if(id === "nextImage") {
-      image = imagesClean.find((img) => Number(img.index) === ((imagesClean.length - 1) <= index ? 0 : (index + 1)));
-      currentVar = variations?.find((v) => Number(v.variantId) === Number(image.id));
-    }
-
-    if(id === "prevImage") {
-      image = imagesClean.find((img) => Number(img.index) === (index > 0? (index - 1) : imagesClean.length - 1));
-      currentVar = variations?.find((v) => Number(v.variantId) === Number(image.id));
-    }
-    
-    setcurrentVariant({
-      variantId: image.id,
-      currentImg: image.image,
-      color: currentVar.color,
-      price: currentVar.price,
-      index: image.index,
-      variantName: currentVar.variationName
-    });
-  };
-
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => nextImage(currentVariant.index, "nextImage"),
-    onSwipedRight: () => nextImage(currentVariant.index, "prevImage"),
+    onSwipedLeft: () => goNext(),
+    onSwipedRight: () => goPrev(),
     trackMouse: true
   });
 
@@ -171,7 +135,7 @@ export default function SellerProductInspect() {
                 <div className="h-full absolute opacity-0 transition duration-500 hover:opacity-100 top-0 left-0 w-full">
                   <button 
                     className="absolute hover:opacity-50 cursor-pointer top-1/2 -translate-y-1/2 left-6"
-                    onClick={() => nextImage(currentVariant.index, "prevImage")}
+                    onClick={goPrev}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +150,7 @@ export default function SellerProductInspect() {
                   </button>
                   <button 
                     className="absolute hover:opacity-50 cursor-pointer top-1/2 -translate-y-1/2 right-6"
-                    onClick={()=> nextImage(currentVariant.index, "nextImage")}
+                    onClick={goNext}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -202,17 +166,17 @@ export default function SellerProductInspect() {
                 </div>
                 <img
                   className="h-full w-full rounded-3xl object-contain"
-                  src={`http://localhost:8080/api/seller/product-image/${currentVariant.currentImg}`}
+                  src={`http://localhost:8080/api/seller/product-image/${activeVariant?.image}`}
                   alt=""
                 />
               </div>
               <div className="overflow-x-auto h-28 flex flex-nowrap gap-1.5 sm:block rounded-2xl p-2 sm:overflow-auto sm:h-125">
                 {
-                 imagesClean?.map((current) => 
+                 variants?.map((current) => 
                    <button
                      key={`${id}`}
-                     className={`rounded-[1.75rem] border-blue-500 ${current.index === currentVariant.index ? "border-4" : "border-0"}`}
-                     onClick={() => changeImage(current.id, current.image, current.index)}
+                     className={`rounded-[1.75rem] border-blue-500 ${current.index === activeVariant.index ? "border-2" : "border-0"}`}
+                     onClick={() => jump(current.index)}
                    >
                      <img
                        className="rounded-2xl object-cover max-h-full hover:border-2 border-blue-500"
@@ -226,8 +190,8 @@ export default function SellerProductInspect() {
             </div>
             <div className="border-y border-slate-300 sm:border-0 sm:bg-blue-50 sm:rounded-3xl flex items-center justify-between p-1.5 sm:p-5">  
               <div className="flex justify-between w-fit flex-col">
-                <p className="mt-2 text-2xl font-semibold text-red-600">${currentVariant.price}</p>
-                <p className="mt-2 font-semibold text-slate-900">{currentVariant.variantName}</p>
+                <p className="mt-2 text-2xl font-semibold text-red-600">${activeVariant?.price}</p>
+                <p className="mt-2 font-semibold text-slate-900">{activeVariant?.variantName}</p>
                 <div className="flex items-center gap-1">
                   <svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <defs>
