@@ -1,4 +1,11 @@
-export default function Text ({variant, children, position, color}) {
+export default function Text ({
+    variant, 
+    children, 
+    position, 
+    color,
+    classList
+}) 
+{
     const variants = {
         heading1: "text-4xl font-bold text-gray-900",
         heading2: "text-3xl font-semibold text-gray-800",
@@ -25,6 +32,6 @@ export default function Text ({variant, children, position, color}) {
     };
 
     return (
-        <p className={`${variants[variant]} ${colors[color]} ${positions[position]}`}>{children}</p>
+        <p className={`${variants[variant]} ${classList} ${colors[color]} ${positions[position]}`}>{children}</p>
     );
 }

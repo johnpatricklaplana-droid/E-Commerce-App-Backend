@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
@@ -36,14 +37,14 @@ public class productController {
     ProductService productService;
 
     @GetMapping("/api/seller/product")
-    public ResponseEntity<List<ProductResponse>> getProducts (Pageable pageable) {
-        List<ProductResponse> productResponse = productService.getProducts(pageable);
+    public ResponseEntity<Set<ProductResponse>> getProducts (Pageable pageable) {
+        Set<ProductResponse> productResponse = productService.getProducts(pageable);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);
     }
 
-    @GetMapping("/api/seller/product-image/{fileName}")
+    @GetMapping("/api/public/product-image/{fileName}")
     public ResponseEntity<UrlResource> getMethodName(@PathVariable String fileName) throws MalformedURLException {
 
         Path filePath = Paths.get("product_images/", fileName);
@@ -57,8 +58,8 @@ public class productController {
     }
 
     @GetMapping("/api/seller/product/{productId}")
-    public ResponseEntity<List<ProductResponse>> getProduct (@PathVariable int productId) {
-        List<ProductResponse> productResponse = productService.getProduct(productId);
+    public ResponseEntity<Set<ProductResponse>> getProduct (@PathVariable int productId) {
+        Set<ProductResponse> productResponse = productService.getProduct(productId);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);

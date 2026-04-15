@@ -267,7 +267,7 @@ public class SellerService {
     }
 
     @Transactional
-    public Integer addProduct(CreateProductRequest product) throws IOException {
+    public Integer addProduct(CreateProductRequest product, MultipartFile thumbnail) throws IOException {
         
         if(product.getProductName().equals("") || product.getProductName() == null) {
             throw new IllegalArgumentException("product name is required");
@@ -293,13 +293,20 @@ public class SellerService {
         }
 
         Product prod = product.toProduct();
+
+        String fileName = thumbnail.getOriginalFilename();
        
-        List<Category> categories = product.getCategory();
+        Set<Category> categories = product.getCategory();
 
         prod.setCategories(categories);
         prod.setSeller(entityManager.getReference(Seller.class, sellerId));
         prod.setProductDescription(product.getProductDescription());
+        prod.setThumbnail(fileName);
         productRepo.save(prod);   
+
+        Path path = Paths.get("product_images", fileName);
+        Files.createDirectories(path.getParent());
+        Files.write(path, thumbnail.getBytes());
        
         return prod.getId();
     }

@@ -1,6 +1,7 @@
 package com.example.demo.DTO.productDTO;
 
 import java.util.List;
+import java.util.Set;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
@@ -14,8 +15,9 @@ public class CreateProductRequest {
   
     private String productName;
     private String productDescription;
+    private double price;
 
-    private List<Category> category;
+    private Set<Category> category;
 
     public Product toProduct() {
         Product product = new Product();
@@ -24,7 +26,7 @@ public class CreateProductRequest {
         return product;
     }
 
-    public List<Category> getCategory () {
+    public Set<Category> getCategory () {
         return category;
     }
 

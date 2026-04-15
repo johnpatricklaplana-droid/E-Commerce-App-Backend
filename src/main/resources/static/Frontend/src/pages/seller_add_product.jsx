@@ -29,6 +29,9 @@ export default function SellerAddProduct() {
         categories: ""
     });
 
+    const [thumbnail, setThumbnail] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
+
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prev) => ({ ...prev, [id]: value }));
@@ -36,12 +39,32 @@ export default function SellerAddProduct() {
 
     const submit = async () => {
         const url = "http://localhost:8080/api/seller/product";
-        const body = formData;
+        const formFields = formData;
+
+        const body = new FormData();
+        body.append(
+            "product",
+            new Blob([JSON.stringify(formFields)], {
+                type: "application/json"
+            })
+        );
+        body.append("thumbnail", thumbnail);
     
         const result = await POST(url, body);
 
-        navigate(`/todo/${result}`);
+        if(Number(result.message) === 201) {
+            navigate(`/todo/${result}`);
+        } else {
+            // TODO
+        }
 
+    };
+
+    const changeImage = (e) => {
+        const imageFile = e.target.files[0];
+
+        setThumbnail(imageFile);
+        setThumbnailPreview(URL.createObjectURL(imageFile));
     };
 
     return (
@@ -109,27 +132,26 @@ export default function SellerAddProduct() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                                <div className="flex items-center justify-between">
-                                    <Text variant="label">Quick summary</Text>
-                                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
-                                      Required fields
-                                    </span>
-                                </div>
-                                <div className="mt-6 space-y-4 text-sm text-slate-600">
-                                    <div className="rounded-3xl bg-slate-50 p-4">
-                                        <p className="text-slate-500">Product name</p>
-                                        <p className="mt-2 text-slate-900 font-semibold">What customers will see first</p>
+                            <div className="rounded-[1.5rem] min-h-[320px] group relative border border-slate-200 bg-white p-6 shadow-sm">
+                               <img className="w-full h-full" src={thumbnailPreview} alt="" />
+                                <label 
+                                    className={`w-full group-hover:opacity-100 ${thumbnailPreview === null ? "opacity-100 hover:bg-blue-50" : "opacity-0"} absolute z-50 top-0 left-0 border-0 flex-col hover:backdrop-blur-2xl rounded-2xl cursor-pointer flex items-center justify-center h-full`}
+                                    htmlFor="thumbnail"
+                                >
+                                    <div className="w-1/2">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 18H17C19.2 18 21 16.4 21 14.2C21 12.4 19.7 10.9 18 10.5C17.6 7.4 15.1 5 12 5C9.2 5 6.8 7 6.2 9.7C4.4 10.1 3 11.7 3 13.6C3 16 4.8 18 7 18Z"
+                                                stroke="#3B82F6" strokeWidth="1.8" strokeLinejoin="round" />
+
+                                            <path d="M12 12V8" stroke="#3B82F6" strokeWidth="1.8" strokeLinecap="round" />
+                                            <path d="M10 10L12 8L14 10" stroke="#3B82F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+
+                                            <path d="M9 18H15" stroke="#3B82F6" strokeWidth="1.8" strokeLinecap="round" />
+                                        </svg>
                                     </div>
-                                    <div className="rounded-3xl bg-slate-50 p-4">
-                                        <p className="text-slate-500">Price</p>
-                                        <p className="mt-2 text-slate-900 font-semibold">Set the selling price</p>
-                                    </div>
-                                    <div className="rounded-3xl bg-slate-50 p-4">
-                                        <p className="text-slate-500">Category</p>
-                                        <p className="mt-2 text-slate-900 font-semibold">Organize your listing</p>
-                                    </div>
-                                </div>
+                                    <p className="font-bold">Image only. I said image only!</p>
+                                </label>
+                                <input onChange={changeImage} className="hidden" type="file" name="" id="thumbnail" />
                             </div>
                         </div>
 

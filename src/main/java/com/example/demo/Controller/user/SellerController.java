@@ -88,12 +88,14 @@ public class SellerController {
     }
     
     @PostMapping("/api/seller/product") 
-    public ResponseEntity<String> addProduct(@RequestBody CreateProductRequest product
+    public ResponseEntity<SimpleResponseDTO> addProduct(
+        @RequestPart("product") CreateProductRequest product,
+        @RequestPart("thumbnail") MultipartFile thumbnail
     ) throws IOException {
-        Integer productId = sellerService.addProduct(product);
+        Integer productId = sellerService.addProduct(product, thumbnail);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("{ \"productId\": " + productId + "}");
+            .body(new SimpleResponseDTO(productId.toString(), 201));
     }
 
     @PostMapping("/api/seller/product-variant/{productId}")

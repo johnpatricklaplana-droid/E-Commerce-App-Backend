@@ -1,11 +1,7 @@
 package com.example.demo.entity;
 
-import com.example.demo.enums.ImageType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,8 +29,4 @@ public class ProductImage {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "image_type")
-    private ImageType imageType;
 }

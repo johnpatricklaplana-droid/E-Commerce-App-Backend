@@ -106,7 +106,7 @@ export default function SellerProducts () {
                                     onClick={() => navigate(`/seller-product/${prod.id}`)}
                                 >
 
-                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/seller/product-image/${prod.variations[0].imagesUrl[0]}` : "error"} alt="" />
+                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/public/product-image/${prod.variations[0].imagesUrl[0]}` : "error"} alt="" />
                                     <div className="w-full p-3">
                                         <Text position={"start"} variant={"semiSmall"}>{prod.productname}</Text>
                                         <Text color={"orange"} variant={"bold"}>{prod.variations[0] ? prod.variations[0].price : "00.00"}</Text>

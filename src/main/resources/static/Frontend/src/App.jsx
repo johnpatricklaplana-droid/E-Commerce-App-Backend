@@ -15,6 +15,7 @@ import AddSellerBankAccount from "./pages/AddSellerBankAccount";
 import ProductInspect from "./pages/ProductInspect";
 import SellerProductInspect from "./pages/SellerProduct";
 import CostumerFeed from "./pages/CostumerFeed";
+import AddProductVariants from "./pages/AddProductVariants";
 
 export default function App() {
     return (
@@ -36,6 +37,7 @@ export default function App() {
                 <Route path="/costumer-product" element={<ProductInspect/>} />
                 <Route path="/seller-product/:id" element={<SellerProductInspect/>} />
                 <Route path="/costumer-feed" element={<CostumerFeed/>} />
+                <Route path="/add-product-variants/:productId" element={<AddProductVariants/>} />
             </Routes>
         </BrowserRouter>
     );

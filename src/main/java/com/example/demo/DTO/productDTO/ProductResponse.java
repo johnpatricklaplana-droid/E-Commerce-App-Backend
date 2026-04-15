@@ -1,7 +1,6 @@
 package com.example.demo.DTO.productDTO;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,14 +11,15 @@ public class ProductResponse {
     private int id;
     private String productName;
     private String productDescription;
+    private double price;
     
     private String thumbNailUrl;
 
     // category
-    private List<ProductCategoryDTO> categories;
+    private Set<ProductCategoryDTO> categories;
 
     // variations
-    private List<ProductVariationsDTO> variations;
+    private Set<ProductVariationsDTO> variations;
 
     private ProductRatingDTO ratings;
 

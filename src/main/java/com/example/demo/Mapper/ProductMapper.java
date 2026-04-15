@@ -1,7 +1,7 @@
 package com.example.demo.Mapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -18,15 +18,19 @@ import com.example.demo.entity.ProductVariations;
 @Service
 public class ProductMapper {
     
-    public List<ProductResponse> toProductResponse (List<Product> product) {
+    public Set<ProductResponse> toProductResponse (
+        Set<Product> product
+    ) {
 
-        List<ProductResponse> productResponses = new ArrayList<>();
+        Set<ProductResponse> productResponses = new HashSet<>();
 
         for (Product prod : product) {
             ProductResponse prodResponse = new ProductResponse();
             prodResponse.setId(prod.getId());
+            prodResponse.setPrice(prod.getPrice());
             prodResponse.setProductName(prod.getProductName());
             prodResponse.setProductDescription(prod.getProductDescription());
+            prodResponse.setThumbNailUrl(prod.getThumbnail());
 
             prodResponse.setCategories(toProductCategoryDTO(prod.getCategories()));
 
@@ -40,9 +44,11 @@ public class ProductMapper {
         return productResponses;
     }
 
-    public List<ProductCategoryDTO> toProductCategoryDTO (List<Category> categories) {
+    public Set<ProductCategoryDTO> toProductCategoryDTO (Set<Category> categories) {
 
-        List<ProductCategoryDTO> categoriesDto = new ArrayList<>();
+        if(categories == null) return null;
+
+        Set<ProductCategoryDTO> categoriesDto = new HashSet<>();
         for (Category cat : categories) {
             ProductCategoryDTO dto = new ProductCategoryDTO();
             dto.setCategoryName(cat.getCategoryName());
@@ -53,9 +59,13 @@ public class ProductMapper {
         return categoriesDto;
     }
 
-    public List<ProductVariationsDTO> toProductVariationsDTO (List<ProductVariations> variations) {
+    public Set<ProductVariationsDTO> toProductVariationsDTO (Set<ProductVariations> variations) {
 
-        List<ProductVariationsDTO> productVariations = new ArrayList<>();
+        if(variations == null) {
+            return null;
+        }
+
+        Set<ProductVariationsDTO> productVariations = new HashSet<>();
         for (ProductVariations variant : variations) {
             ProductVariationsDTO dto = new ProductVariationsDTO();
             dto.setVariantId(variant.getId());
@@ -70,7 +80,9 @@ public class ProductMapper {
         return productVariations;
     }
 
-    public ProductRatingDTO toProductRatings (List<ProductRating> ratings) {
+    public ProductRatingDTO toProductRatings (Set<ProductRating> ratings) {
+
+        if(ratings == null) return null;
 
         double rating = 0;
         int numberOfRaters = ratings.size();
@@ -86,8 +98,11 @@ public class ProductMapper {
         return ratingDTO;
     }
 
-    public List<String> toImagesUrl(List<ProductImage> images) {
-        List<String> imagesUrl = new ArrayList<>();
+    public Set<String> toImagesUrl(Set<ProductImage> images) {
+
+        if(images == null) return null;
+
+        Set<String> imagesUrl = new HashSet<>();
         for (ProductImage image : images) {
             imagesUrl.add(image.getImageUrl());
         }

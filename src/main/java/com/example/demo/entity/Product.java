@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,6 +36,9 @@ public class Product {
     @Column(name = "product_description")
     private String productDescription;
 
+    @Column(name = "price")
+    private double price;
+
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
@@ -45,13 +49,16 @@ public class Product {
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories;
+    private Set<Category> categories;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductRating> ratings;
+    private Set<ProductRating> ratings;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductVariations> variations;
+    private Set<ProductVariations> variations;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     // @OneToMany(mappedBy = "product")
     // private List<ProductRates> rates;

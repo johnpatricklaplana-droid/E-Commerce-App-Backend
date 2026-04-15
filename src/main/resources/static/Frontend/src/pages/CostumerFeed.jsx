@@ -1,7 +1,21 @@
 import Input from "../components/Input";
 import CommonSvgIcon from "../components/CommonIcon";
+import { useEffect, useState } from "react";
+import { GET } from "../api/API.js"
 
 export default function CostumerFeed() {
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const getProducts = async () => {
+            const url = "http://localhost:8080/api/public/costumer/product"
+            const result = await GET(url);
+            setProducts(prev => [...prev, ...result])
+        }
+        getProducts();
+    }, []);   
+
     return (
         <div className="w-screen h-screen">
             <div className="sm:px-16 px-3 space-y-10 sm:py-6 h-full w-full">
@@ -75,253 +89,29 @@ export default function CostumerFeed() {
                     <div className="py-6 space-y-6">
                         <h1 className="sm:text-3xl text-lg font-sans">GOAT</h1>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=1" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
+                            {
+                                products?.map(prod => 
+                                    <div key={prod.id} className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
+                                        <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src={`http://localhost:8080/api/public/product-image/${prod.thumbNailUrl}`} alt="" />
+                                        <div className="space-y-3">
+                                            <div>
+                                                <p className="font-bold sm:text-2xl">{prod.productName}</p>
+                                                <p className="font-bold text-red-600 sm:text-2xl">${prod.price.toLocaleString()}</p>
+                                            </div>
+                                            <div className="flex items-center gap-1.5">
+                                                <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
+                                                <p className="text-xs">{prod.ratings.rating} rating {prod.ratings.numberOfRaters} reviews</p>
+                                            </div>
+                                            <div className="flex gap-1.5">
+                                                <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
+                                                <button className="hover:scale-105 transition duration-500 cursor-pointer">
+                                                    <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=2" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=3" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=4" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=5" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=6" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=7" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=8" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=9" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=10" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=11" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=12" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
-                                <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=13" alt="" />
-                                <div className="space-y-3"> 
-                                    <div>
-                                        <p className="font-bold sm:text-2xl">Best Headphones</p>
-                                        <p className="font-bold sm:text-2xl">$12000</p>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                        <p className="text-xs">20k reviews</p>
-                                    </div>
-                                    <div className="flex gap-1.5">
-                                        <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                        <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                            <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

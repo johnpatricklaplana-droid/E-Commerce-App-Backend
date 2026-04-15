@@ -1,6 +1,7 @@
 package com.example.demo.Controller.user;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -46,8 +47,8 @@ public class CostumerController {
     }
 
     @GetMapping("/api/public/costumer/product")
-    public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(defaultValue = "all") String category) {
-        List<ProductResponse> productResponse = costumerService.getProducts(category);
+    public ResponseEntity<Set<ProductResponse>> getProducts(@RequestParam(defaultValue = "all") String category) {
+        Set<ProductResponse> productResponse = costumerService.getProducts(category);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);

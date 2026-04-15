@@ -1,6 +1,7 @@
 package com.example.demo.DTO.productDTO;
 
 import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class ProductVariationsDTO {
     private String sku;
     private double price;
     
-    private List<String> imagesUrl;
+    private Set<String> imagesUrl;
 
 }
 

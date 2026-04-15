@@ -1,10 +1,6 @@
 package com.example.demo.entity;
 
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,5 +43,5 @@ public class ProductVariations {
     private String sku;
 
     @OneToMany(mappedBy = "productVariations")
-    private List<ProductImage> images;
+    private Set<ProductImage> images;
 }

@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import com.example.demo.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    List<Product> findBySellerId(int sellerId);
+    Set<Product> findBySellerId(int sellerId);
     
     // @Query("""
     //     SELECT pi

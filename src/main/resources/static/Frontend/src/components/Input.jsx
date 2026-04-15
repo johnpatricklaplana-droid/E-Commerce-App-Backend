@@ -8,7 +8,8 @@ export default function Input ({
     id, 
     fullWidth, 
     placeholder,
-    height
+    height,
+    classList
 }) {
 
     const variants = {

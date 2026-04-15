@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,6 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
-import com.example.demo.enums.ImageType;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
@@ -77,7 +78,6 @@ public class ProductService {
             ProductImage image = new ProductImage();
             image.setImageUrl(fileName);
             image.setProductVariations(entityManager.getReference(ProductVariations.class, variationId));
-            image.setImageType(ImageType.PHOTOS);
             productImageRepository.save(image);
 
             Path path = Paths.get("product_images/", fileName);
@@ -87,7 +87,7 @@ public class ProductService {
 
     }
 
-    public List<ProductResponse> getProducts(Pageable pageable) {
+    public Set<ProductResponse> getProducts(Pageable pageable) {
         
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
             .getContext()
@@ -96,12 +96,12 @@ public class ProductService {
 
         int sellerId = userDetails.getUserId();
 
-        List<Product> product = productRepo.findBySellerId(sellerId);
+        Set<Product> product = productRepo.findBySellerId(sellerId);
     
         return productMapper.toProductResponse(product);
     }
 
-    public List<ProductResponse> getProduct(int productId) {
+    public Set<ProductResponse> getProduct(int productId) {
         
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
             .getContext()
@@ -112,7 +112,7 @@ public class ProductService {
 
         Product product = productRepo.getProduct(productId, sellerId);
 
-        List<Product> products = new ArrayList<>();
+        Set<Product> products = new HashSet<>();
         products.add(product);
 
         return productMapper.toProductResponse(products);
