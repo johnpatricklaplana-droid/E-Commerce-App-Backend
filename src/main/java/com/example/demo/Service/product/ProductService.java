@@ -55,7 +55,7 @@ public class ProductService {
     @Autowired
     ProductMapper  productMapper;
 
-    public void saveProductImages (Integer variationId, List<MultipartFile> files) throws IOException {
+    public Set<ProductImage> saveProductImages (Integer variationId, List<MultipartFile> files) throws IOException {
 
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
             .getContext()
@@ -71,6 +71,8 @@ public class ProductService {
         if(product.getSeller().getId() != sellerId) {
             throw new ActionNotAllowedException("oops that's bad");
         }
+
+        Set<ProductImage> images = new HashSet<>();
         
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();
@@ -83,7 +85,10 @@ public class ProductService {
             Path path = Paths.get("product_images/", fileName);
             Files.createDirectories(path.getParent());
             Files.write(path, file.getBytes());
+            images.add(image);
         }
+
+        return images;
 
     }
 

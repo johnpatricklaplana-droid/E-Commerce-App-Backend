@@ -11,6 +11,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class productController {
     ProductService productService;
 
     @GetMapping("/api/seller/product")
-    public ResponseEntity<Set<ProductResponse>> getProducts (Pageable pageable) {
+    public ResponseEntity<Set<ProductResponse>> getProducts (@PageableDefault(page = 0, size = 10) Pageable pageable) {
         Set<ProductResponse> productResponse = productService.getProducts(pageable);
         return ResponseEntity
             .status(HttpStatus.OK)

@@ -18,7 +18,7 @@ public interface CostumerRepository extends JpaRepository<Costumer, Integer> {
     @Query("""
         SELECT  p
         FROM Product p
-        JOIN FETCH p.categories c
+        LEFT JOIN FETCH p.categories c
         LEFT JOIN FETCH p.ratings r
         WHERE (:category IS NULL OR c.categoryName = :category)
     """)

@@ -12,6 +12,7 @@ export default function CostumerFeed() {
             const url = "http://localhost:8080/api/public/costumer/product"
             const result = await GET(url);
             setProducts(prev => [...prev, ...result])
+            console.log(result);
         }
         getProducts();
     }, []);   

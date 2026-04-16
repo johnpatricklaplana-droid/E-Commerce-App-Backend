@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import { useState } from "react";
-import { POST, PostFile } from "../api/API";
+import { PostFile } from "../api/API";
 import Button from "../components/Button";
 import LeftArrow from "../components/LeftArrow";
 import Text from "../components/Text";
@@ -9,14 +9,16 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 
 const categoryOptions = [
-    { value: "js", label: "JavaScript" },
-    { value: "py", label: "Python" },
-    { value: "react", label: "React" },
-    { value: "java", label: "java" },
-    { value: "css", label: "css" },
-    { value: "spring", label: "spring" },
-    { value: "vague", label: "vague" },
-    { value: "tailwind", label: "tailwind" }
+    { value: "electronics", label: "Electronics" },
+    { value: "fashion", label: "Fashion" },
+    { value: "home_kitchen", label: "Home & Kitchen" },
+    { value: "beauty", label: "Beauty & Personal Care" },
+    { value: "sports", label: "Sports & Outdoors" },
+    { value: "toys", label: "Toys & Games" },
+    { value: "automotive", label: "Automotive" },
+    { value: "books", label: "Books" },
+    { value: "grocery", label: "Grocery & Food" },
+    { value: "health", label: "Health & Wellness" }
 ];
 
 export default function SellerAddProduct() {
@@ -50,10 +52,10 @@ export default function SellerAddProduct() {
         );
         body.append("thumbnail", thumbnail);
     
-        const result = await POST(url, body);
+        const result = await PostFile(url, body);
 
-        if(Number(result.message) === 201) {
-            navigate(`/todo/${result}`);
+        if(Number(result.status) === 201) {
+            navigate(`/add-product-variants/${result.message}`);
         } else {
             // TODO
         }

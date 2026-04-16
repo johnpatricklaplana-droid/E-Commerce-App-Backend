@@ -166,7 +166,7 @@ export default function SellerProductInspect() {
                 </div>
                 <img
                   className="h-full w-full rounded-3xl object-contain"
-                  src={`http://localhost:8080/api/seller/product-image/${activeVariant?.image}`}
+                  src={`http://localhost:8080/api/public/product-image/${activeVariant?.image}`}
                   alt=""
                 />
               </div>
@@ -180,7 +180,7 @@ export default function SellerProductInspect() {
                    >
                      <img
                        className="rounded-2xl object-cover max-h-full hover:border-2 border-blue-500"
-                       src={`http://localhost:8080/api/seller/product-image/${current.image}`}
+                       src={`http://localhost:8080/api/public/product-image/${current.image}`}
                        alt=""
                      />
                    </button>
@@ -190,7 +190,7 @@ export default function SellerProductInspect() {
             </div>
             <div className="border-y border-slate-300 sm:border-0 sm:bg-blue-50 sm:rounded-3xl flex items-center justify-between p-1.5 sm:p-5">  
               <div className="flex justify-between w-fit flex-col">
-                <p className="mt-2 text-2xl font-semibold text-red-600">${activeVariant?.price}</p>
+                <p className="mt-2 text-2xl font-semibold text-red-600">${activeVariant?.price.toLocaleString()}</p>
                 <p className="mt-2 font-semibold text-slate-900">{activeVariant?.variantName}</p>
                 <div className="flex items-center gap-1">
                   <svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -268,15 +268,6 @@ export default function SellerProductInspect() {
                     >{cat}</p>
                   )
                   }
-                  {/* <p className="bg-[#6C5CE7] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">gaming</p>
-                <p className="bg-[#0984E3] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">Electronics</p>
-                <p className="bg-[#FD79A8] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">fashion</p>
-                <p className="bg-[#E17055] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">home</p>
-                <p className="bg-[#A29BFE] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">beauty</p>
-                <p className="bg-[#00B894] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">sports</p>
-                <p className="bg-[#FDCB6E] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">books</p>
-                <p className="bg-[#E67E22] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">food</p>
-                <p className="bg-[#636E72] w-fit px-3 py-1.5 text-sm rounded-2xl text-white">automotive</p> */}
                 </div>
               </div>
               <div className="rounded-[1.75rem] bg-blue-50 transition-all duration-400 ease-in-out hover:bg-blue-100 p-6">

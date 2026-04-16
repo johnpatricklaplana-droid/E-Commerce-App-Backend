@@ -21,6 +21,7 @@ export default function SellerProducts () {
             console.log(result);
                 return {
                     id: res.id,
+                    thumbnail: res.thumbNailUrl,
                     productname: res.productName,
                     productdescription: res.productDescription,
                     categories: res.categories || [],
@@ -32,6 +33,8 @@ export default function SellerProducts () {
         
         fetchProduct();
     }, []);
+
+    console.log(product);
 
     return (
         <div className="bg-blue-100 grid grid-cols-[270px_1fr] h-screen">
@@ -106,10 +109,10 @@ export default function SellerProducts () {
                                     onClick={() => navigate(`/seller-product/${prod.id}`)}
                                 >
 
-                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/public/product-image/${prod.variations[0].imagesUrl[0]}` : "error"} alt="" />
+                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/public/product-image/${prod.thumbnail}` : "error"} alt="" />
                                     <div className="w-full p-3">
                                         <Text position={"start"} variant={"semiSmall"}>{prod.productname}</Text>
-                                        <Text color={"orange"} variant={"bold"}>{prod.variations[0] ? prod.variations[0].price : "00.00"}</Text>
+                                        <Text color={"orange"} variant={"bold"}>${prod.variations[0] ? prod.variations[0].price.toLocaleString() : "00.00"}</Text>
                                     </div>
                                     <div className="flex justify-end w-full px-3">
                                         <CommonSvgIcon hover={"grow"} width={28} height={28} type={"threeDot"}></CommonSvgIcon>

@@ -2,6 +2,7 @@ package com.example.demo.Controller.user;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -99,17 +100,17 @@ public class SellerController {
     }
 
     @PostMapping("/api/seller/product-variant/{productId}")
-    public ResponseEntity<String> postMethodName(
+    public ResponseEntity<ProductVariationsDTO> postMethodName(
         @PathVariable int productId,
         @RequestPart("productVariation") ProductVariationsDTO variation,
         @RequestPart("images") List<MultipartFile> images
     ) throws IOException {
 
-        Integer variantId = sellerService.saveVariant(productId, variation, images);
+        ProductVariationsDTO variant = sellerService.saveVariant(productId, variation, images);
         
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("{ \"variantId\": " + variantId + "}");
+            .body(variant);
     }
     
     

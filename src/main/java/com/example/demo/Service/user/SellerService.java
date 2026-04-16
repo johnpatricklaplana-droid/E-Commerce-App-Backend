@@ -22,11 +22,13 @@ import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
+import com.example.demo.Mapper.ProductMapper;
 import com.example.demo.Service.Jwt;
 import com.example.demo.Service.product.ProductService;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Seller_Bank_Account;
@@ -107,6 +109,9 @@ public class SellerService {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ProductMapper productMapper;
 
     @Transactional
     public String signup (SellerSignUpFieldsDTO sellerInfo) {
@@ -311,7 +316,7 @@ public class SellerService {
         return prod.getId();
     }
 
-    public Integer saveVariant (int productId, ProductVariationsDTO product, List<MultipartFile> images) throws IOException {
+    public ProductVariationsDTO saveVariant (int productId, ProductVariationsDTO product, List<MultipartFile> images) throws IOException {
 
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
             .getContext()
@@ -335,9 +340,15 @@ public class SellerService {
         variations.setPrice(productVariation.getPrice());
         productVariationRepo.save(variations);  
 
-        productService.saveProductImages(variations.getId(), images);
+        Set<ProductImage> imgs = productService.saveProductImages(variations.getId(), images);
+        variations.setImages(imgs);
 
-        return null;
+        Set<ProductVariations> variationsResponse = new HashSet<>();
+        variationsResponse.add(variations);
+        
+        ProductVariationsDTO response = productMapper.toProductVariationsDTO(variationsResponse).iterator().next();
+
+        return response;
     }
     
 }
