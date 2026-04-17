@@ -30,4 +30,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     """)
     Product getProduct(@Param("productId") int productId, @Param("sellerId") int sellerId);
 
+    @Query("""
+        SELECT p
+        FROM Product p
+        WHERE p.id = :productId
+    """)
+    Product getProductPublic(@Param("productId") int productId);
+
 }

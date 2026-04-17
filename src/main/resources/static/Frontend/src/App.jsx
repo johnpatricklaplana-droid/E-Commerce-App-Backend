@@ -16,6 +16,7 @@ import ProductInspect from "./pages/ProductInspect";
 import SellerProductInspect from "./pages/SellerProduct";
 import CostumerFeed from "./pages/CostumerFeed";
 import AddProductVariants from "./pages/AddProductVariants";
+import CostumerProductInspect from "./pages/CostumerProductInspect";
 
 export default function App() {
     return (
@@ -38,6 +39,7 @@ export default function App() {
                 <Route path="/seller-product/:id" element={<SellerProductInspect/>} />
                 <Route path="/costumer-feed" element={<CostumerFeed/>} />
                 <Route path="/add-product-variants/:productId" element={<AddProductVariants/>} />
+                <Route path="/costumer-product-inspect" element={<CostumerProductInspect/>} />
             </Routes>
         </BrowserRouter>
     );

@@ -2,6 +2,7 @@ package com.example.demo.Mapper;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -15,69 +16,61 @@ import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
 
+import io.jsonwebtoken.lang.Collections;
+
 @Service
 public class ProductMapper {
     
-    public Set<ProductResponse> toProductResponse (
-        Set<Product> product
-    ) {
+    public ProductResponse toProductResponse (Product product) {
 
-        Set<ProductResponse> productResponses = new HashSet<>();
+        ProductResponse prodResponse = new ProductResponse();
+        prodResponse.setId(product.getId());
+        prodResponse.setPrice(product.getPrice());
+        prodResponse.setProductName(product.getProductName());
+        prodResponse.setProductDescription(product.getProductDescription());
+        prodResponse.setThumbNailUrl(product.getThumbnail());
 
-        for (Product prod : product) {
-            ProductResponse prodResponse = new ProductResponse();
-            prodResponse.setId(prod.getId());
-            prodResponse.setPrice(prod.getPrice());
-            prodResponse.setProductName(prod.getProductName());
-            prodResponse.setProductDescription(prod.getProductDescription());
-            prodResponse.setThumbNailUrl(prod.getThumbnail());
+        prodResponse.setCategories(toProductCategoryDTO(product.getCategories()));
 
-            prodResponse.setCategories(toProductCategoryDTO(prod.getCategories()));
+        prodResponse.setVariations(toProductVariationsDTO(product.getVariations()));
 
-            prodResponse.setVariations(toProductVariationsDTO(prod.getVariations()));
+        prodResponse.setRatings(toProductRatings(product.getRatings()));
 
-            prodResponse.setRatings(toProductRatings(prod.getRatings()));
-
-            productResponses.add(prodResponse);
-        } 
-
-        return productResponses;
+        return prodResponse;
     }
 
     public Set<ProductCategoryDTO> toProductCategoryDTO (Set<Category> categories) {
 
-        if(categories == null) return null;
+        return categories == null 
+            ? Collections.emptySet()
+            : categories.stream()
+            .map(cat -> {
+                ProductCategoryDTO dto = new ProductCategoryDTO();
+                dto.setCategoryName(cat.getCategoryName());
+                dto.setCategoryDescription(cat.getDescription());
 
-        Set<ProductCategoryDTO> categoriesDto = new HashSet<>();
-        for (Category cat : categories) {
-            ProductCategoryDTO dto = new ProductCategoryDTO();
-            dto.setCategoryName(cat.getCategoryName());
-            dto.setCategoryDescription(cat.getDescription());
-            categoriesDto.add(dto);
-        } 
-
-        return categoriesDto;
+                return dto;
+            })
+            .collect(Collectors.toSet());
     }
 
     public Set<ProductVariationsDTO> toProductVariationsDTO (Set<ProductVariations> variations) {
 
-        if(variations == null) {
-            return null;
-        }
+        return variations == null 
+            ? Collections.emptySet()
+            : variations.stream()
+                .map(variant -> {
+                    ProductVariationsDTO dto = new ProductVariationsDTO();
+                    dto.setVariantId(variant.getId());
+                    dto.setVariationName(variant.getVariationName());
+                    dto.setColor(variant.getColor());
+                    dto.setPrice(variant.getPrice());
+                    dto.setSku(variant.getSku());
+                    dto.setImagesUrl(toImagesUrl(variant.getImages()));
 
-        Set<ProductVariationsDTO> productVariations = new HashSet<>();
-        for (ProductVariations variant : variations) {
-            ProductVariationsDTO dto = new ProductVariationsDTO();
-            dto.setVariantId(variant.getId());
-            dto.setVariationName(variant.getVariationName());
-            dto.setColor(variant.getColor());
-            dto.setPrice(variant.getPrice());
-            dto.setSku(variant.getSku());
-            dto.setImagesUrl(toImagesUrl(variant.getImages()));
-            productVariations.add(dto);
-        }
-
-        return productVariations;
+                    return dto;
+                })
+                .collect(Collectors.toSet());
     }
 
     public ProductRatingDTO toProductRatings (Set<ProductRating> ratings) {
@@ -100,13 +93,18 @@ public class ProductMapper {
 
     public Set<String> toImagesUrl(Set<ProductImage> images) {
 
-        if(images == null) return null;
-
-        Set<String> imagesUrl = new HashSet<>();
-        for (ProductImage image : images) {
-            imagesUrl.add(image.getImageUrl());
-        }
-        return imagesUrl;
+        return images == null 
+            ? Collections.emptySet()
+            : images.stream()
+                .map(img -> img.getImageUrl())
+                .collect(Collectors.toSet());
     }
 
+    public Set<ProductResponse> toProductResponse (Set<Product> products) {
+
+        return products.stream()
+            .map(prod -> toProductResponse(prod))
+            .collect(Collectors.toSet());
+
+    }
 }

@@ -1,11 +1,8 @@
 package com.example.demo.Controller.product;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.Service.product.ProductService;
-import com.example.demo.entity.Product;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -55,6 +47,7 @@ public class productController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .contentType(MediaType.IMAGE_PNG)
+            .header("Cache-Control", "public, max-age=31536000")
             .body(resource);
     }
 
@@ -65,5 +58,12 @@ public class productController {
             .status(HttpStatus.OK)
             .body(productResponse);
     }    
+    
+    @GetMapping("/api/public/product/{productId}")
+    public ResponseEntity<ProductResponse> getMethodName(@PathVariable int productId) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(productService.getProductPublic(productId));
+    }
     
 }

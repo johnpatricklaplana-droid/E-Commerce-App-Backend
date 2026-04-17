@@ -332,23 +332,21 @@ public class SellerService {
         }
 
         ProductVariationsDTO productVariation = product;
-        ProductVariations variations = new ProductVariations();
+        ProductVariations variations = productVariation.toProdutVariations();
         variations.setProduct(entityManager.getReference(Product.class, productId));
-        variations.setColor(productVariation.getColor());
-        variations.setSku(UUID.randomUUID().toString());
-        variations.setVariationName(productVariation.getVariationName());
-        variations.setPrice(productVariation.getPrice());
+        
         productVariationRepo.save(variations);  
 
         Set<ProductImage> imgs = productService.saveProductImages(variations.getId(), images);
         variations.setImages(imgs);
 
+        // mapper expects a collection, so wrap single variation in Set
+        // then extract the only element from the result
         Set<ProductVariations> variationsResponse = new HashSet<>();
         variationsResponse.add(variations);
         
-        ProductVariationsDTO response = productMapper.toProductVariationsDTO(variationsResponse).iterator().next();
+        return productMapper.toProductVariationsDTO(variationsResponse).iterator().next();
 
-        return response;
     }
     
 }

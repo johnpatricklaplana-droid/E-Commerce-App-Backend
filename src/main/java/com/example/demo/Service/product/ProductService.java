@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -121,6 +122,13 @@ public class ProductService {
         products.add(product);
 
         return productMapper.toProductResponse(products);
+    }
+
+    public ProductResponse getProductPublic(int productId) {
+        
+        Product product = productRepo.getProductPublic(productId);
+
+        return productMapper.toProductResponse(product);
     }
 
 }

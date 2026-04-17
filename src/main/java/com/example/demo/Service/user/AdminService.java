@@ -109,7 +109,7 @@ public class AdminService {
     }
 
     public void rejectSellerBusinessRegistrationFile(int id) {
-        
+       
         Business_Registration_Documents documents = documentsRepo.findById(id)
                 .orElse(null);
 
