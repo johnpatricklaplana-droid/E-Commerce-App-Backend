@@ -15,6 +15,11 @@ public class ProductResponse {
     
     private String thumbNailUrl;
 
+    private int sellerId;
+    private String sellerFirstName;
+    private String sellerLastName;
+    private String sellerProfilePic;
+
     // category
     private Set<ProductCategoryDTO> categories;
 

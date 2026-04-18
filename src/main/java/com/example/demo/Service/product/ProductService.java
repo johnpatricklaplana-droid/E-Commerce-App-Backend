@@ -26,6 +26,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
+import com.example.demo.entity.Seller;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
@@ -127,7 +128,7 @@ public class ProductService {
     public ProductResponse getProductPublic(int productId) {
         
         Product product = productRepo.getProductPublic(productId);
-
+        
         return productMapper.toProductResponse(product);
     }
 

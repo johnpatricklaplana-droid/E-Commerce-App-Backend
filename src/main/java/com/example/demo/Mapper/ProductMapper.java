@@ -15,6 +15,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
+import com.example.demo.entity.Seller;
 
 import io.jsonwebtoken.lang.Collections;
 
@@ -29,6 +30,15 @@ public class ProductMapper {
         prodResponse.setProductName(product.getProductName());
         prodResponse.setProductDescription(product.getProductDescription());
         prodResponse.setThumbNailUrl(product.getThumbnail());
+
+        Seller seller = product.getSeller();
+
+        if(seller != null) {
+            prodResponse.setSellerFirstName(seller.getFirst_name());
+            prodResponse.setSellerLastName(seller.getLast_name());
+            prodResponse.setSellerId(seller.getId());
+            prodResponse.setSellerProfilePic(seller.getProfile_pic());
+        }
 
         prodResponse.setCategories(toProductCategoryDTO(product.getCategories()));
 

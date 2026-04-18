@@ -12,9 +12,10 @@ export default function CostumerProductInspect () {
     const [product, setProduct] = useState({});
     const [productVariations, setProductVariations] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef(null);
-    const itemRefs = useRef([]);
+    const itemsRef = useRef([]);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         
@@ -36,51 +37,59 @@ export default function CostumerProductInspect () {
     }, [productId]);
 
     useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
+        
         const observer = new IntersectionObserver(
             (entries) => {
-                let mostVisibleIndex = 0;
-                let highestRatio = 0;
 
-                entries.forEach((entry) => {
-                    if (entry.intersectionRatio > highestRatio) {
-                        highestRatio = entry.intersectionRatio;
-                        mostVisibleIndex = itemRefs.current.indexOf(entry.target);
+                let mostVisibleIndex = 0;
+                let highestIntersectionRation = 0;
+
+                entries.forEach(el => {
+                    if(el.intersectionRatio > highestIntersectionRation) {
+                        mostVisibleIndex = itemsRef.current.indexOf(el.target);
+                        highestIntersectionRation = el.intersectionRatio;
                     }
                 });
 
-                // I removed the condition to test my theory that it still works without it.
-                // I didn’t delete it completely in case something goes wrong.
-                // if (highestRatio > 0) {
-                    setActiveIndex(mostVisibleIndex);
-                // }
+                setActiveIndex(mostVisibleIndex);
 
             },
             {
-                root: container,
-                threshold: [0.5, 0.75, 0.9], 
+                root: containerRef.current,
+                threshold: [0.5, 0.7, 0.9]
             }
         );
 
-        itemRefs.current.forEach((el) => {
-            if (el) observer.observe(el);
+        itemsRef.current.forEach(el => {
+            observer.observe(el);
         });
 
-        return () => observer.disconnect();
+        return () => {
+            observer.disconnect();
+        }
+
     }, [productVariations]);
 
+    const closeOpen = () => {
+        setIsOpen(false);
+    };
+
+    const open = () => {
+        setIsOpen(true);
+    };
+
+    
+
     return (
-        <div className="min-h-screen space-y-6 relative w-screen pb-24">
-            <AddToCartBox></AddToCartBox>
+        <div className={`min-h-screen w-screen flex flex-col gap-6`}>
+            {isOpen && <AddToCartBox closeOpen={closeOpen}></AddToCartBox>}
             <div 
-                className="h-96 w-full flex overflow-auto"
+                className="h-96 w-full flex overflow-x-auto"
                 ref={containerRef}
             >
                 {productVariations.map((vary, i) => 
                     <img
-                        ref={(el) => (itemRefs.current[i] = el)}
+                        ref={(el) => itemsRef.current[i] = el}
                         className="w-full object-contain shrink-0 aspect-auto h-full"
                         src={`http://localhost:8080/api/public/product-image/${vary.image}`}
                     >
@@ -267,9 +276,9 @@ export default function CostumerProductInspect () {
                 </div>
             </div>
 
-            <div className="fixed grid grid-cols-[1fr_1fr_50%] justify-end w-full bottom-0">
+            <div className="fixed grid grid-cols-[1fr_1fr_50%] left-0 right-0 justify-end w-full bottom-0">
                 <button className="py-3 px-5 font-bold bg-slate-200">web socket</button>
-                <button className="py-3 px-5 font-bold  bg-emerald-500 text-white">Add to cart</button>
+                <button onClick={open} className="py-3 px-5 font-bold  bg-emerald-500 text-white">Add to cart</button>
                 <button className="py-3 px-5 bg-orange-500 text-white font-bold">Buy now</button>
             </div>
         </div>

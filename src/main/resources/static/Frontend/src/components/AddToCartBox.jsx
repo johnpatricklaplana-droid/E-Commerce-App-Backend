@@ -1,22 +1,14 @@
 import { useState } from "react";
 import CommonSvgIcon from "./CommonIcon";
 
-export default function AddToCartBox () {
-
-    const [isOpen, setIsOpen] = useState(false);
-
-    const closeOpen = () => {
-        setIsOpen(prev => prev ? false : true);
-    };
+export default function AddToCartBox ({ closeOpen }) {
 
     return (
         <div 
-            className={`absolute ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} space-y-3 p-3 bottom-0 left-0 w-full`}
+            className={`fixed z-50 backdrop-blur-2xl bg-white/50 p-3 bottom-0`}
         >
             <div className="justify-end flex">
-                <button
-                    onClick={closeOpen}
-                >
+                <button onClick={closeOpen}>
                     <CommonSvgIcon type={"xbutton"}></CommonSvgIcon>
                 </button>
             </div>

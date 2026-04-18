@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
