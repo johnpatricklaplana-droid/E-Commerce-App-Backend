@@ -18,7 +18,7 @@ public class LocationDTO {
     private double lon;
     private AddressDTO address;
 
-    public User_Location getLocation () {
+    public User_Location toLocation () {
         User_Location location = new User_Location();
         location.setStreet(street);
         location.setCity(city);

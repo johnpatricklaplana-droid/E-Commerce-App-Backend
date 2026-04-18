@@ -3,7 +3,9 @@ import AddToCartBox from "../components/AddToCartBox";
 import CommonSvgIcon from "../components/CommonIcon";
 import Text from "../components/Text";
 import { GET } from "../api/API";
-import { toCategories, toProduct, toProductVariations } from "../hooks/mappers";
+import { toCategories, toProduct, toProductVariations } from "../hooks/ProductMapper";
+import { toSeller, toSellerLocation } from "../hooks/SellerMappers";
+import { useSwipeable } from "react-swipeable";
 
 export default function CostumerProductInspect () {
 
@@ -12,10 +14,10 @@ export default function CostumerProductInspect () {
     const [product, setProduct] = useState({});
     const [productVariations, setProductVariations] = useState([]);
     const [categories, setCategories] = useState([]);
-    const containerRef = useRef(null);
-    const itemsRef = useRef([]);
-    const [activeIndex, setActiveIndex] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [seller, setSeller] = useState({});
+    const [sellerLocation, setSellerLocation] = useState([]);
+    const [currentVariation, setCurrentVariation] = useState({});
 
     useEffect(() => {
         
@@ -26,9 +28,19 @@ export default function CostumerProductInspect () {
 
             setProduct(toProduct(result));
 
-            setProductVariations(toProductVariations(result));
+            const tempVariation = toProductVariations(result);
+
+            setProductVariations(tempVariation);
+            setCurrentVariation(tempVariation[0]);
 
             setCategories(toCategories(result));
+
+            const url2 = `http://localhost:8080/api/public/seller/${productId}`;
+            const result2 = await GET(url2);
+
+            setSeller(toSeller(result2));
+
+            setSellerLocation(toSellerLocation(result2));
 
         };
 
@@ -36,39 +48,11 @@ export default function CostumerProductInspect () {
 
     }, [productId]);
 
-    useEffect(() => {
-        
-        const observer = new IntersectionObserver(
-            (entries) => {
-
-                let mostVisibleIndex = 0;
-                let highestIntersectionRation = 0;
-
-                entries.forEach(el => {
-                    if(el.intersectionRatio > highestIntersectionRation) {
-                        mostVisibleIndex = itemsRef.current.indexOf(el.target);
-                        highestIntersectionRation = el.intersectionRatio;
-                    }
-                });
-
-                setActiveIndex(mostVisibleIndex);
-
-            },
-            {
-                root: containerRef.current,
-                threshold: [0.5, 0.7, 0.9]
-            }
-        );
-
-        itemsRef.current.forEach(el => {
-            observer.observe(el);
-        });
-
-        return () => {
-            observer.disconnect();
-        }
-
-    }, [productVariations]);
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: () => next(),
+        onSwipedRight: () => prev(),
+        trackMouse: true
+    });
 
     const closeOpen = () => {
         setIsOpen(false);
@@ -78,24 +62,53 @@ export default function CostumerProductInspect () {
         setIsOpen(true);
     };
 
-    
+    const next = () => {
+        let currentIndex = currentVariation.index;
+
+        if(currentIndex + 1 > productVariations.length-1) {
+            const newActiveVariation = productVariations.find(vary => vary.index === 0);
+            setCurrentVariation(newActiveVariation);
+        } else {
+            const newActiveVariation = productVariations.find(vary => vary.index === currentIndex + 1);
+            setCurrentVariation(newActiveVariation);
+        }
+    };
+
+    const prev = () => {
+        let currentIndex = currentVariation.index;
+
+        if (currentIndex - 1 < 0) {
+            const newActiveVariation = productVariations.find(vary => vary.index === productVariations.length - 1);
+            setCurrentVariation(newActiveVariation);
+        } else {
+            const newActiveVariation = productVariations.find(vary => vary.index === currentIndex - 1);
+            setCurrentVariation(newActiveVariation);
+        }
+    };
+
+    console.log(productVariations);
+    console.log(currentVariation)
 
     return (
         <div className={`min-h-screen w-screen flex flex-col gap-6`}>
-            {isOpen && <AddToCartBox closeOpen={closeOpen}></AddToCartBox>}
+            {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
             <div 
-                className="h-96 w-full flex overflow-x-auto"
-                ref={containerRef}
+                className="h-96 w-full flex overflow-x-hidden"
+                {...swipeHandlers}
             >
-                {productVariations.map((vary, i) => 
-                    <img
-                        ref={(el) => itemsRef.current[i] = el}
-                        className="w-full object-contain shrink-0 aspect-auto h-full"
-                        src={`http://localhost:8080/api/public/product-image/${vary.image}`}
-                    >
-
-                    </img>
-                )}
+                <div 
+                    className={`flex transition-transform duration-200`}
+                    style={{transform: `translateX(-${currentVariation?.index * 100}%)`}}
+                >
+                    {productVariations.map((vary, i) => 
+                        <img
+                            className="w-full object-contain shrink-0 aspect-auto h-full"
+                            src={`http://localhost:8080/api/public/product-image/${vary.image}`}
+                        >
+    
+                        </img>
+                    )}
+                </div>
             </div>
             <div className=" overflow-x-auto gap-1.5 p-1.5 flex h-[100px] w-full">
                 {productVariations.map(vary => 
@@ -108,14 +121,10 @@ export default function CostumerProductInspect () {
                 )}
             </div>
             <div className="border-b p-3">
-                {productVariations.map((vary, i) => 
-                    i === activeIndex 
-                        ? <div>                                                        
-                            <p className="text-[22px] leading-tight line-clamp-2 font-semibold">{vary.variationName}</p>
-                            <p className="text-[22px] font-bold text-red-500">${vary.price.toLocaleString()}</p>
-                        </div>
-                        : ""
-                )}
+                <div>                                                        
+                    <p className="text-[22px] leading-tight line-clamp-2 font-semibold">{currentVariation.variationName}</p>
+                    <p className="text-[22px] font-bold text-red-500">${currentVariation?.price?.toLocaleString()}</p>
+                </div>
             </div>
             <p className="text-gray-400 flex items-center pl-3 gap-1.5 mt-1.5">
                 <CommonSvgIcon type={"star"} classList={"w-[32px] h-[32px]"}></CommonSvgIcon>
@@ -187,7 +196,7 @@ export default function CostumerProductInspect () {
                     >
 
                     </img>
-                    <p>Your name is the highest |</p>
+                    <p>{seller.firstName + " " + seller.lastName}</p>
                 </div>
                 <p className="flex items-center gap-1.5">
                     <CommonSvgIcon type={"star"} classList={"w-[20px] h-[20px]"}></CommonSvgIcon> 

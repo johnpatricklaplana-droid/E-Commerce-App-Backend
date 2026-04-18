@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -28,10 +29,13 @@ public class Seller extends User {
         joinColumns=@JoinColumn(name="seller_id"),
         inverseJoinColumns=@JoinColumn(name="location_id")
     )
-    private List<User_Location> seller_location;
+    private Set<User_Location> seller_location;
 
     @OneToMany(mappedBy="seller")
     private List<Seller_Bank_Account> seller_Bank_Accounts;
+
+    @OneToMany(mappedBy = "sellers")
+    private Set<SellerRatings> ratings;
 
     @OneToMany(mappedBy = "seller")
     private List<Product> products;

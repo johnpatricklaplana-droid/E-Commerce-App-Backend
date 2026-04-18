@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +21,8 @@ import com.example.demo.Controller.client.Location_external_API;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
+import com.example.demo.DTO.sellerDTO.RatingsDTO;
+import com.example.demo.DTO.sellerDTO.SellerInfo;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Mapper.ProductMapper;
 import com.example.demo.Service.Jwt;
@@ -31,6 +33,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.entity.Seller;
+import com.example.demo.entity.SellerRatings;
 import com.example.demo.entity.Seller_Bank_Account;
 import com.example.demo.entity.Seller_Paper_Storage;
 import com.example.demo.entity.Sellers_Papers;
@@ -154,7 +157,7 @@ public class SellerService {
     }
 
     private void saveSeller (Seller seller, Integer locationId) {
-        List<User_Location> locations = new ArrayList<>();
+        Set<User_Location> locations = new HashSet<>();
         locations.add(entityManager.getReference(User_Location.class, locationId));
         
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
@@ -347,6 +350,54 @@ public class SellerService {
         
         return productMapper.toProductVariationsDTO(variationsResponse).iterator().next();
 
+    }
+
+    public SellerInfo getSeller(int productId) {
+        
+        Seller seller = seller_Repo.findSellerByProduct(productId);
+
+        SellerInfo sellerInfo = new SellerInfo();
+        sellerInfo.setFirstName(seller.getFirst_name());
+        sellerInfo.setLastName(seller.getLast_name());
+        sellerInfo.setProfilePic(seller.getProfile_pic());
+        sellerInfo.setSellerId(seller.getId());
+
+        Set<SellerRatings> ratings = seller.getRatings();
+
+        Set<RatingsDTO> ratingsDTOs = ratings.stream()
+            .map(rat -> {
+                RatingsDTO dto = new RatingsDTO();
+                dto.setRating(rat.getRating());
+                dto.setReview(rat.getReview());
+                dto.setCreatedAt(rat.getCreatedAt());
+                dto.setUpdatedAt(rat.getUpdatedAt());
+
+                return dto;
+            })
+            .collect(Collectors.toSet());
+
+        sellerInfo.setRatings(ratingsDTOs);
+        
+        Set<User_Location> locations = seller.getSeller_location();
+
+        Set<LocationDTO> locationDTOs = locations.stream()
+            .map(loc -> {
+                LocationDTO dto = new LocationDTO();
+                dto.setCountry(loc.getCountry());
+                dto.setCity(loc.getCity());
+                dto.setLat(loc.getLat());
+                dto.setLon(loc.getLon());
+                dto.setPostcode(loc.getPostal_code());
+                dto.setProvince(loc.getProvince());
+                dto.setStreet(loc.getStreet());
+                
+                return dto;
+            })
+            .collect(Collectors.toSet());
+
+        sellerInfo.setLocation(locationDTOs);
+
+        return sellerInfo;
     }
     
 }

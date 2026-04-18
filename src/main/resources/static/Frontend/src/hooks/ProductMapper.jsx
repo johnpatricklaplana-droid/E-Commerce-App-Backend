@@ -8,15 +8,19 @@ export function toProduct (product) {
 }
 
 export function toProductVariations (product) {
+
+    let i = 0;
+
     return product.variations.flatMap(vary =>
         vary.imagesUrl.map(img =>
-        ({
+        ({  
             variantId: vary.variantId,
             variationName: vary.variationName,
             sku: vary.sku,
             price: vary.price,
             color: vary.color,
-            image: img
+            image: img,
+            index: i++
         })
         )
     );

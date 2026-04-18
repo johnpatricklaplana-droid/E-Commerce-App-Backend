@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +34,15 @@ public interface Seller_Repository extends JpaRepository<Seller, Integer> {
         WHERE s.id = :sellerId
     """)
     void setSellerProfilePicture(@Param("sellerId") Integer sellerId, @Param("imageUrl") String imageUrl);
+
+    @Query("""
+        SELECT s
+        FROM Seller s
+        JOIN s.products as p
+        LEFT JOIN FETCH s.seller_location
+        LEFT JOIN FETCH s.ratings
+        WHERE p.id = :productId
+    """)
+    Seller findSellerByProduct(@Param("productId") int productId);
     
 }

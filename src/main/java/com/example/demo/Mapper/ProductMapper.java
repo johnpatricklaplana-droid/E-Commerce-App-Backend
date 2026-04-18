@@ -31,15 +31,6 @@ public class ProductMapper {
         prodResponse.setProductDescription(product.getProductDescription());
         prodResponse.setThumbNailUrl(product.getThumbnail());
 
-        Seller seller = product.getSeller();
-
-        if(seller != null) {
-            prodResponse.setSellerFirstName(seller.getFirst_name());
-            prodResponse.setSellerLastName(seller.getLast_name());
-            prodResponse.setSellerId(seller.getId());
-            prodResponse.setSellerProfilePic(seller.getProfile_pic());
-        }
-
         prodResponse.setCategories(toProductCategoryDTO(product.getCategories()));
 
         prodResponse.setVariations(toProductVariationsDTO(product.getVariations()));

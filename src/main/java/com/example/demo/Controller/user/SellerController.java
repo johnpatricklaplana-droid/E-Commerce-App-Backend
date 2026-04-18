@@ -2,7 +2,6 @@ package com.example.demo.Controller.user;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
+import com.example.demo.DTO.sellerDTO.SellerInfo;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
 import com.example.demo.entity.Seller_Bank_Account;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 public class SellerController {
@@ -113,5 +115,13 @@ public class SellerController {
             .body(variant);
     }
     
+    @GetMapping("/api/public/seller/{productId}")
+    public ResponseEntity<SellerInfo> getSeller(@PathVariable int productId) {
+        SellerInfo sellerInfo = sellerService.getSeller(productId);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(sellerInfo);
+    }
     
 }
