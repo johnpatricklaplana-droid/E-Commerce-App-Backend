@@ -39,7 +39,7 @@ export default function App() {
                 <Route path="/seller-product/:id" element={<SellerProductInspect/>} />
                 <Route path="/costumer-feed" element={<CostumerFeed/>} />
                 <Route path="/add-product-variants/:productId" element={<AddProductVariants/>} />
-                <Route path="/costumer-product-inspect" element={<CostumerProductInspect/>} />
+                <Route path="/costumer-product-inspect/:productId" element={<CostumerProductInspect/>} />
             </Routes>
         </BrowserRouter>
     );

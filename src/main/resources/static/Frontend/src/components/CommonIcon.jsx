@@ -13,6 +13,17 @@ export default function CommonSvgIcon ({
         grow: "hover:scale-110 transition duration-500"
     };
 
+    if(type === "location") {
+        return (
+            <div>
+                <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12z" fill="#FF3B30" />
+                    <circle cx="12" cy="10" r="3" fill="white" />
+                </svg>
+            </div>
+        );
+    }
+
     if(type === "threeDot") {
         return (
             <button className={`${hovers[hover]}`}>

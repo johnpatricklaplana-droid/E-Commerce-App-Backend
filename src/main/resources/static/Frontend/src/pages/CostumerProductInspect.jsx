@@ -6,10 +6,13 @@ import { GET } from "../api/API";
 import { toCategories, toProduct, toProductVariations } from "../hooks/ProductMapper";
 import { toSeller, toSellerLocation } from "../hooks/SellerMappers";
 import { useSwipeable } from "react-swipeable";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CostumerProductInspect () {
 
-    const productId = 36;
+    const { productId } = useParams();
+
+    const navigate = useNavigate();
 
     const [product, setProduct] = useState({});
     const [productVariations, setProductVariations] = useState([]);
@@ -24,7 +27,6 @@ export default function CostumerProductInspect () {
         const getProduct = async () => {
             const url = `http://localhost:8080/api/public/product/${productId}`;
             const result = await GET(url);
-            console.log(result);
 
             setProduct(toProduct(result));
 
@@ -37,7 +39,7 @@ export default function CostumerProductInspect () {
 
             const url2 = `http://localhost:8080/api/public/seller/${productId}`;
             const result2 = await GET(url2);
-
+        
             setSeller(toSeller(result2));
 
             setSellerLocation(toSellerLocation(result2));
@@ -87,10 +89,12 @@ export default function CostumerProductInspect () {
     };
 
     console.log(productVariations);
-    console.log(currentVariation)
+    console.log(sellerLocation)
 
     return (
-        <div className={`min-h-screen w-screen flex flex-col gap-6`}>
+        <div className={`min-h-screen w-screen flex flex-col p-1.5 pb-24 gap-6`}>
+            <button onClick={() => navigate(-1)} className="text-3xl z-50 fixed left-3 top-3">⬅️</button>
+            <button className="text-3xl z-50 fixed right-3 top-3">🛒</button>
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
             <div 
                 className="h-96 w-full flex overflow-x-hidden"
@@ -139,8 +143,25 @@ export default function CostumerProductInspect () {
                     )
                 }
             </div>
-            <Text variant={"label"} classList={"p-3"}>Description</Text>
-            {<p className="p-3">{product.productDescription}</p>}
+            <div className="p-3 space-y-1.5">
+                <Text variant={"label"}>Location</Text>
+                <p 
+                    className="flex text-gray-400 items-center"
+                >
+                    <CommonSvgIcon 
+                        height="34" 
+                        width="34" 
+                        type={"location"}
+                    >
+
+                    </CommonSvgIcon>
+                    {sellerLocation[0]?.city + ", " + sellerLocation[0]?.province + ", " + sellerLocation[0]?.country + ", " + sellerLocation[0]?.street}
+                </p>
+            </div>
+            <div className="p-3 space-y-1.5">
+                <Text variant={"label"}>Description</Text>
+                {<p className="text-gray-400">{product.productDescription}</p>}
+            </div>
 
             <Text variant={"label"} classList={"p-3"}>Costumer reviews</Text>
             <div 
@@ -286,7 +307,7 @@ export default function CostumerProductInspect () {
             </div>
 
             <div className="fixed grid grid-cols-[1fr_1fr_50%] left-0 right-0 justify-end w-full bottom-0">
-                <button className="py-3 px-5 font-bold bg-slate-200">web socket</button>
+                <button className="py-3 px-5 text-4xl font-bold bg-blue-400">💬</button>
                 <button onClick={open} className="py-3 px-5 font-bold  bg-emerald-500 text-white">Add to cart</button>
                 <button className="py-3 px-5 bg-orange-500 text-white font-bold">Buy now</button>
             </div>

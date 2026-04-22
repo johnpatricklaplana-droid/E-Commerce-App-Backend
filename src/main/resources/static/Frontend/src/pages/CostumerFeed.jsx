@@ -2,9 +2,11 @@ import Input from "../components/Input";
 import CommonSvgIcon from "../components/CommonIcon";
 import { useEffect, useState } from "react";
 import { GET } from "../api/API.js"
+import { useNavigate } from "react-router-dom";
 
 export default function CostumerFeed() {
 
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -15,7 +17,11 @@ export default function CostumerFeed() {
             console.log(result);
         }
         getProducts();
-    }, []);   
+    }, []);  
+    
+    const inspectProduct = (productId) => {
+        navigate(`/costumer-product-inspect/${productId}`);
+    };
 
     return (
         <div className="w-screen h-screen">
@@ -92,7 +98,11 @@ export default function CostumerFeed() {
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {
                                 products?.map(prod => 
-                                    <div key={prod.id} className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl">
+                                    <button 
+                                        key={prod.id} 
+                                        className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow-[0_3px_10px_rgba(0,0,0,0.25)] rounded-2xl"
+                                        onClick={() => (inspectProduct(prod.id))}
+                                    >
                                         <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src={`http://localhost:8080/api/public/product-image/${prod.thumbNailUrl}`} alt="" />
                                         <div className="space-y-3">
                                             <div>
@@ -110,7 +120,7 @@ export default function CostumerFeed() {
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </button>
                                 )
                             }
                         </div>
