@@ -68,11 +68,11 @@ public class productController {
             .body(productService.getProductPublic(productId));
     }
     
-    @PostMapping("/api/public/product")
-    public ResponseEntity<Set<ProductResponse>> getRelatedProducts(@RequestBody RelatedProductsDTO related) {
+    @PostMapping("/api/public/product/{productId}")
+    public ResponseEntity<Set<ProductResponse>> getRelatedProducts(@RequestBody RelatedProductsDTO related, @PathVariable int productId) {
         return ResponseEntity
             .status(200)
-            .body(productService.getRelatedProducts(related));
+            .body(productService.getRelatedProducts(related, productId));
     }
     
 }

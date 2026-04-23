@@ -42,7 +42,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         FROM Product p
         JOIN FETCH p.categories c
         WHERE c.categoryName IN :categories
+        AND 
+        p.id <> :productId
     """)
-    Set<Product> getRelatedProducts(@Param("categories") Set<String> categories);
+    Set<Product> getRelatedProducts(@Param("categories") Set<String> categories, @Param("productId") int productId);
 
 }

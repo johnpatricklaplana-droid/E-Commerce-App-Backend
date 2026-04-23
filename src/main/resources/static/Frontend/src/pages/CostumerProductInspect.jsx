@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AddToCartBox from "../components/AddToCartBox";
 import CommonSvgIcon from "../components/CommonIcon";
 import Text from "../components/Text";
@@ -48,7 +48,7 @@ export default function CostumerProductInspect () {
 
             setSellerLocation(toSellerLocation(result2));
 
-            const url3 = "http://localhost:8080/api/public/product";
+            const url3 = `http://localhost:8080/api/public/product/${productId}`;
             const caty = cats.map(cat => 
                 cat.categoryName
             );
@@ -259,7 +259,7 @@ export default function CostumerProductInspect () {
             <Text variant={"label"} classList={"p-3"}>Related pitch</Text>
 
             <div className="grid sm:grid-cols-4 grid-cols-2 gap-1.5">
-                {relatedProducts.map(relProd => 
+                {relatedProducts?.map(relProd => 
                     <button 
                         onClick={() => (changeProduct(relProd.id))}
                         className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl"

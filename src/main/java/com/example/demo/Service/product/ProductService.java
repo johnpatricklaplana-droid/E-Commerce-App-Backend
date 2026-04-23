@@ -125,9 +125,9 @@ public class ProductService {
         return productMapper.toProductResponse(product);
     }
 
-    public Set<ProductResponse> getRelatedProducts(RelatedProductsDTO related) {
+    public Set<ProductResponse> getRelatedProducts(RelatedProductsDTO related, int productId) {
         
-        Set<Product> products = productRepo.getRelatedProducts(related.getCategories());
+        Set<Product> products = productRepo.getRelatedProducts(related.getCategories(), productId);
         products.forEach(prod ->  prod.setVariations(null));
         products.forEach(prod -> prod.setCategories(null));
 
