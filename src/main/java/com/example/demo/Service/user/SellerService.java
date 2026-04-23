@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,6 +338,7 @@ public class SellerService {
         ProductVariationsDTO productVariation = product;
         ProductVariations variations = productVariation.toProdutVariations();
         variations.setProduct(entityManager.getReference(Product.class, productId));
+        variations.setSku(UUID.randomUUID().toString());
         
         productVariationRepo.save(variations);  
 

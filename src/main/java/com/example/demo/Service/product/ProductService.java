@@ -4,29 +4,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.DTO.productDTO.ProductCategoryDTO;
-import com.example.demo.DTO.productDTO.ProductRatingDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
-import com.example.demo.DTO.productDTO.ProductVariationsDTO;
+import com.example.demo.DTO.productDTO.RelatedProductsDTO;
 import com.example.demo.Mapper.ProductMapper;
-import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
-import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
-import com.example.demo.entity.Seller;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
@@ -130,6 +123,16 @@ public class ProductService {
         Product product = productRepo.getProductPublic(productId);
         
         return productMapper.toProductResponse(product);
+    }
+
+    public Set<ProductResponse> getRelatedProducts(RelatedProductsDTO related) {
+        
+        Set<Product> products = productRepo.getRelatedProducts(related.getCategories());
+        products.forEach(prod ->  prod.setVariations(null));
+        products.forEach(prod -> prod.setCategories(null));
+
+        return productMapper.toProductResponse(products);
+
     }
 
 }

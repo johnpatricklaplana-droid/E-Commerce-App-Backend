@@ -27,7 +27,7 @@ export default function SellerAddProduct() {
 
     const [formData, setFormData] = useState({
         productName: "",
-        description: "",
+        productDescription: "",
         categories: ""
     });
 
@@ -51,7 +51,9 @@ export default function SellerAddProduct() {
             })
         );
         body.append("thumbnail", thumbnail);
-    
+     
+        console.log(formFields);
+
         const result = await PostFile(url, body);
 
         if(Number(result.status) === 201) {
@@ -114,7 +116,7 @@ export default function SellerAddProduct() {
                                             const value = selected.map(elected => ({categoryName: elected.value}));
                                             setFormData(prev => ({
                                                 ...prev,
-                                                categories: value
+                                                category: value
                                             }))
                                         }}
                                     />
@@ -126,7 +128,7 @@ export default function SellerAddProduct() {
                                         type="textarea"
                                         placeholder={"$10000"}
                                         variant={"default"}
-                                        id={"description"}
+                                        id={"productDescription"}
                                         fullWidth={true}
                                         handleChange={handleChange}
                                         height={"h-full max-h-[100px]"}

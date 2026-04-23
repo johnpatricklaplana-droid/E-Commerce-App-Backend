@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.productDTO.ProductResponse;
+import com.example.demo.DTO.productDTO.RelatedProductsDTO;
 import com.example.demo.Service.product.ProductService;
 
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -38,7 +40,7 @@ public class productController {
     }
 
     @GetMapping("/api/public/product-image/{fileName}")
-    public ResponseEntity<UrlResource> getMethodName(@PathVariable String fileName) throws MalformedURLException {
+    public ResponseEntity<UrlResource> getImage(@PathVariable String fileName) throws MalformedURLException {
 
         Path filePath = Paths.get("product_images/", fileName);
         System.out.println(filePath.toAbsolutePath());
@@ -64,6 +66,13 @@ public class productController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productService.getProductPublic(productId));
+    }
+    
+    @PostMapping("/api/public/product")
+    public ResponseEntity<Set<ProductResponse>> getRelatedProducts(@RequestBody RelatedProductsDTO related) {
+        return ResponseEntity
+            .status(200)
+            .body(productService.getRelatedProducts(related));
     }
     
 }

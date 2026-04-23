@@ -37,4 +37,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     """)
     Product getProductPublic(@Param("productId") int productId);
 
+    @Query("""
+        SELECT p 
+        FROM Product p
+        JOIN FETCH p.categories c
+        WHERE c.categoryName IN :categories
+    """)
+    Set<Product> getRelatedProducts(@Param("categories") Set<String> categories);
+
 }

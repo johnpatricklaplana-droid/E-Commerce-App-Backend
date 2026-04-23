@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import AddToCartBox from "../components/AddToCartBox";
 import CommonSvgIcon from "../components/CommonIcon";
 import Text from "../components/Text";
-import { GET } from "../api/API";
+import { GET, POST } from "../api/API";
 import { toCategories, toProduct, toProductVariations } from "../hooks/ProductMapper";
 import { toSeller, toSellerLocation } from "../hooks/SellerMappers";
 import { useSwipeable } from "react-swipeable";
@@ -14,6 +14,7 @@ export default function CostumerProductInspect () {
 
     const navigate = useNavigate();
 
+    const [loading, setloading] = useState(false);
     const [product, setProduct] = useState({});
     const [productVariations, setProductVariations] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -21,6 +22,7 @@ export default function CostumerProductInspect () {
     const [seller, setSeller] = useState({});
     const [sellerLocation, setSellerLocation] = useState([]);
     const [currentVariation, setCurrentVariation] = useState({});
+    const [relatedProducts, setRelatedProducts] = useState([]);
 
     useEffect(() => {
         
@@ -35,7 +37,9 @@ export default function CostumerProductInspect () {
             setProductVariations(tempVariation);
             setCurrentVariation(tempVariation[0]);
 
-            setCategories(toCategories(result));
+            const cats = toCategories(result);
+
+            setCategories(cats);
 
             const url2 = `http://localhost:8080/api/public/seller/${productId}`;
             const result2 = await GET(url2);
@@ -44,11 +48,26 @@ export default function CostumerProductInspect () {
 
             setSellerLocation(toSellerLocation(result2));
 
+            const url3 = "http://localhost:8080/api/public/product";
+            const caty = cats.map(cat => 
+                cat.categoryName
+            );
+
+            const body = {
+                categories: caty
+            }
+
+            const fetchRelatedProducts = await POST(url3, body);
+            setRelatedProducts(fetchRelatedProducts);
+            console.log(fetchRelatedProducts);
+            setloading(false);
         };
 
         getProduct();
 
     }, [productId]);
+
+    console.log(categories);
 
     const swipeHandlers = useSwipeable({
         onSwipedLeft: () => next(),
@@ -86,10 +105,22 @@ export default function CostumerProductInspect () {
             const newActiveVariation = productVariations.find(vary => vary.index === currentIndex - 1);
             setCurrentVariation(newActiveVariation);
         }
-    };
+    };  
 
-    console.log(productVariations);
-    console.log(sellerLocation)
+    const changeProduct = (prodId) => {
+        setloading(true);
+        navigate(`/costumer-product-inspect/${prodId}`)
+        window.scrollTo({top: 0, behavior: "auto"});
+    }
+
+    if(loading) {
+        return (
+            <div className="flex items-center flex-col justify-center h-screen w-screen">
+                <h1 className="text-2xl">Loading please wait</h1>
+                <p>TODO: create skeleton loading screen</p>
+            </div>
+        );
+    }
 
     return (
         <div className={`min-h-screen w-screen flex flex-col p-1.5 pb-24 gap-6`}>
@@ -209,7 +240,7 @@ export default function CostumerProductInspect () {
                 </div>
             </div>
                     
-            <div className="flex gap-1.5 p-3">
+            <div className="flex gap-1.5 p-3 border border-gray-400">
                 <div className="flex gap-1.5 items-center">
                     <img
                         className="rounded-[50%] w-16 h-16"
@@ -217,7 +248,7 @@ export default function CostumerProductInspect () {
                     >
 
                     </img>
-                    <p>{seller.firstName + " " + seller.lastName}</p>
+                    <p className="font-bold text-2xl">{seller.firstName + " " + seller.lastName}</p>
                 </div>
                 <p className="flex items-center gap-1.5">
                     <CommonSvgIcon type={"star"} classList={"w-[20px] h-[20px]"}></CommonSvgIcon> 
@@ -227,83 +258,34 @@ export default function CostumerProductInspect () {
 
             <Text variant={"label"} classList={"p-3"}>Related pitch</Text>
 
-            <div className="grid grid-cols-2 gap-1.5">
-                <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl">
-                    <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=1" alt="" />
-                    <div className="space-y-3">
-                        <div>
-                            <p className="font-bold sm:text-2xl">prod.productName</p>
-                            <p className="font-bold text-red-600 sm:text-2xl">$100,000</p>
+            <div className="grid sm:grid-cols-4 grid-cols-2 gap-1.5">
+                {relatedProducts.map(relProd => 
+                    <button 
+                        onClick={() => (changeProduct(relProd.id))}
+                        className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl"
+                        key={relProd.id}
+                    >
+                        <img 
+                            className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" 
+                            src={`http://localhost:8080/api/public/product-image/${relProd.thumbNailUrl}`} alt="" />
+                        <div className="space-y-3">
+                            <div>
+                                <p className="font-bold sm:text-2xl">{relProd.productName}</p>
+                                <p className="font-bold text-red-600 sm:text-2xl">${relProd.price.toLocaleString()}</p>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
+                                <p className="text-xs">{relProd.ratings.rating} rating {relProd.ratings.numberOfRaters} reviews</p>
+                            </div>
+                            <div className="flex gap-1.5">
+                                <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
+                                <button className="hover:scale-105 transition duration-500 cursor-pointer">
+                                    <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                            <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                            <p className="text-xs">2.3 rating 100,000 reviews</p>
-                        </div>
-                        <div className="flex gap-1.5">
-                            <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                            <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl">
-                    <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=1" alt="" />
-                    <div className="space-y-3">
-                        <div>
-                            <p className="font-bold sm:text-2xl">prod.productName</p>
-                            <p className="font-bold text-red-600 sm:text-2xl">$100,000</p>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                            <p className="text-xs">2.3 rating 100,000 reviews</p>
-                        </div>
-                        <div className="flex gap-1.5">
-                            <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                            <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl">
-                    <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=1" alt="" />
-                    <div className="space-y-3">
-                        <div>
-                            <p className="font-bold sm:text-2xl">prod.productName</p>
-                            <p className="font-bold text-red-600 sm:text-2xl">$100,000</p>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                            <p className="text-xs">2.3 rating 100,000 reviews</p>
-                        </div>
-                        <div className="flex gap-1.5">
-                            <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                            <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl">
-                    <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" src="https://picsum.photos/200/300?random=1" alt="" />
-                    <div className="space-y-3">
-                        <div>
-                            <p className="font-bold sm:text-2xl">prod.productName</p>
-                            <p className="font-bold text-red-600 sm:text-2xl">$100,000</p>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                            <p className="text-xs">2.3 rating 100,000 reviews</p>
-                        </div>
-                        <div className="flex gap-1.5">
-                            <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                            <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    </button>
+                )}
             </div>
 
             <div className="fixed grid grid-cols-[1fr_1fr_50%] left-0 right-0 justify-end w-full bottom-0">
