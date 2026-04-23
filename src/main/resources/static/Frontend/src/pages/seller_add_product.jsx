@@ -18,7 +18,9 @@ const categoryOptions = [
     { value: "automotive", label: "Automotive" },
     { value: "books", label: "Books" },
     { value: "grocery", label: "Grocery & Food" },
-    { value: "health", label: "Health & Wellness" }
+    { value: "health", label: "Health & Wellness" },
+    { value: "anime", label: "anime" },
+    { value: "gaming", label: "gaming" }
 ];
 
 export default function SellerAddProduct() {

@@ -4,13 +4,16 @@ export default function Button({
     onClick,
     type = "button",
     disabled = false, 
-    fullWidth
+    fullWidth,
+    bg,
+    color,
+    classList
 }) {
 
     const baseStyle = "px-4 py-2 rounded font-medium";
 
     const variants = {
-        primary: "bg-blue-500 text-white hover:bg-blue-600",
+        primary: "text-white",
         secondary: "bg-gray-500 text-white hover:bg-gray-600",
         danger: "bg-red-500 text-white hover:bg-red-600",
         outline: "border border-gray-500 text-gray-700",
@@ -24,7 +27,7 @@ export default function Button({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`${baseStyle} ${variants[variant]} ${width}`}
+            className={`${baseStyle} ${classList} ${bg} ${variants[variant]} ${width}`}
         >
             {children}
         </button>

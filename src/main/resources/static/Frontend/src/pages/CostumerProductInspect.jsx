@@ -7,6 +7,8 @@ import { toCategories, toProduct, toProductVariations } from "../hooks/ProductMa
 import { toSeller, toSellerLocation } from "../hooks/SellerMappers";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate, useParams } from "react-router-dom";
+import CostumerNavBar from "../components/CostumerNavBar";
+import Button from "../components/Button";
 
 export default function CostumerProductInspect () {
 
@@ -14,7 +16,7 @@ export default function CostumerProductInspect () {
 
     const navigate = useNavigate();
 
-    const [loading, setloading] = useState(false);
+    const [loading, setloading] = useState(true);
     const [product, setProduct] = useState({});
     const [productVariations, setProductVariations] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -23,6 +25,7 @@ export default function CostumerProductInspect () {
     const [sellerLocation, setSellerLocation] = useState([]);
     const [currentVariation, setCurrentVariation] = useState({});
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [currentVariationNearAddToCart, setCurrentVariationNearAddToCart] = useState({});
 
     useEffect(() => {
         
@@ -36,6 +39,7 @@ export default function CostumerProductInspect () {
 
             setProductVariations(tempVariation);
             setCurrentVariation(tempVariation[0]);
+            setCurrentVariationNearAddToCart(tempVariation[0]);
 
             const cats = toCategories(result);
 
@@ -66,8 +70,6 @@ export default function CostumerProductInspect () {
         getProduct();
 
     }, [productId]);
-
-    console.log(categories);
 
     const swipeHandlers = useSwipeable({
         onSwipedLeft: () => next(),
@@ -122,38 +124,99 @@ export default function CostumerProductInspect () {
         );
     }
 
+    const changeCurrentVariationNearAddToCart = (variantId) => {
+        const newCurrentVariantNearAddToCart = productVariations.find(prod => prod.variantId === variantId);
+
+        setCurrentVariationNearAddToCart(newCurrentVariantNearAddToCart);
+    };
+
+    console.log(currentVariationNearAddToCart);
+
     return (
-        <div className={`min-h-screen w-screen flex flex-col p-1.5 pb-24 gap-6`}>
-            <button onClick={() => navigate(-1)} className="text-3xl z-50 fixed left-3 top-3">⬅️</button>
-            <button className="text-3xl z-50 fixed right-3 top-3">🛒</button>
+        <div className={`min-h-screen w-screen flex flex-col p-1.5 sm:pb-1.5 pb-24 gap-6`}>
+            <CostumerNavBar></CostumerNavBar>
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
-            <div 
-                className="h-96 w-full flex overflow-x-hidden"
-                {...swipeHandlers}
-            >
-                <div 
-                    className={`flex transition-transform duration-200`}
-                    style={{transform: `translateX(-${currentVariation?.index * 100}%)`}}
-                >
-                    {productVariations.map((vary, i) => 
-                        <img
-                            className="w-full object-contain shrink-0 aspect-auto h-full"
-                            src={`http://localhost:8080/api/public/product-image/${vary.image}`}
-                        >
-    
-                        </img>
-                    )}
-                </div>
-            </div>
-            <div className=" overflow-x-auto gap-1.5 p-1.5 flex h-[100px] w-full">
-                {productVariations.map(vary => 
-                    <img
-                        className="rounded-2xl shadow object-contain aspect-square h-full"
-                        src={`http://localhost:8080/api/public/product-image/${vary.image}`}
+            <div className="sm:grid sm:grid-cols-2 w-full sm:gap-3">
+                <div>
+                    <div
+                        className="h-96 w-full flex overflow-x-hidden"
+                        {...swipeHandlers}
                     >
-    
-                    </img>
-                )}
+                        <div
+                            className={`flex transition-transform duration-200`}
+                            style={{ transform: `translateX(-${currentVariation?.index * 100}%)` }}
+                        >
+                            {productVariations.map((vary, i) =>
+                                <img
+                                    className="w-full object-contain shrink-0 aspect-auto h-full"
+                                    src={`http://localhost:8080/api/public/product-image/${vary.image}`}
+                                >
+
+                                </img>
+                            )}
+                        </div>
+                    </div>
+                    <div className=" overflow-x-auto sm:max-w-[80%] gap-1.5 p-1.5 flex h-[100px] w-full">
+                        {productVariations.map(vary =>
+                            <img
+                                className="rounded-2xl shadow object-contain aspect-square h-full"
+                                src={`http://localhost:8080/api/public/product-image/${vary.image}`}
+                            >
+
+                            </img>
+                        )}
+                    </div>
+                </div>
+                <div className="relative space-y-3 p-1.5 sm:block hidden">
+                    <div className="flex gap-1.5">
+                        <img
+                            className="aspect-square max-w-[122px]"
+                            src={`http://localhost:8080/api/public/product-image/${currentVariationNearAddToCart.image}`}
+                            alt=""
+                        />
+                        <div>
+                            <p>{currentVariationNearAddToCart.variationName}</p>
+                            <p className="text-2xl text-red-500 font-bold">${currentVariationNearAddToCart.price.toLocaleString()}</p>
+                            <div className="flex gap-1.5 items-center">
+                                <CommonSvgIcon classList={"w-6 h-6"} type={"star"}></CommonSvgIcon>
+                                <p className="text-sm text-gray-400">todo: ratings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex gap-1.5 max-h-[250px] flex-wrap overflow-y-scroll">
+                        {
+                            productVariations.map((vary, i, self) => {
+
+                            const isFirst = self.findIndex(selfy => selfy.variantId === vary.variantId) === i;
+
+                            if(!isFirst) {
+                                return undefined;
+                            }
+
+                            return <button
+                                        className="flex gap-1.5 hover:bg-gray-500 active:scale-95 transition cursor-pointer items-center border border-gray-400 hover:scale-101"
+                                        key={vary.variantId}
+                                        onClick={() => (changeCurrentVariationNearAddToCart(vary.variantId))}
+                                    >
+                                        <img
+                                            src={`http://localhost:8080/api/public/product-image/${vary.image}`}
+                                            alt=""
+                                            className="max-w-16 max-h-16 min-w-16 min-h-16"
+                                        />
+                                        <div>
+                                            <p className=" px-1.5 text-sm text-gray-700">{vary.variationName}</p>
+                                            <p className=" px-1.5 text-sm text-red-500">${vary.price.toLocaleString()}</p>
+                                        </div>
+                                    </button>
+                                }
+                            )
+                        }
+                    </div>
+                    <div className="absolute bottom-0 p-3 flex justify-start w-full">
+                        <Button bg={"bg-emerald-500"} classList={"mr-3 hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Add to cart</Button>
+                        <Button bg={"bg-orange-500"} classList={"hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Buy now</Button>
+                    </div>
+                </div>
             </div>
             <div className="border-b p-3">
                 <div>                                                        
@@ -258,11 +321,11 @@ export default function CostumerProductInspect () {
 
             <Text variant={"label"} classList={"p-3"}>Related pitch</Text>
 
-            <div className="grid sm:grid-cols-4 grid-cols-2 gap-1.5">
+            <div className="grid sm:grid-cols-6 grid-cols-2 gap-3">
                 {relatedProducts?.map(relProd => 
                     <button 
                         onClick={() => (changeProduct(relProd.id))}
-                        className="sm:space-y-6 space-y-1.5 hover:scale-105 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl"
+                        className="sm:space-y-3 space-y-1.5 hover:scale-101 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl"
                         key={relProd.id}
                     >
                         <img 
@@ -270,25 +333,19 @@ export default function CostumerProductInspect () {
                             src={`http://localhost:8080/api/public/product-image/${relProd.thumbNailUrl}`} alt="" />
                         <div className="space-y-3">
                             <div>
-                                <p className="font-bold sm:text-2xl">{relProd.productName}</p>
-                                <p className="font-bold text-red-600 sm:text-2xl">${relProd.price.toLocaleString()}</p>
+                                <p className="text-start text-gray-700 font-semibold">{relProd.productName}</p>
+                                <p className="text-start font-bold text-red-600">${relProd.price.toLocaleString()}</p>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
                                 <p className="text-xs">{relProd.ratings.rating} rating {relProd.ratings.numberOfRaters} reviews</p>
-                            </div>
-                            <div className="flex gap-1.5">
-                                <button className="font-bold text-xs sm:text-lg w-full hover:bg-amber-200 cursor-pointer hover:scale-105 transition duration-500 bg-amber-300 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-2xl">Add to cart</button>
-                                <button className="hover:scale-105 transition duration-500 cursor-pointer">
-                                    <CommonSvgIcon type={"heart"} color={"gray"} width="36" height="36"></CommonSvgIcon>
-                                </button>
                             </div>
                         </div>
                     </button>
                 )}
             </div>
 
-            <div className="fixed grid grid-cols-[1fr_1fr_50%] left-0 right-0 justify-end w-full bottom-0">
+            <div className="fixed grid grid-cols-[1fr_1fr_50%] sm:hidden left-0 right-0 justify-end w-full bottom-0">
                 <button className="py-3 px-5 text-4xl font-bold bg-blue-400">💬</button>
                 <button onClick={open} className="py-3 px-5 font-bold  bg-emerald-500 text-white">Add to cart</button>
                 <button className="py-3 px-5 bg-orange-500 text-white font-bold">Buy now</button>
