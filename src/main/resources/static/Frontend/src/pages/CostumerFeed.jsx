@@ -106,8 +106,8 @@ export default function CostumerFeed() {
                                         <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded" src={`http://localhost:8080/api/public/product-image/${prod.thumbNailUrl}`} alt="" />
                                         <div className="space-y-3">
                                             <div>
-                                                <p className="text-start truncate font-semibold">{prod.productName}</p>
-                                                <p className="text-start font-bold text-red-600">${prod.price.toLocaleString()}</p>
+                                                <p className="text-start truncate">{prod.productName}</p>
+                                                <p className="text-start text-red-600">${prod.price.toLocaleString()}</p>
                                             </div>
                                             <div className="flex items-center gap-1.5">
                                                 <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>

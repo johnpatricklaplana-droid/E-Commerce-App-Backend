@@ -9,6 +9,7 @@ import { useSwipeable } from "react-swipeable";
 import { useNavigate, useParams } from "react-router-dom";
 import CostumerNavBar from "../components/CostumerNavBar";
 import Button from "../components/Button";
+import CostumerLoginPopup from "../components/CostumerLoginPopup";
 
 export default function CostumerProductInspect () {
 
@@ -26,6 +27,8 @@ export default function CostumerProductInspect () {
     const [currentVariation, setCurrentVariation] = useState({});
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [currentVariationNearAddToCart, setCurrentVariationNearAddToCart] = useState({});
+    const [quantity, setQuatity] = useState(0);
+    const [openLoginPopup, setOpenLoginPopup] = useState(false);
 
     useEffect(() => {
         
@@ -70,6 +73,25 @@ export default function CostumerProductInspect () {
         getProduct();
 
     }, [productId]);
+
+    const addToCart = async () => {
+        console.log(productId);
+        console.log(currentVariationNearAddToCart.variantId);
+        console.log(quantity);
+      
+        const result = await fetch(`http://localhost:8080/api/costumer/cart/${productId}/${currentVariationNearAddToCart.variantId}/${quantity}`, {
+            method: "POST"
+        });
+        
+        if(result.status === 403) {
+            setOpenLoginPopup(true);
+        }
+        
+    };
+
+    const nowWayToLogin = () => {
+        setOpenLoginPopup(false);
+    };
 
     const swipeHandlers = useSwipeable({
         onSwipedLeft: () => next(),
@@ -130,11 +152,14 @@ export default function CostumerProductInspect () {
         setCurrentVariationNearAddToCart(newCurrentVariantNearAddToCart);
     };
 
-    console.log(currentVariationNearAddToCart);
+    const changeQuantity = (newQuantity) => {
+        setQuatity(newQuantity);
+    };
 
     return (
-        <div className={`min-h-screen w-screen flex flex-col p-1.5 sm:pb-1.5 pb-24 gap-6`}>
+        <div className={`min-h-screen relative w-screen flex flex-col p-1.5 sm:pb-1.5 pb-24 gap-6`}>
             <CostumerNavBar></CostumerNavBar>
+            {openLoginPopup === true && <CostumerLoginPopup noWay={nowWayToLogin}></CostumerLoginPopup>}
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
             <div className="sm:grid sm:grid-cols-2 w-full sm:gap-3">
                 <div>
@@ -167,7 +192,7 @@ export default function CostumerProductInspect () {
                         )}
                     </div>
                 </div>
-                <div className="relative space-y-3 p-1.5 sm:block hidden">
+                <div className="space-y-3 p-1.5 sm:block hidden">
                     <div className="flex gap-1.5">
                         <img
                             className="aspect-square max-w-[122px]"
@@ -212,8 +237,14 @@ export default function CostumerProductInspect () {
                             )
                         }
                     </div>
-                    <div className="absolute bottom-0 p-3 flex justify-start w-full">
-                        <Button bg={"bg-emerald-500"} classList={"mr-3 hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Add to cart</Button>
+                    <p className="font-semibold">Quantity</p>
+                    <div className="flex gap-7 items-center">
+                        <button onClick={() => (changeQuantity(quantity - 1))} disabled={quantity === 0} className="hover:bg-gray-300 active:scale-95 transition cursor-pointer border px-1.5 rounded">-</button>
+                        <p>{quantity}</p>
+                        <button onClick={() => (changeQuantity(quantity + 1))} className="hover:bg-gray-300 active:scale-95 transition cursor-pointer border px-1.5 rounded">+</button>
+                    </div>
+                    <div className="flex justify-start w-full">
+                        <Button onClick={addToCart} bg={"bg-emerald-500"} classList={"mr-3 hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Add to cart</Button>
                         <Button bg={"bg-orange-500"} classList={"hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Buy now</Button>
                     </div>
                 </div>

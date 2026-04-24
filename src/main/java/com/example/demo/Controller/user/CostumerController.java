@@ -1,26 +1,22 @@
 package com.example.demo.Controller.user;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
+import com.example.demo.DTO.costumerDTO.CartItemsDTO;
 import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.Service.user.AuthService;
 import com.example.demo.Service.user.CostumerService;
 import com.example.demo.Service.user.UserAuthService;
-import com.example.demo.entity.User;
-import com.example.demo.enums.User_Role;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +48,22 @@ public class CostumerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(productResponse);
+    }
+    
+    @PostMapping("/api/costumer/cart/{productId}/{variantId}/{quantity}")
+    public ResponseEntity<SimpleResponseDTO> addToCart(@PathVariable int productId, @PathVariable int variantId, @PathVariable int quantity) {
+        costumerService.addToCart(productId, variantId, quantity);
+        
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new SimpleResponseDTO("craeted one", 201));
+    }
+    
+    @GetMapping("/api/costumer/cart")
+    public ResponseEntity<Set<CartItemsDTO>> getCostumerActiveCart() {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(costumerService.getActiveCart());
     }
     
 

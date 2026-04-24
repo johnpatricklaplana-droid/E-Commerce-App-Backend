@@ -59,6 +59,9 @@ public class Product {
     @Column(name = "thumbnail")
     private String thumbnail;
 
+    @OneToMany(mappedBy = "product")
+    private Set<CartItems> cartItems;
+
     // @OneToMany(mappedBy = "product")
     // private List<ProductRates> rates;
 

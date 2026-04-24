@@ -12,7 +12,12 @@ export default function CostumerNavBar() {
                 <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
                 Home
             </button>
-            <CommonSvgIcon classList={"flex justify-center items-center px-3 py-1.5 text-white/80 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
+            <button className="relative">
+                <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
+                    1
+                </div>
+                <CommonSvgIcon classList={"flex justify-center items-center px-3 py-1.5 text-white/80 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
+            </button>
             <button className="flex justify-center items-center px-3 text-white/80 py-1.5 gap-1.5 hover:border-b-2 hover:border-white">
                 <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
                 TODO
