@@ -1,4 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 export default function CostumerLoginPopup ({ noWay }) {
+
+    const navigate = useNavigate();
+
+    const login = () => {
+        navigate("/costumer-login");
+    };
+
     return (
         <div 
             className="absolute top-0 left-0 z-40 h-full w-screen bg-black/50"
@@ -29,7 +38,7 @@ export default function CostumerLoginPopup ({ noWay }) {
                     <h1 className="text-2xl text-center font-bold">add items to your cart</h1>
                 </div>
                 <p className="text-gray-400 text-center text-sm max-w-[70%]">Looks like you're not logged in yet. Log in to continue shopping and add items to your cart.</p>
-                <button className="p-1.5 hover:bg-pink-600 bg-pink-500 active:scale-95 transition cursor-pointer text-white font-bold w-full rounded-[0.8rem]">Login</button>
+                <button onClick={login} className="p-1.5 hover:bg-pink-600 bg-pink-500 active:scale-95 transition cursor-pointer text-white font-bold w-full rounded-[0.8rem]">Login</button>
                 <button className="p-1.5 border-gray-400 active:scale-95 cursor-pointer transition border-2 w-full font-bold text-pink-500 rounded-[0.8rem]">Create account</button>
                 <button onClick={noWay} className="cursor-pointer">No way</button>
             </div>

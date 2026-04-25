@@ -22,5 +22,12 @@ public interface CartItemsRepository extends JpaRepository<CartItems, Integer> {
         WHERE ci.cart.id = :cartId
     """)
     Set<CartItems> getCartItems(@Param("cartId") Integer cartId);
+
+    @Query("""
+        SELECT COUNT(ci)
+        FROM CartItems ci
+        WHERE ci.cart.id = :cartId
+    """)
+    int getCartItemsCount(@Param("cartId") int cartId);
     
 }

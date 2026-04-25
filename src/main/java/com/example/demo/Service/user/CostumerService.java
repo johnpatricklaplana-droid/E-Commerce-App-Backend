@@ -104,4 +104,20 @@ public class CostumerService {
         return cartItemsClean.cleanCaritItems(cartItems);
 
     }
+
+    public int getCartItemsCount() {
+        
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        int costumerId = userDetails.getUserId();
+
+        CostumersCart activeCart = cosumersCartRepo.getActiveCart(costumerId);
+
+        int itemsCount = cartItemsRepo.getCartItemsCount(activeCart.getId());
+
+        return itemsCount;
+    }
 }

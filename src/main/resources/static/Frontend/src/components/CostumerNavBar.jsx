@@ -1,39 +1,41 @@
 import CommonSvgIcon from "./CommonIcon";
 import { useNavigate } from "react-router-dom";
+import Input from "./Input";
 
 export default function CostumerNavBar() {
 
     const navigate = useNavigate();
 
+    const home = () => {
+        navigate("/costumer-feed");
+    }
+
     return (
-        <nav className="sticky top-0 hidden sm:flex z-40 bg-orange-500 left-0 justify-center">
-            <button onClick={() => navigate(-1)} className="text-3xl cursor-pointer z-50 absolute left-2 -translate-y-1/2 top-[50%]">⬅️</button>
-            <button className="flex justify-center text-white/80 items-center px-3 py-1.5 gap-1.5 border-b-2 border-white">
-                <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
-                Home
-            </button>
-            <button className="relative">
-                <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
-                    1
+        <div className="top-0 sticky p-3 space-y-3 z-50 bg-orange-500 left-0 w-full">
+            <div className="flex w-full justify-between items-center gap-3">
+                <button 
+                    className="text-blue-400 text-2xl font-bold tracking-wide cursor-pointer hover:text-blue-300 transition"
+                    onClick={home}
+                >
+                    ShopEase
+                </button>
+                <div className="w-full hidden sm:block">
+                    <Input placeholder={"search some products"} fullWidth={true} type={"search"}></Input>
                 </div>
-                <CommonSvgIcon classList={"flex justify-center items-center px-3 py-1.5 text-white/80 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
-            </button>
-            <button className="flex justify-center items-center px-3 text-white/80 py-1.5 gap-1.5 hover:border-b-2 hover:border-white">
-                <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
-                TODO
-            </button>
-            <button className="flex justify-center items-center px-3 text-white/80 py-1.5 gap-1.5 hover:border-b-2 hover:border-white">
-                <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
-                TODO
-            </button>
-            <button className="flex justify-center items-center text-white/80 px-3 py-1.5 gap-1.5 hover:border-b-2 hover:border-white">
-                <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
-                TODO
-            </button>
-            <button className="flex justify-center items-center px-3 py-1.5 text-white/80 gap-1.5 hover:border-b-2 hover:border-white">
-                <CommonSvgIcon type={"home"} width="32" height="32" fill={"currentColor"}></CommonSvgIcon>
-                TODO
-            </button>
-        </nav>
+                <div className="flex gap-1.5">
+                    <CommonSvgIcon type={"search"} classList={"w-[24px] h-[24px] mr-3.5 block sm:hidden"}></CommonSvgIcon>
+                    <button className="flex items-center gap-1.5 rounded hover:bg-blue-100 sm:px-3 sm:py-1.5">
+                        <CommonSvgIcon type={"home"}></CommonSvgIcon>
+                        <span className="sm:inline hidden">home</span>
+                    </button>
+                    <button className="rounded-[50%] hover:bg-blue-100 sm:p-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

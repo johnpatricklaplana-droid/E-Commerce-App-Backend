@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { POST } from "../api/API";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function CostumerLogin () {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -14,12 +17,18 @@ export default function CostumerLogin () {
         setFormData(prev => ({...prev, [id]: value}));
     };
 
-    const login = (e) => {
+    const login = async (e) => {
         e.preventDefault();
         const url = "http://localhost:8080/api/auth/login";
         const body = formData;
          
-        POST(url, body);
+        const result = await POST(url, body);
+
+        if(result.status === 200) {
+            navigate("/costumer-feed");
+        } else {
+            // TODO: 
+        }
     };
 
     return (
@@ -41,23 +50,23 @@ export default function CostumerLogin () {
                     </h1>
                     <input onChange={handleChange} id="email" className="py-3 bg-blue-100 w-full px-6 rounded-2xl outline-0" type="email" placeholder="Email address" />
                     <input onChange={handleChange} id="password" className="py-3 bg-blue-100 w-full px-6 rounded-2xl outline-0" type="password" name="" placeholder="Password" />
-                            <p className="text-end text-xs">Forgot passowrd?</p>
-                            <Button onClick={login}>Login</Button>
-                            <div className="flex gap-3 justify-center items-center w-full px-4">
-                                <hr className="w-full" /><span className="whitespace-nowrap text-sm">Or login with</span>
-                                    <hr className="w-full" />
-                                    </div>
-                                    <div className="px-2 border-gray-400 py-3 justify-center hover:bg-blue-100 rounded-2xl flex items-center border gap-2">
-                                        <img width="25" height="25" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />
-                                        <span className="text-sm">Google</span>
-                                    </div>
-                                    <div className="px-2 py-3 border-gray-400 justify-center hover:bg-blue-100 rounded-2xl flex items-center border gap-2">
-                                        <img width="25" height="25" src="https://img.icons8.com/color/48/facebook-new.png" alt="facebook-new" />
-                                        <span className="text-sm">Facebook</span>
-                                    </div>
-                                    <p className="text-center">don't have an account? <a className="text-blue-600 hover:underline" href="/costumer-signup">Sign up</a></p>
-                            </div>
-                        </form>
-                    </main>
+                    <p className="text-end text-xs">Forgot passowrd?</p>
+                    <Button bg={"bg-blue-500"} onClick={login}>Login</Button>
+                    <div className="flex gap-3 justify-center items-center w-full px-4">
+                        <hr className="w-full" /><span className="whitespace-nowrap text-sm">Or login with</span>
+                        <hr className="w-full" />
+                    </div>
+                    <div className="px-2 border-gray-400 py-3 justify-center hover:bg-blue-100 rounded-2xl flex items-center border gap-2">
+                        <img width="25" height="25" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />
+                        <span className="text-sm">Google</span>
+                    </div>
+                    <div className="px-2 py-3 border-gray-400 justify-center hover:bg-blue-100 rounded-2xl flex items-center border gap-2">
+                        <img width="25" height="25" src="https://img.icons8.com/color/48/facebook-new.png" alt="facebook-new" />
+                        <span className="text-sm">Facebook</span>
+                    </div>
+                    <p className="text-center">don't have an account? <a className="text-blue-600 hover:underline" href="/costumer-signup">Sign up</a></p>
+                </div>
+            </form>
+        </main>
     );
 }

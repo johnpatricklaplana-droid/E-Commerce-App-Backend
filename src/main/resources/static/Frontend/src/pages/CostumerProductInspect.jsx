@@ -157,29 +157,32 @@ export default function CostumerProductInspect () {
     };
 
     return (
-        <div className={`min-h-screen relative w-screen flex flex-col p-1.5 sm:pb-1.5 pb-24 gap-6`}>
-            <CostumerNavBar></CostumerNavBar>
+        <div className="">
+        <CostumerNavBar></CostumerNavBar>
+        <div className={`min-h-screen mt-6 relative w-screen flex flex-col sm:pb-1.5 pb-24 gap-6`}>
             {openLoginPopup === true && <CostumerLoginPopup noWay={nowWayToLogin}></CostumerLoginPopup>}
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
             <div className="sm:grid sm:grid-cols-2 w-full sm:gap-3">
-                <div>
+                <div className="">
                     <div
-                        className="h-96 w-full flex overflow-x-hidden"
+                        className="h-96 w-full flex relative overflow-x-hidden"
                         {...swipeHandlers}
                     >
+                        <button onClick={prev} className="absolute left-1.5 top-1/2 bg-orange-500 font-bold p-1.5 -translate-y-1/2 cursor-pointer z-50">prev</button>
                         <div
                             className={`flex transition-transform duration-200`}
                             style={{ transform: `translateX(-${currentVariation?.index * 100}%)` }}
                         >
                             {productVariations.map((vary, i) =>
                                 <img
-                                    className="w-full object-contain shrink-0 aspect-auto h-full"
+                                    className="w-full object-cover shrink-0 aspect-video h-full"
                                     src={`http://localhost:8080/api/public/product-image/${vary.image}`}
                                 >
 
                                 </img>
                             )}
                         </div>
+                            <button onClick={next} className="absolute right-1.5 top-1/2 bg-orange-500 p-1.5 font-bold -translate-y-1/2 cursor-pointer">next</button>
                     </div>
                     <div className=" overflow-x-auto sm:max-w-[80%] gap-1.5 p-1.5 flex h-[100px] w-full">
                         {productVariations.map(vary =>
@@ -219,7 +222,7 @@ export default function CostumerProductInspect () {
                             }
 
                             return <button
-                                        className="flex gap-1.5 hover:bg-gray-500 active:scale-95 transition cursor-pointer items-center border border-gray-400 hover:scale-101"
+                                        className="flex relative gap-1.5 hover:bg-gray-500 active:scale-95 transition cursor-pointer items-center border border-gray-500 hover:scale-101"
                                         key={vary.variantId}
                                         onClick={() => (changeCurrentVariationNearAddToCart(vary.variantId))}
                                     >
@@ -232,6 +235,7 @@ export default function CostumerProductInspect () {
                                             <p className=" px-1.5 text-sm text-gray-700">{vary.variationName}</p>
                                             <p className=" px-1.5 text-sm text-red-500">${vary.price.toLocaleString()}</p>
                                         </div>
+                                {currentVariationNearAddToCart.variantId === vary.variantId && <p className="absolute text-2xl bottom-0 right-0">✅</p>}
                                     </button>
                                 }
                             )
@@ -334,7 +338,7 @@ export default function CostumerProductInspect () {
                 </div>
             </div>
                     
-            <div className="flex gap-1.5 p-3 border border-gray-400">
+            <div className="flex gap-1.5 p-3 shadow">
                 <div className="flex gap-1.5 items-center">
                     <img
                         className="rounded-[50%] w-16 h-16"
@@ -352,24 +356,24 @@ export default function CostumerProductInspect () {
 
             <Text variant={"label"} classList={"p-3"}>Related pitch</Text>
 
-            <div className="grid sm:grid-cols-6 grid-cols-2 gap-3">
+            <div className="grid sm:grid-cols-6 p-1.5 grid-cols-2 gap-3">
                 {relatedProducts?.map(relProd => 
                     <button 
                         onClick={() => (changeProduct(relProd.id))}
-                        className="sm:space-y-3 space-y-1.5 hover:scale-101 transition duration-300 cursor-pointer p-1.5 sm:p-3 shadow rounded-2xl"
+                        className="space-y-1.5 hover:scale-101 transition duration-300 cursor-pointer p-1.5 shadow rounded bg-white"
                         key={relProd.id}
                     >
                         <img 
-                            className="object-cover w-full h-[150px] sm:h-[200px]  rounded-2xl" 
+                            className="object-cover w-full h-[150px] sm:h-[200px]  rounded" 
                             src={`http://localhost:8080/api/public/product-image/${relProd.thumbNailUrl}`} alt="" />
-                        <div className="space-y-3">
+                        <div className="space-y-1.5">
                             <div>
-                                <p className="text-start text-gray-700 font-semibold">{relProd.productName}</p>
-                                <p className="text-start font-bold text-red-600">${relProd.price.toLocaleString()}</p>
+                                <p className="text-start text-gray-700 truncate">{relProd.productName}</p>
+                                <p className="text-start text-red-600">${relProd.price.toLocaleString()}</p>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                <p className="text-xs">{relProd.ratings.rating} rating {relProd.ratings.numberOfRaters} reviews</p>
+                                <p className="text-xs text-gray-400">{relProd.ratings.rating} rating {relProd.ratings.numberOfRaters} reviews</p>
                             </div>
                         </div>
                     </button>
@@ -381,6 +385,7 @@ export default function CostumerProductInspect () {
                 <button onClick={open} className="py-3 px-5 font-bold  bg-emerald-500 text-white">Add to cart</button>
                 <button className="py-3 px-5 bg-orange-500 text-white font-bold">Buy now</button>
             </div>
+        </div>
         </div>
     );
 }
