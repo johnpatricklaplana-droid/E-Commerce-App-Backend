@@ -1,6 +1,8 @@
 import CommonSvgIcon from "./CommonIcon";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
+import { useEffect, useState } from "react";
+import { GET } from "../api/API";
 
 export default function CostumerNavBar() {
 

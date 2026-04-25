@@ -9,6 +9,7 @@ export default function CostumerFeed() {
 
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
+    const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
         const getProducts = async () => {
@@ -23,6 +24,20 @@ export default function CostumerFeed() {
     const inspectProduct = (productId) => {
         navigate(`/costumer-product-inspect/${productId}`);
     };
+    
+    useEffect(() => {
+        
+        const getCartItemsCount = async () => {
+            const url = "http://localhost:8080/api/costumer/cart/items/count";
+
+            const result = await GET(url);
+
+            setCartItemsCount(result);
+        }
+
+        getCartItemsCount();
+
+    }, []);
 
     return (
         <div className="w-screen h-screen">
@@ -34,7 +49,7 @@ export default function CostumerFeed() {
                     </button>
                     <button className="relative">
                         <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
-                            1
+                            {cartItemsCount}
                         </div>
                         <CommonSvgIcon width="22" height="22" classList={"flex justify-center items-center px-3 py-1.5 text-amber-500 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
                     </button>
