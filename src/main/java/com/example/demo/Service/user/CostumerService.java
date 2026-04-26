@@ -140,6 +140,11 @@ public class CostumerService {
         }
 
         // TODO: LIMIT QUANTITY
+
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("entity must be greater than 0!!!!!!!!!");
+        }
+
         cartItems.setQuantity(quantity);
         cartItemsRepo.save(cartItems);
 

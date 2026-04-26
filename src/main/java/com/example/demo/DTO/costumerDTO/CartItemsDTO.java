@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 public class CartItemsDTO {
     
-    private int cartId;
+    private int cartItemId;
     private LocalDateTime addedDate;
     private int quantity;
 

@@ -23,7 +23,7 @@ public class CartItemsClean {
     public CartItemsDTO cleanCaritItems (CartItems cartItems) {
 
         CartItemsDTO cartItemsDTO = new CartItemsDTO();
-        cartItemsDTO.setCartId(cartItems.getId());
+        cartItemsDTO.setCartItemId(cartItems.getId());
         cartItemsDTO.setAddedDate(cartItems.getAddedDate());
         cartItemsDTO.setQuantity(cartItems.getQuantity());    
 

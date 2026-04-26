@@ -50,10 +50,14 @@ export async function GET(url) {
     }
 }
 
-export async function PATCH(url) {
+export async function PATCH(url, body) {
     try {
         const result = await fetch(url, {
             method: "PATCH",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            },
             credentials: "include"
         });
 
