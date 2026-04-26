@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CostumerNavBar from "../components/CostumerNavBar";
 import Button from "../components/Button";
 import CostumerLoginPopup from "../components/CostumerLoginPopup";
+import SuccessOrFailureMessagePopup from "../components/SuccessOrFailureMessagePopup";
 
 export default function CostumerProductInspect () {
 
@@ -29,6 +30,7 @@ export default function CostumerProductInspect () {
     const [currentVariationNearAddToCart, setCurrentVariationNearAddToCart] = useState({});
     const [quantity, setQuatity] = useState(0);
     const [openLoginPopup, setOpenLoginPopup] = useState(false);
+    const [openSuccessOrFailureMessage, setOpenSuccessOrFailureMessage] = useState(false);
 
     useEffect(() => {
         
@@ -75,10 +77,7 @@ export default function CostumerProductInspect () {
     }, [productId]);
 
     const addToCart = async () => {
-        console.log(productId);
-        console.log(currentVariationNearAddToCart.variantId);
-        console.log(quantity);
-      
+    
         const result = await fetch(`http://localhost:8080/api/costumer/cart/${productId}/${currentVariationNearAddToCart.variantId}/${quantity}`, {
             method: "POST",
             credentials: "include"
@@ -86,6 +85,14 @@ export default function CostumerProductInspect () {
         
         if(result.status === 403) {
             setOpenLoginPopup(true);
+        } 
+
+        if(result.status === 201) {
+            setOpenSuccessOrFailureMessage(true);
+
+            setTimeout(() => {
+                setOpenSuccessOrFailureMessage(false);
+            }, 3000);
         }
         
     };
@@ -159,6 +166,7 @@ export default function CostumerProductInspect () {
 
     return (
         <div className="">
+        <SuccessOrFailureMessagePopup open={openSuccessOrFailureMessage ? true : false} message={"successful one"}></SuccessOrFailureMessagePopup>
         <CostumerNavBar></CostumerNavBar>
         <div className={`min-h-screen mt-6 relative w-screen flex flex-col sm:pb-1.5 pb-24 gap-6`}>
             {openLoginPopup === true && <CostumerLoginPopup noWay={nowWayToLogin}></CostumerLoginPopup>}
