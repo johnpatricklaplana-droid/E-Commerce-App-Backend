@@ -9,7 +9,6 @@ export default function CostumerFeed() {
 
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
-    const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
         const getProducts = async () => {
@@ -24,54 +23,11 @@ export default function CostumerFeed() {
     const inspectProduct = (productId) => {
         navigate(`/costumer-product-inspect/${productId}`);
     };
-    
-    useEffect(() => {
-        
-        const getCartItemsCount = async () => {
-            const url = "http://localhost:8080/api/costumer/cart/items/count";
-
-            const result = await GET(url);
-
-            setCartItemsCount(result);
-        }
-
-        getCartItemsCount();
-
-    }, []);
 
     return (
         <div className="w-screen h-screen">
             <CostumerNavBar></CostumerNavBar>
             <div className="sm:px-16 px-3 space-y-10 sm:py-6 h-full w-full">
-                <nav className="sm:flex hidden justify-start items-center">
-                    <button className="flex justify-center items-center px-3 py-1.5 gap-1.5 border-b-2 border-amber-400">
-                        <CommonSvgIcon type={"home"} width="22" height="22" fill={"orange"}></CommonSvgIcon>
-                    </button>
-                    <button className="relative">
-                        <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
-                            {cartItemsCount}
-                        </div>
-                        <CommonSvgIcon width="22" height="22" classList={"flex justify-center items-center px-3 py-1.5 text-amber-500 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
-                    </button>
-                    <button className="flex justify-center items-center px-3 py-1.5 gap-1.5 border-b-2 border-amber-400">
-                        <CommonSvgIcon type={"home"} width="22" height="22" fill={"orange"}></CommonSvgIcon>
-                    </button>
-                    <button className="relative">
-                        <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
-                            1
-                        </div>
-                        <CommonSvgIcon width="22" height="22" classList={"flex justify-center text-amber-500 items-center px-3 py-1.5 gap-1.5"} type={"addtocart"}></CommonSvgIcon>
-                    </button>
-                    <button className="flex justify-center items-center px-3 py-1.5 gap-1.5 border-b-2 border-amber-400">
-                        <CommonSvgIcon type={"home"} width="22" height="22" fill={"orange"}></CommonSvgIcon>
-                    </button>
-                    <button className="relative">
-                        <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
-                            1
-                        </div>
-                        <CommonSvgIcon width="22" height="22" classList={"flex justify-center items-center px-3 py-1.5 text-amber-500 gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
-                    </button>
-                </nav>
                 <div className="h-full">
                     <div className="grid sm:w-[60%] sm:mt-10 w-full grid-cols-2 sm:grid-cols-4 gap-1.5">
                         <div className="bg-orange-400/30 flex items-center p-1.5 gap-1.5 rounded-2xl">

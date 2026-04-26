@@ -14,7 +14,6 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utils.JwtToken;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +36,7 @@ public class JwtAuthenticationService extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = JwtToken.extractToken(request);
-        
+        System.out.println(token);
         if(token != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             authService.validateJwtToken(token);
            

@@ -80,7 +80,8 @@ export default function CostumerProductInspect () {
         console.log(quantity);
       
         const result = await fetch(`http://localhost:8080/api/costumer/cart/${productId}/${currentVariationNearAddToCart.variantId}/${quantity}`, {
-            method: "POST"
+            method: "POST",
+            credentials: "include"
         });
         
         if(result.status === 403) {

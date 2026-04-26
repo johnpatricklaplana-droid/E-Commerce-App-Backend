@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.costumerDTO.CartItemsDTO;
 import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
+import com.example.demo.DTO.productDTO.UpdateQuantityDTO;
 import com.example.demo.Service.user.AuthService;
 import com.example.demo.Service.user.CostumerService;
 import com.example.demo.Service.user.UserAuthService;
@@ -72,4 +74,12 @@ public class CostumerController {
             .body(costumerService.getCartItemsCount());
     }
     
+    @PatchMapping("/api/costumer/cart/items/{cartItemId}")
+    public ResponseEntity<SimpleResponseDTO> updateCartItemQuantity(@PathVariable int cartItemId, @RequestBody UpdateQuantityDTO quantity) {
+        costumerService.updateCartItemQuantity(cartItemId, quantity.getQuantity());
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new SimpleResponseDTO("updated one", 200));
+    }
+
 }

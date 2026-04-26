@@ -18,6 +18,7 @@ import com.example.demo.entity.CostumersCart;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.enums.CartStatus;
+import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.CartItemsRepository;
 import com.example.demo.repository.CostumerRepository;
 import com.example.demo.repository.CosumersCartRepository;
@@ -119,5 +120,28 @@ public class CostumerService {
         int itemsCount = cartItemsRepo.getCartItemsCount(activeCart.getId());
 
         return itemsCount;
+    }
+
+    public void updateCartItemQuantity(int cartItemId, int quantity) {
+        
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+            
+        int costumerId = userDetails.getUserId();
+
+        CostumersCart cart = cosumersCartRepo.getActiveCart(costumerId);
+
+        CartItems cartItems = cartItemsRepo.findByIdAndCart_Id(cartItemId, cart.getId());
+
+        if(cartItems == null) {
+            throw new ActionNotAllowedException("forbidden");
+        }
+
+        // TODO: LIMIT QUANTITY
+        cartItems.setQuantity(quantity);
+        cartItemsRepo.save(cartItems);
+
     }
 }
