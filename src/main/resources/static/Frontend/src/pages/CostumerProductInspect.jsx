@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AddToCartBox from "../components/AddToCartBox";
 import CommonSvgIcon from "../components/CommonIcon";
 import Text from "../components/Text";
-import { GET, POST } from "../api/API";
+import { GET, getCartItemsCount, POST } from "../api/API";
 import { toCategories, toProduct, toProductVariations } from "../hooks/ProductMapper";
 import { toSeller, toSellerLocation } from "../hooks/SellerMappers";
 import { useSwipeable } from "react-swipeable";
@@ -28,9 +28,18 @@ export default function CostumerProductInspect () {
     const [currentVariation, setCurrentVariation] = useState({});
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [currentVariationNearAddToCart, setCurrentVariationNearAddToCart] = useState({});
-    const [quantity, setQuatity] = useState(0);
+    const [quantity, setQuatity] = useState(1);
     const [openLoginPopup, setOpenLoginPopup] = useState(false);
     const [openSuccessOrFailureMessage, setOpenSuccessOrFailureMessage] = useState(false);
+    const [changeCartItemCount, setChangeCartItemCount] = useState(0);
+    const [addedToCartMessage, setAddedToCartMessage] = useState("");
+
+    // TODO: cartItemsCount is partially backend-sourced and partially locally incremented.
+    // Initial value is fetched from API (getCartItemsCount),
+    // but after adding to cart, it is optimistically updated in the frontend using +1.
+    // This can lead to desync if multiple tabs or failed requests occur.
+    // Consider refactoring to a single source of truth (always refetch).
+    const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
         
@@ -82,13 +91,18 @@ export default function CostumerProductInspect () {
             method: "POST",
             credentials: "include"
         });
+
+        const response = await result.json();
         
         if(result.status === 403) {
             setOpenLoginPopup(true);
         } 
 
         if(result.status === 201) {
+            setAddedToCartMessage(response.message);
             setOpenSuccessOrFailureMessage(true);
+            setChangeCartItemCount(changeCartItemCount + 1);
+            setCartItemsCount(prev => prev + 1);
 
             setTimeout(() => {
                 setOpenSuccessOrFailureMessage(false);
@@ -96,6 +110,18 @@ export default function CostumerProductInspect () {
         }
         
     };
+
+    useEffect(() => {
+
+        const getCount = async () => {
+            const result = await getCartItemsCount();
+
+            setCartItemsCount(result)
+        }
+      
+        getCount();
+
+    }, []);
 
     const nowWayToLogin = () => {
         setOpenLoginPopup(false);
@@ -166,8 +192,8 @@ export default function CostumerProductInspect () {
 
     return (
         <div className="">
-        <SuccessOrFailureMessagePopup open={openSuccessOrFailureMessage ? true : false} message={"successful one"}></SuccessOrFailureMessagePopup>
-        <CostumerNavBar></CostumerNavBar>
+        <SuccessOrFailureMessagePopup open={openSuccessOrFailureMessage ? true : false} message={addedToCartMessage}></SuccessOrFailureMessagePopup>
+        <CostumerNavBar cartItemsCount={cartItemsCount}></CostumerNavBar>
         <div className={`min-h-screen mt-6 relative w-screen flex flex-col sm:pb-1.5 pb-24 gap-6`}>
             {openLoginPopup === true && <CostumerLoginPopup noWay={nowWayToLogin}></CostumerLoginPopup>}
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}

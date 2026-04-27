@@ -12,10 +12,10 @@ import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 public class GlobalExceptionHandler {
     
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+    public ResponseEntity<SimpleResponseDTO> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(ex.getMessage());
+            .body(new SimpleResponseDTO(ex.getMessage(), 409));
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)

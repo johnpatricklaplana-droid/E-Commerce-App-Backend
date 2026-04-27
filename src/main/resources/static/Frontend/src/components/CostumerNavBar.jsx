@@ -5,26 +5,11 @@ import { useEffect, useState } from "react";
 import { GET } from "../api/API";
 import LogoutOrSignupPopup from "./LogouOrSIgnupPopup";
 
-export default function CostumerNavBar() {
+export default function CostumerNavBar({ cartItemsCount = 0 }) {
 
     const [loginPopup, setLoginPopup] = useState(false);
-    const [cartItemsCount, setCartItemsCount] = useState(0);
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-            
-            const getCartItemsCount = async () => {
-                const url = "http://localhost:8080/api/costumer/cart/items/count";
-    
-                const result = await GET(url);
-    
-                setCartItemsCount(result);
-            }
-    
-            getCartItemsCount();
-    
-        }, []);
 
     const home = () => {
         navigate("/costumer-feed");
@@ -56,7 +41,7 @@ export default function CostumerNavBar() {
                         className="relative"
                         onClick={() => (navigate("/costumer-cart"))}
                     >
-                        <div className="h-6 w-6 bg-emerald-500 absolute right-0 rounded-[50%]">
+                        <div className={`h-6 w-6 ${cartItemsCount === 0 ? "opacity-0" : "opacity-100"} bg-emerald-500 absolute right-0 rounded-[50%]`}>
                             {cartItemsCount === 0 ? "" : cartItemsCount}
                         </div>
                         <CommonSvgIcon width="22" height="22" classList={"flex justify-center items-center px-3 py-1.5 text-black gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>

@@ -67,3 +67,25 @@ export async function PATCH(url, body) {
         console.error(error);
     }
 }
+
+export async function DELETE(url) {
+    try {
+        const result = await fetch(url, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const response = await result.json();
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getCartItemsCount(params) {
+
+    const url = "http://localhost:8080/api/costumer/cart/items/count";
+
+    return await GET(url);
+
+}

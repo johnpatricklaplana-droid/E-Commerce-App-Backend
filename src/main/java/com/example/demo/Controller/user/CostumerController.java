@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,11 +54,11 @@ public class CostumerController {
     
     @PostMapping("/api/costumer/cart/{productId}/{variantId}/{quantity}")
     public ResponseEntity<SimpleResponseDTO> addToCart(@PathVariable int productId, @PathVariable int variantId, @PathVariable int quantity) {
-        costumerService.addToCart(productId, variantId, quantity);
+        String message = costumerService.addToCart(productId, variantId, quantity);
         
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new SimpleResponseDTO("craeted one", 201));
+            .body(new SimpleResponseDTO(message, 201));
     }
     
     @GetMapping("/api/costumer/cart")
@@ -80,6 +81,14 @@ public class CostumerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new SimpleResponseDTO("updated one", 200));
+    }
+
+    @DeleteMapping("/api/costumer/cart/items/{cartItemId}")
+    public ResponseEntity<SimpleResponseDTO> deleteCartItem (@PathVariable int cartItemId) {
+        costumerService.deleteCartItem(cartItemId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new SimpleResponseDTO("no content", 200));
     }
 
 }

@@ -23,6 +23,8 @@ import com.example.demo.repository.CartItemsRepository;
 import com.example.demo.repository.CostumerRepository;
 import com.example.demo.repository.CosumersCartRepository;
 import com.example.demo.security.MyUserDetails;
+import com.example.demo.utils.ExtractUserId;
+import com.example.demo.utils.IsThisYoursCheck;
 
 import jakarta.persistence.EntityManager;
 
@@ -60,14 +62,13 @@ public class CostumerService {
     }
 
     @Transactional
-    public void addToCart(int productId, int variantId, int quantity) {
+    public String addToCart(int productId, int variantId, int quantity) {
         
-        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getPrincipal();
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("quantity must be greater than 0");
+        }
 
-        int costumerId = userDetails.getUserId();
+        int costumerId = ExtractUserId.extractUserId();
 
         CostumersCart activeCart = cosumersCartRepo.getActiveCart(costumerId);
 
@@ -79,6 +80,15 @@ public class CostumerService {
             activeCart = cart;
         }
 
+        CartItems cartItemsIfAlreadyExist = cartItemsRepo.findByCart_IdAndVariations_Id(activeCart.getId(), variantId);
+        
+        if(cartItemsIfAlreadyExist != null) {
+            cartItemsIfAlreadyExist.setQuantity(cartItemsIfAlreadyExist.getQuantity() + 1);
+            cartItemsRepo.save(cartItemsIfAlreadyExist);
+
+            return "quantity updated";
+        }
+
         CartItems cartItems = new CartItems();
         cartItems.setCart(activeCart);
         cartItems.setProduct(entityManager.getReference(Product.class, productId));
@@ -86,6 +96,8 @@ public class CostumerService {
         cartItems.setQuantity(quantity);
         cartItems.setVariations(entityManager.getReference(ProductVariations.class, variantId));
         cartItemsRepo.save(cartItems);
+ 
+        return "added to cart";       
 
     }
 
@@ -123,13 +135,8 @@ public class CostumerService {
     }
 
     public void updateCartItemQuantity(int cartItemId, int quantity) {
-        
-        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getPrincipal();
             
-        int costumerId = userDetails.getUserId();
+        int costumerId = ExtractUserId.extractUserId();
 
         CostumersCart cart = cosumersCartRepo.getActiveCart(costumerId);
 
@@ -147,6 +154,16 @@ public class CostumerService {
 
         cartItems.setQuantity(quantity);
         cartItemsRepo.save(cartItems);
+
+    }
+
+    public void deleteCartItem(int cartItemId) {
+        
+        int costumerId = ExtractUserId.extractUserId();
+
+        CartItems cartItem = IsThisYoursCheck.isCartItemYours(costumerId, cartItemId, cartItemsRepo, cosumersCartRepo);
+
+        cartItemsRepo.delete(cartItem);
 
     }
 }

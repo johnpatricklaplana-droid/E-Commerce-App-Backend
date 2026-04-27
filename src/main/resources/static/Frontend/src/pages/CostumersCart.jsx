@@ -1,16 +1,38 @@
 import CostumerNavBar from "../components/CostumerNavBar";
 import CommonSvgIcon from "../components/CommonIcon";
 import { useEffect, useState } from "react";
-import { GET, PATCH } from "../api/API";
+import { DELETE, GET, PATCH } from "../api/API";
+import DeleteConfimationPopup from "../components/DeleteConfirmationPopup";
+import SuccessOrFailureMessagePopup from "../components/SuccessOrFailureMessagePopup";
+import { getCartItemsCount } from "../api/API";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart () {
 
+    const navigate = useNavigate();
     const [user, setUser] = useState("todo");
     const [cartItems, setCartItems] = useState([]);
     const [quantities, setQuantities] = useState([]);
     const [selected, setSelected] = useState([]);
     const [totalPrice, setTotalPrice] = useState({items: 0, total: 0});
+    const [deleteConfirmationPopup, setDeleteConfimationPopup] = useState(false);
+    const [cartItemIdToDelete, setCartItemIdToDelete] = useState(null);
+    const [deleteCartSuccess, setDeleteCartSuccess] = useState({message: "", isOpen: false});
+    const [cartItemsCount, setCartItemsCount] = useState(0);
 
+    useEffect(() => {
+
+        const getCount = async () => {
+
+            const result = await getCartItemsCount();
+
+            setCartItemsCount(result);
+        };
+
+        getCount();
+
+    }, [cartItems]);
+    
     useEffect(() => {
         
         const getCartItems = async () => {
@@ -105,15 +127,56 @@ export default function Cart () {
         setTotalPrice({"items": item, "total": total});
     };
 
+    const openDeleteConfirmationPopup = (cartItemId) => {
+        setCartItemIdToDelete(cartItemId);
+        setDeleteConfimationPopup(true);
+    }; 
+
+    const closeDeleteConfimationPopu = () => {
+        setDeleteConfimationPopup(false);
+    };
+
+    const confirmDelete = async () => {
+        
+        setDeleteConfimationPopup(false);
+
+        setCartItems(prev => prev.filter(pre => pre.cartItemId !== cartItemIdToDelete));
+
+        const url = `http://localhost:8080/api/costumer/cart/items/${cartItemIdToDelete}`;
+
+        const result = await DELETE(url);
+
+        if(result.status === 200) {
+            setDeleteCartSuccess({message: "deleted one", isOpen: true});
+
+            setTimeout(() => {
+                setDeleteCartSuccess({message: "deleted one", isOpen: false});
+            }, 3000);
+        } else {
+            setDeleteCartSuccess({message: "delete failed for some reason", isOpen: false});
+        }
+
+    };
+
     console.log(selected);
 
     return (
-        <div>
-            <CostumerNavBar></CostumerNavBar>
-            <div className="">
-                <h1 className="font-bold font-serif m-6 text-2xl">Super Cart</h1>
-                <div className="p-6">
-                    <table className="w-full">
+        <div className="h-screen">
+            <SuccessOrFailureMessagePopup open={deleteCartSuccess.isOpen} message={deleteCartSuccess.message}></SuccessOrFailureMessagePopup>
+            <DeleteConfimationPopup confirm={confirmDelete} cancel={closeDeleteConfimationPopu} open={deleteConfirmationPopup}></DeleteConfimationPopup>
+            <CostumerNavBar cartItemsCount={cartItemsCount}></CostumerNavBar>
+            <div className="flex flex-col h-full">
+                <div className="p-6 h-full overflow-auto">
+                    <div className={`h-full w-full flex flex-col gap-6 items-center justify-center ${cartItems.length === 0 ? "block" : "hidden"}`}>
+                        <h1 className={`text-4xl max-w-[60%] text-center`}>Looks like you haven’t added anything yet. Start shopping to fill your cart.</h1>
+                        <button 
+                            className="w-fit bg-emerald-500 py-3 px-6 hover:bg-emerald-600 cursor-pointer active:scale-95 transition text-white font-bold rounded"
+                            onClick={() => (navigate("/costumer-feed"))}
+                        >
+                            Shop now like a pro
+                        </button>
+                    </div>
+                    <table className={`w-full ${cartItems.length === 0 ? "hidden" : "table"}`}>
                         <tr className="border-b">
                             <th className="p-3 text-sm">Product</th>
                             <th className="p-3 text-sm">Price</th>
@@ -166,6 +229,7 @@ export default function Cart () {
                                             <button
                                                 className="border px-1.5 active:scale-95 transition cursor-pointer"
                                                 onClick={() => (descreaseQuantity(quntity))}
+                                                disabled={quntity?.quantity === 1 ? true : false}
                                             >
                                                 -
                                             </button>
@@ -181,15 +245,20 @@ export default function Cart () {
                                     })()
                                 }
                                 <td className="text-center text-red-500 text-sm font-bold p-3">$TODO</td>
-                                <td className="text-center p-3 text-sm items-center flex gap-1.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="red" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6" />
-                                        <path d="M8 6V4h8v2" />
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                                        <line x1="10" y1="11" x2="10" y2="17" />
-                                        <line x1="14" y1="11" x2="14" y2="17" />
-                                    </svg>
-                                    Remove
+                                <td className="">
+                                    <button 
+                                        className="text-center p-1.5 rounded hover:scale-105 transition cursor-pointer active:scale-95 hover:bg-red-700 text-sm hover:text-white text-red-500 justify-center border border-red-500 items-center flex gap-1.5"
+                                        onClick={() => (openDeleteConfirmationPopup(item.cartItemId))}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M8 6V4h8v2" />
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                            <line x1="10" y1="11" x2="10" y2="17" />
+                                            <line x1="14" y1="11" x2="14" y2="17" />
+                                        </svg>
+                                        Remove
+                                    </button>
                                 </td>
                             </tr>
                         }
