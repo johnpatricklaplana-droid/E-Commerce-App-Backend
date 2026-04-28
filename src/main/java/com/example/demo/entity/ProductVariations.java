@@ -47,4 +47,7 @@ public class ProductVariations {
 
     @OneToMany(mappedBy = "variations")
     private Set<CartItems> cartItems;
+
+    @OneToMany(mappedBy = "variations")
+    private Set<Orders> orders;
 }

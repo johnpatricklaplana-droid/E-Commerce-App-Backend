@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { GET } from "../api/API";
 import LogoutOrSignupPopup from "./LogouOrSIgnupPopup";
 
-export default function CostumerNavBar({ cartItemsCount = 0 }) {
+export default function CostumerNavBar({ cartItemsCount }) {
 
     const [loginPopup, setLoginPopup] = useState(false);
 

@@ -18,6 +18,7 @@ import CostumerFeed from "./pages/CostumerFeed";
 import AddProductVariants from "./pages/AddProductVariants";
 import CostumerProductInspect from "./pages/CostumerProductInspect";
 import Cart from "./pages/CostumersCart";
+import CostumerPlaceOrder from "./pages/CostumerPlaceOrder";
 
 export default function App() {
     return (
@@ -42,6 +43,7 @@ export default function App() {
                 <Route path="/add-product-variants/:productId" element={<AddProductVariants/>} />
                 <Route path="/costumer-product-inspect/:productId" element={<CostumerProductInspect/>} />
                 <Route path="/costumer-cart" element={<Cart/>} />
+                <Route path="/costumer-place-order" element={<CostumerPlaceOrder/>} />
             </Routes>
         </BrowserRouter>
     );

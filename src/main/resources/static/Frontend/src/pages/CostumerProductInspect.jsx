@@ -91,9 +91,14 @@ export default function CostumerProductInspect () {
             method: "POST",
             credentials: "include"
         });
-
-        const response = await result.json();
-        
+       
+        let response;
+        try {
+            response = await result.json();
+        } catch (error) {
+            console.error(error);
+        }
+      
         if(result.status === 403) {
             setOpenLoginPopup(true);
         } 

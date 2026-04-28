@@ -82,10 +82,12 @@ export async function DELETE(url) {
     }
 }
 
-export async function getCartItemsCount(params) {
+export async function getCartItemsCount() {
 
     const url = "http://localhost:8080/api/costumer/cart/items/count";
 
-    return await GET(url);
+    const result = await GET(url);
+
+    return result;
 
 }

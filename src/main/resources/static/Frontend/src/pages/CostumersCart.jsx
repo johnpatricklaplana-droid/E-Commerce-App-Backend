@@ -25,7 +25,7 @@ export default function Cart () {
         const getCount = async () => {
 
             const result = await getCartItemsCount();
-
+               
             setCartItemsCount(result);
         };
 
@@ -140,14 +140,13 @@ export default function Cart () {
         
         setDeleteConfimationPopup(false);
 
-        setCartItems(prev => prev.filter(pre => pre.cartItemId !== cartItemIdToDelete));
-
         const url = `http://localhost:8080/api/costumer/cart/items/${cartItemIdToDelete}`;
 
         const result = await DELETE(url);
 
         if(result.status === 200) {
             setDeleteCartSuccess({message: "deleted one", isOpen: true});
+            setCartItems(prev => prev.filter(pre => pre.cartItemId !== cartItemIdToDelete));
 
             setTimeout(() => {
                 setDeleteCartSuccess({message: "deleted one", isOpen: false});
@@ -158,7 +157,7 @@ export default function Cart () {
 
     };
 
-    console.log(selected);
+    console.log(cartItems);
 
     return (
         <div className="h-screen">
