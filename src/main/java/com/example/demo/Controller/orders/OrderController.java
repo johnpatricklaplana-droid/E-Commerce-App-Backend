@@ -22,7 +22,7 @@ public class OrderController {
     OrdersService ordersService;
     
     @PostMapping("/api/costumer/orders")
-    public ResponseEntity<SimpleResponseDTO> postMethodName(@RequestBody Set<RequestOrdersDTO> order) {
+    public ResponseEntity<SimpleResponseDTO> saveOrders(@RequestBody Set<RequestOrdersDTO> order) {
         ordersService.saveOrders(order);
         return ResponseEntity
             .status(HttpStatus.CREATED)

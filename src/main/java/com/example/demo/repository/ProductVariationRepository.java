@@ -14,16 +14,16 @@ public interface ProductVariationRepository extends JpaRepository<ProductVariati
 
     Optional<ProductVariations> findByIdAndProduct_Id(int variationId, int productId);
     
-    @Query("""
-        SELECT v
-        FROM ProductVariations v
-        INNER JOIN FETCH v.product p
-        WHERE v.id IN :variationIds
-        AND v.product.id IN :productIds
-    """)
-    Set<ProductVariations> findByProductAndVariations(
-        @Param("variationIds") Set<Integer> variationIds,
-        @Param("productIds") Set<Integer> productIds
-    );
+    // @Query("""
+    //     SELECT v
+    //     FROM ProductVariations v
+    //     INNER JOIN FETCH v.product p
+    //     WHERE v.id IN :variationIds
+    //     AND v.product.id IN :productIds
+    // """)
+    // Set<ProductVariations> findByProductAndVariations(
+    //     @Param("variationIds") Set<Integer> variationIds,
+    //     @Param("productIds") Set<Integer> productIds
+    // );
 
 }

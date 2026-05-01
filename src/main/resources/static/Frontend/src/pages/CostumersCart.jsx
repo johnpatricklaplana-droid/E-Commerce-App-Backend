@@ -39,12 +39,14 @@ export default function Cart () {
             const url = "http://localhost:8080/api/costumer/cart"
 
             const result = await GET(url);
-
+          console.log(result);
             setSelected(result.map(res => 
                 ({
                     "cartItemId": res.cartItemId, 
                     "selected": false,
-                    "price": res.variations.price
+                    "price": res.variations.price,
+                    "productId": res.product.productId,
+                    "variationId": res.variations.variantId
                 })
             ));
             
@@ -157,7 +159,13 @@ export default function Cart () {
 
     };
 
-    console.log(cartItems);
+    const checkOut = () => {
+        
+        const selectedItem = selected.filter(sel => sel.selected === true);
+
+        console.log(selectedItem);
+
+    };
 
     return (
         <div className="h-screen">
@@ -266,7 +274,7 @@ export default function Cart () {
                 </div>
                 <div className="flex items-center bg-white w-full shadow gap-3 sticky bottom-0 p-3 justify-end">
                     <h1 className="">TOTAL ({totalPrice.items} items): <span className="text-red-500 font-bold">${totalPrice.total.toLocaleString()}</span></h1>
-                    <button className="bg-orange-500 w-[240px] py-3">Check out</button>
+                    <button onClick={checkOut} className="bg-orange-500 w-[240px] py-3">Check out</button>
                 </div>
             </div>
         </div>

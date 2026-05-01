@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class RequestOrdersDTO {
     
-    private int productId;
-    private int variationId;
+    private int cartItemId;
 
 }

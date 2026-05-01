@@ -2,22 +2,22 @@ import CostumerNavBar from "../components/CostumerNavBar";
 
 export default function CostumerPlaceOrder () {
     return (
-        <div>
+        <div className="space-y-8">
             <CostumerNavBar></CostumerNavBar>
             <div className="grid p-7 gap-6 grid-cols-[700px_1fr]">
                 <div className="space-y-7">
-                    <h1 className="text-2xl font-bold">Checkout</h1>
+                    <h1 className="text-5xl font-bold">Checkout</h1>
                     <p>Almost there! Please review your information and place your order.</p>
                     <div className="space-y-6">
                         <div className="ring-gray-400/50 ring-1 rounded space-y-3 p-8 border-gray-400">
                             <h1 className="text-lg font-semibold">Shipping address</h1>
                             <div className="ring-gray-400/50 ring-1 flex items-center justify-between p-3 rounded">
-                                <div>
+                                <div  className="space-y-1">
                                     <p className="font-semibold">Johny hey daddy</p>
-                                    <p className="text-gray-400 text-sm">+29929323923</p>
-                                    <p className="text-gray-400 text-sm">palina north national elementary university of tarlac city</p>
-                                    <p className="text-gray-400 text-sm">new york</p>
-                                    <p className="text-gray-400 text-sm">philippines</p>
+                                    <p className="text-gray-400 text-xs">+29929323923</p>
+                                    <p className="text-gray-400 text-xs">palina north national elementary university of tarlac city</p>
+                                    <p className="text-gray-400 text-xs">new york</p>
+                                    <p className="text-gray-400 text-xs">philippines</p>
                                 </div>
                                 <button className="text-gray-400 font-bold transition cursor-pointer px-3 py-1.5 ring-2 rounded ring-gray-400/50">Edit</button>
                             </div>

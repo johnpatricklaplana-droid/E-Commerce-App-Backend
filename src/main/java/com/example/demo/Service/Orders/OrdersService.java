@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DTO.orders.RequestOrdersDTO;
+import com.example.demo.entity.CartItems;
 import com.example.demo.entity.Costumer;
+import com.example.demo.entity.CostumersCart;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductVariations;
 import com.example.demo.enums.OrderReturnStatus;
 import com.example.demo.enums.OrderStatus;
 import com.example.demo.exceptions.ActionNotAllowedException;
+import com.example.demo.repository.CartItemsRepository;
+import com.example.demo.repository.CosumersCartRepository;
 import com.example.demo.repository.OrdersRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.ProductVariationRepository;
@@ -37,35 +41,32 @@ public class OrdersService {
 
     @Autowired
     ProductVariationRepository variationRepo;
+
+    @Autowired
+    CosumersCartRepository costumersCartRepo;
+
+    @Autowired
+    CartItemsRepository cartItemsRepo;
     
     public void saveOrders (Set<RequestOrdersDTO> ordersDTO) {
 
         int costumerId = ExtractUserId.extractUserId();
 
-        Set<Integer> variationIds = ordersDTO.stream()
-            .map(order -> order.getVariationId())
-            .collect(Collectors.toSet());
+        CostumersCart cart = costumersCartRepo.getActiveCart(costumerId);
 
-        Set<Integer> productIds = ordersDTO.stream()
-            .map(prod -> prod.getProductId())
-            .collect(Collectors.toSet());
+        Set<Integer> cartItemIds = ordersDTO.stream()
+                .map(ord -> ord.getCartItemId())
+                .collect(Collectors.toSet());
 
-        Set<ProductVariations> variations = variationRepo.findByProductAndVariations(variationIds, productIds);
-
-        if(variations == null || variations.isEmpty()) {
-            throw new ActionNotAllowedException("unable to do some");
-        }
+        Set<CartItems> cartItems = cartItemsRepo.findCartItemsByIds(cartItemIds, cart.getId());     
 
         Set<Orders> orders = new HashSet<>();
-        for (ProductVariations varys : variations) {
-
-            int productId = varys.getProduct().getId();
-            int variationId = varys.getId();
+        for (CartItems item : cartItems) {
 
             Orders order = new Orders();
             order.setCostumer(entityManager.getReference(Costumer.class, costumerId));
-            order.setProduct(entityManager.getReference(Product.class, productId));
-            order.setVariations(entityManager.getReference(ProductVariations.class, variationId));
+            order.setProduct(item.getProduct());
+            order.setVariations(item.getVariations());
             order.setOrderDate(LocalDateTime.now());
             order.setOrderStatus(OrderStatus.PROCESSING);
             orders.add(order);
@@ -74,7 +75,5 @@ public class OrdersService {
         ordersRepo.saveAll(orders);
         
     }
-
-    
 
 }
