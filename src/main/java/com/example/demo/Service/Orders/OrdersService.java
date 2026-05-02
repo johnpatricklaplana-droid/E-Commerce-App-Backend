@@ -2,11 +2,13 @@ package com.example.demo.Service.Orders;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.DTO.orders.RequestOrdersDTO;
 import com.example.demo.entity.CartItems;
@@ -48,6 +50,7 @@ public class OrdersService {
     @Autowired
     CartItemsRepository cartItemsRepo;
     
+    @Transactional
     public void saveOrders (Set<RequestOrdersDTO> ordersDTO) {
 
         int costumerId = ExtractUserId.extractUserId();
@@ -70,9 +73,12 @@ public class OrdersService {
             order.setOrderDate(LocalDateTime.now());
             order.setOrderStatus(OrderStatus.PROCESSING);
             orders.add(order);
+            
         }
 
         ordersRepo.saveAll(orders);
+
+        cartItemsRepo.deleteAllById(cartItemIds);
         
     }
 
