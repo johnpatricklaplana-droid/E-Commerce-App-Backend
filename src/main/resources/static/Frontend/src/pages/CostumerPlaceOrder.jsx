@@ -1,6 +1,31 @@
+import { useEffect } from "react";
 import CostumerNavBar from "../components/CostumerNavBar";
+import { useLocation } from "react-router-dom";
+import { POST } from "../api/API";
 
 export default function CostumerPlaceOrder () {
+
+    const location = useLocation();
+
+    const cartItemIds = location.state?.cartItemIds || [];
+
+    useEffect(() => {
+       
+        const getCartItemsToPlaceOrder = async () => {
+            const url = "http://localhost:8080/api/costumer/cart/items";
+            const body = {
+                cartItemId: cartItemIds
+            };
+
+            const result = await POST(url, body);
+
+            console.log(result);
+        };
+
+        getCartItemsToPlaceOrder();
+
+    }, [cartItemIds]);
+
     return (
         <div className="space-y-8">
             <CostumerNavBar></CostumerNavBar>

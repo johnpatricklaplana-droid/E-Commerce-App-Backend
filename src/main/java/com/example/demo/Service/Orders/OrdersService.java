@@ -51,15 +51,13 @@ public class OrdersService {
     CartItemsRepository cartItemsRepo;
     
     @Transactional
-    public void saveOrders (Set<RequestOrdersDTO> ordersDTO) {
+    public void saveOrders (RequestOrdersDTO ordersDTO) {
 
         int costumerId = ExtractUserId.extractUserId();
 
         CostumersCart cart = costumersCartRepo.getActiveCart(costumerId);
 
-        Set<Integer> cartItemIds = ordersDTO.stream()
-                .map(ord -> ord.getCartItemId())
-                .collect(Collectors.toSet());
+        Set<Integer> cartItemIds = ordersDTO.getCartItemId();
 
         Set<CartItems> cartItems = cartItemsRepo.findCartItemsByIds(cartItemIds, cart.getId());     
 

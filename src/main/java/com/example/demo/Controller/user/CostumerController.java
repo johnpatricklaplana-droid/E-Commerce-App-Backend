@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.costumerDTO.CartItemsDTO;
 import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
+import com.example.demo.DTO.orders.RequestOrdersDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.DTO.productDTO.UpdateQuantityDTO;
 import com.example.demo.Service.user.AuthService;
@@ -68,6 +69,16 @@ public class CostumerController {
             .body(costumerService.getActiveCart());
     }
     
+    @PostMapping("/api/costumer/cart/items")
+    public ResponseEntity<Set<CartItemsDTO>> getCartItemsToPlaceOrder(@RequestBody RequestOrdersDTO cartItemIds) {
+        Set<CartItemsDTO> cartItems = costumerService.getItemsToPlaceOrder(cartItemIds);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(cartItems);
+    }
+    
+
     @GetMapping("api/costumer/cart/items/count")
     public ResponseEntity<Integer> getCartItemsCount() {
         return ResponseEntity

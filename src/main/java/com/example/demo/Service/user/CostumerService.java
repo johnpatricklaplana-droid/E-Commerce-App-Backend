@@ -2,6 +2,7 @@ package com.example.demo.Service.user;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.DTO.costumerDTO.CartItemsDTO;
+import com.example.demo.DTO.orders.RequestOrdersDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.Mapper.CartItemsClean;
 import com.example.demo.Mapper.ProductMapper;
@@ -166,4 +168,27 @@ public class CostumerService {
         cartItemsRepo.delete(cartItem);
 
     }
+
+    public Set<CartItemsDTO> getItemsToPlaceOrder (RequestOrdersDTO cartItemsIdsDto) {
+
+        Set<Integer> cartItemsIds = cartItemsIdsDto.getCartItemId();
+
+        Integer costumerId = ExtractUserId.extractUserId();
+
+        CostumersCart cart = cosumersCartRepo.getActiveCart(costumerId);
+
+        Set<CartItems> cartItems = cartItemsRepo.findCartItemsByIds(cartItemsIds, cart.getId());
+
+        Set<Integer> cartItemsIdsRealOne = cartItems
+            .stream()
+            .map(cartItem -> cartItem.getId())
+            .collect(Collectors.toSet());
+            
+
+        Set<CartItems> cartItemsFullyLoaded = cartItemsRepo.getItemsToPlaceOrder(cartItemsIdsRealOne);
+
+        return cartItemsClean.cleanCaritItems(cartItemsFullyLoaded);
+
+    }
+
 }

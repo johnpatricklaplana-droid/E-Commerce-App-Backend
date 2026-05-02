@@ -163,7 +163,15 @@ export default function Cart () {
         
         const selectedItem = selected.filter(sel => sel.selected === true);
 
-        console.log(selectedItem);
+        const cartItemIds = selectedItem.map(sel => sel.cartItemId);
+
+        console.log(cartItemIds);
+
+        navigate("/costumer-place-order", {
+            state: {
+                cartItemIds: cartItemIds
+            }
+        })
 
     };
 

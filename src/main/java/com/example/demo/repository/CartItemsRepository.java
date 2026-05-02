@@ -47,4 +47,17 @@ public interface CartItemsRepository extends JpaRepository<CartItems, Integer> {
         @Param("cartId") Integer cartId
     );
     
+    @Query("""
+        SELECT ci
+        FROM CartItems ci
+        JOIN FETCH ci.product as p
+        LEFT JOIN FETCH p.ratings
+        JOIN FETCH p.seller as s
+        JOIN FETCH s.seller_location
+        JOIN FETCH ci.variations as v
+        JOIN FETCH v.images 
+        WHERE ci.id IN :cartItemsIds 
+    """)
+    Set<CartItems> getItemsToPlaceOrder(@Param("cartItemsIds") Set<Integer> cartItemsIds);
+
 }

@@ -1,5 +1,7 @@
 package com.example.demo.DTO.orders;
 
+import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class RequestOrdersDTO {
     
-    private int cartItemId;
+    private Set<Integer> cartItemId;
 
 }
