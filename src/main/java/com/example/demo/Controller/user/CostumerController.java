@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.costumerDTO.CartItemsDTO;
 import com.example.demo.DTO.costumerDTO.costumer_InfoDTO;
+import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.orders.RequestOrdersDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.DTO.productDTO.UpdateQuantityDTO;
 import com.example.demo.Service.user.AuthService;
 import com.example.demo.Service.user.CostumerService;
 import com.example.demo.Service.user.UserAuthService;
+import com.example.demo.entity.User_Location;
 
 
 @RestController
@@ -77,7 +79,6 @@ public class CostumerController {
             .status(HttpStatus.OK)
             .body(cartItems);
     }
-    
 
     @GetMapping("api/costumer/cart/items/count")
     public ResponseEntity<Integer> getCartItemsCount() {
@@ -101,5 +102,14 @@ public class CostumerController {
             .status(HttpStatus.OK)
             .body(new SimpleResponseDTO("no content", 200));
     }
+
+    @GetMapping("/api/costumer/location")
+    public ResponseEntity<LocationDTO> getUserLocation() {
+        
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(costumerService.getUserLocation());
+    }
+    
 
 }

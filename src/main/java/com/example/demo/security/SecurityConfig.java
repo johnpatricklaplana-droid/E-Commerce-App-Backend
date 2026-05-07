@@ -31,7 +31,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/api/auth/**",
-                "/api/public/**"
+                "/api/public/**",
+                "/stripe/webhook"
             ).permitAll()
             .requestMatchers(
                 "/api/seller/**"

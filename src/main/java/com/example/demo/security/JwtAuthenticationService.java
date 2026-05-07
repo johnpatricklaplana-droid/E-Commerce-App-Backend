@@ -36,7 +36,7 @@ public class JwtAuthenticationService extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = JwtToken.extractToken(request);
-        System.out.println(token);
+      
         if(token != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             authService.validateJwtToken(token);
            

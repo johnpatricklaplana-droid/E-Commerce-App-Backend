@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.example.demo.enums.OrderReturnStatus;
 import com.example.demo.enums.OrderStatus;
+import com.example.demo.enums.PaymentStatusOrder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,5 +56,12 @@ public class Orders {
     @Column(name = "return_status")
     @Enumerated(EnumType.STRING)
     private OrderReturnStatus returnStatus;
+
+    @Column(name = "payment_intent_id")
+    private String paymentIntentId;
+
+    @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
+    private PaymentStatusOrder paymentStatusOrder;
 
 }

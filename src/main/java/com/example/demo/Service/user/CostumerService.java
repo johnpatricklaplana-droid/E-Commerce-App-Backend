@@ -1,15 +1,18 @@
 package com.example.demo.Service.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.DTO.costumerDTO.CartItemsDTO;
+import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.orders.RequestOrdersDTO;
 import com.example.demo.DTO.productDTO.ProductResponse;
 import com.example.demo.Mapper.CartItemsClean;
@@ -19,6 +22,7 @@ import com.example.demo.entity.Costumer;
 import com.example.demo.entity.CostumersCart;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductVariations;
+import com.example.demo.entity.User_Location;
 import com.example.demo.enums.CartStatus;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.repository.CartItemsRepository;
@@ -189,6 +193,24 @@ public class CostumerService {
 
         return cartItemsClean.cleanCaritItems(cartItemsFullyLoaded);
 
+    }
+
+    public LocationDTO getUserLocation() {
+        
+        int costumerId = ExtractUserId.extractUserId();
+
+        Costumer costumer = costumer_Repo.findById(costumerId).orElse(null);
+
+        User_Location location = costumer.getCostumer_location().get(0);
+
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setCity(location.getCity());
+        locationDTO.setCountry(location.getCountry());
+        locationDTO.setPostcode(location.getPostal_code());
+        locationDTO.setProvince(location.getProvince());
+        locationDTO.setStreet(location.getStreet());
+        
+        return locationDTO;
     }
 
 }

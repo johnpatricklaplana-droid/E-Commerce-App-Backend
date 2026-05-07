@@ -5,5 +5,6 @@ public enum OrderStatus {
     PROCESSING,
     DELIVERED,
     SHIPPED,
-    OUT_FOR_DELIVERY
+    OUT_FOR_DELIVERY,
+    REQUIRE_PAYMENT
 }

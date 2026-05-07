@@ -34,4 +34,7 @@ public class Costumer extends User {
     @OneToMany(mappedBy = "costumer")
     private Set<Orders> orders;
 
+    @OneToMany(mappedBy = "costumer")
+    private Set<Payment> payments;
+
 }
