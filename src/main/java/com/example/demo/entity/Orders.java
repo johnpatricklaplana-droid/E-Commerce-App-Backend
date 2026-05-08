@@ -64,4 +64,7 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private PaymentStatusOrder paymentStatusOrder;
 
+    @Column(name = "quantity")
+    private int quantity;
+
 }

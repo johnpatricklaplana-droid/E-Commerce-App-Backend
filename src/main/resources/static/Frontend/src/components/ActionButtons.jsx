@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { ShoppingBag, Home } from "lucide-react";
 
-export function ActionButtons() {
+export function ActionButtons( { goToOrder } ) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -12,6 +12,7 @@ export function ActionButtons() {
             <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={goToOrder}
                 className="relative flex-1 px-6 py-4 rounded-2xl overflow-hidden group"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600" />

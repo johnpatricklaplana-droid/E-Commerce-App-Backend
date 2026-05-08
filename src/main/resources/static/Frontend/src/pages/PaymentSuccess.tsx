@@ -6,8 +6,11 @@ import { Logo } from "../components/Logo";
 import { SuccessIcon } from "../components/SuccessIcon";
 import { AnimatedBackground } from "../components/AnimatedBackground";
 import { ActionButtons } from "../components/ActionButtons";
+import { useNavigate } from "react-router-dom";
 
 export default function PaymentSuccess() {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const duration = 3000;
@@ -43,6 +46,10 @@ export default function PaymentSuccess() {
 
         return () => clearInterval(interval);
     }, []);
+
+    const goToOrder = () => {
+        navigate("/costumer-orders");
+    };
 
     return (
         <div className="relative size-full min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
@@ -125,7 +132,7 @@ export default function PaymentSuccess() {
                         </div>
                     </motion.div>
 
-                    <ActionButtons />
+                    <ActionButtons goToOrder={goToOrder} />
 
                     <motion.div
                         initial={{ opacity: 0 }}

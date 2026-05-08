@@ -4,8 +4,12 @@ import Input from "./Input";
 import { useEffect, useState } from "react";
 import { GET } from "../api/API";
 import LogoutOrSignupPopup from "./LogouOrSIgnupPopup";
+import { Search, ShoppingCart, User, Package } from 'lucide-react';
+import { IconButton, Avatar, Menu, MenuItem, Badge, InputBase } from '@mui/material';
 
 export default function CostumerNavBar({ cartItemsCount }) {
+
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const [loginPopup, setLoginPopup] = useState(false);
 
@@ -21,47 +25,83 @@ export default function CostumerNavBar({ cartItemsCount }) {
 
     const open = () => {
         setLoginPopup(true);
+        handleClose();
+    };
+
+    const handleProfileClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
     return (
-        <div className="top-0 sticky p-3 space-y-3 z-50 bg-orange-500 left-0 w-full">
-            {loginPopup && <LogoutOrSignupPopup onClick={close}></LogoutOrSignupPopup>}
-            <div className="flex w-full justify-between items-center gap-3">
-                <button 
-                    className="text-blue-400 text-2xl font-bold tracking-wide cursor-pointer hover:text-blue-300 transition"
-                    onClick={home}
-                >
-                    ShopEase
-                </button>
-                <div className="w-full hidden sm:block">
-                    <Input placeholder={"search some products"} fullWidth={true} type={"search"}></Input>
-                </div>
-                <div className="flex gap-1.5">
-                    <button 
-                        className="relative"
-                        onClick={() => (navigate("/costumer-cart"))}
-                    >
-                        <div className={`h-6 w-6 ${cartItemsCount === 0 ? "opacity-0" : "opacity-100"} bg-emerald-500 absolute right-0 rounded-[50%]`}>
-                            {cartItemsCount === 0 ? "" : cartItemsCount}
+        <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+            {loginPopup === true && <LogoutOrSignupPopup onClick={close}></LogoutOrSignupPopup>}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-2">
+                            <Package className="w-8 h-8 text-blue-600" />
+                            <span className="text-xl font-bold text-gray-900">ShopHub</span>
                         </div>
-                        <CommonSvgIcon width="22" height="22" classList={"flex justify-center items-center px-3 py-1.5 text-black gap-1.5 hover:border-b-2 hover:border-white"} type={"addtocart"}></CommonSvgIcon>
-                    </button>
-                    <CommonSvgIcon type={"search"} classList={"w-[24px] h-[24px] mr-3.5 block sm:hidden"}></CommonSvgIcon>
-                    <button className="flex items-center gap-1.5 rounded hover:bg-blue-100 sm:px-3 sm:py-1.5">
-                        <CommonSvgIcon type={"home"}></CommonSvgIcon>
-                        <span className="sm:inline hidden">home</span>
-                    </button>
-                    <button 
-                        className="rounded-[50%] hover:bg-blue-100 sm:p-1.5"
-                        onClick={open}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <circle cx="12" cy="8" r="4" />
-                            <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                        </svg>
-                    </button>
+
+                        {/* Navigation Links */}
+                        <div className="hidden md:flex items-center gap-6">
+                            <a href="/costumer-feed" className="text-gray-600 hover:text-gray-900 transition-colors">
+                                Home
+                            </a>
+                            <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                                Shop
+                            </a>
+                            <a href="/costumer-orders" className="text-blue-600 font-medium border-b-2 border-blue-600 pb-[22px] -mb-[1px]">
+                                My Purchases
+                            </a>
+                            <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                                Support
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        {/* Search Bar */}
+                        <div className="hidden sm:flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 w-64">
+                            <Search className="w-4 h-4 text-gray-500" />
+                            <InputBase
+                                placeholder="Search products or orders..."
+                                value="kljfklasf"
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="flex-1 text-sm"
+                                sx={{ fontSize: '14px' }}
+                            />
+                        </div>
+
+                        <IconButton onClick={() => (navigate("/costumer-cart"))} size="medium">
+                            <Badge badgeContent={cartItemsCount} color="primary">
+                                <ShoppingCart className="w-5 h-5 text-gray-700" />
+                            </Badge>
+                        </IconButton>
+
+                        <IconButton onClick={handleProfileClick} size="medium">
+                            <Avatar sx={{ width: 32, height: 32, bgcolor: '#3b82f6' }}>
+                                <User className="w-4 h-4" />
+                            </Avatar>
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>Settings</MenuItem>
+                            <MenuItem onClick={open}>Logout</MenuItem>
+                        </Menu>
+                    </div>
                 </div>
             </div>
-        </div>
+        </nav>
     );
 }
