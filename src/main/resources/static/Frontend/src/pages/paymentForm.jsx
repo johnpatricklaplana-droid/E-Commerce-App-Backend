@@ -13,7 +13,7 @@ export default function PaymentForm () {
         const { error, paymentIntent } = await stripe.confirmPayment({
             elements: elements,
             confirmParams: {
-                return_url: "http://localhost:5173/todo"
+                return_url: "http://localhost:5173/costumer-payment-success"
             },
             redirect: "if_required"
         });

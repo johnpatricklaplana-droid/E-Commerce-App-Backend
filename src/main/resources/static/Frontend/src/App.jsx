@@ -20,6 +20,7 @@ import CostumerProductInspect from "./pages/CostumerProductInspect";
 import Cart from "./pages/CostumersCart";
 import CostumerPlaceOrder from "./pages/CostumerPlaceOrder";
 import PaymentConfirmation from "./pages/paymentConfirmation";
+import PaymentSuccess from "./pages/PaymentSuccess"
 
 export default function App() {
     return (
@@ -46,6 +47,7 @@ export default function App() {
                 <Route path="/costumer-cart" element={<Cart/>} />
                 <Route path="/costumer-place-order" element={<CostumerPlaceOrder/>} />
                 <Route path="/costumer-payment-confirmation" element={<PaymentConfirmation/>} />
+                <Route path="/costumer-payment-success" element={<PaymentSuccess />} />
             </Routes>
         </BrowserRouter>
     );

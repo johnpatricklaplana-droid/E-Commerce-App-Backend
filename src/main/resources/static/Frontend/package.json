@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/node": "^25.6.2",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",
@@ -19,6 +20,9 @@
     "@stripe/react-stripe-js": "^6.3.0",
     "@stripe/stripe-js": "^9.4.0",
     "@tailwindcss/vite": "^4.2.1",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.14.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.14.0",
