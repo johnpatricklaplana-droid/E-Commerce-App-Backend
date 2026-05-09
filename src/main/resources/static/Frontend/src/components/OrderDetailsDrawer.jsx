@@ -59,7 +59,6 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
 
     return (
         <>
-            {/* Backdrop */}
             <div
                 className={`fixed inset-0 bg-black/30 ${overlayHide} backdrop-blur-sm z-40`}
                 onClick={onClose}
@@ -71,7 +70,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                     <div className="flex items-center justify-between">
                         <div>
                             <h2 className="text-[24px] font-semibold text-[#111827]">Order Details</h2>
-                            <p className="text-[14px] text-[#6B7280] mt-1">{order.orderId}</p>
+                            <p className="text-[14px] text-[#6B7280] mt-1">ORDER# {order.orderId}</p>
                         </div>
                         <button
                             onClick={onClose}
@@ -82,9 +81,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="px-8 py-6 space-y-8">
-                    {/* Product Gallery */}
                     <div>
                         <h3 className="text-[16px] font-semibold text-[#111827] mb-4">Product</h3>
                         <div className="relative rounded-2xl overflow-hidden bg-[#F9FAFB]">
@@ -173,7 +170,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                             <div className="flex items-center justify-between">
                                 <span className="text-[14px] text-[#6B7280]">Price</span>
                                 <span className="text-[20px] font-semibold text-[#111827]">
-                                    ${order.variations?.price.toFixed(2)}
+                                    ${order.variations?.price.toLocaleString()}
                                 </span>
                             </div>
                         </div>
@@ -191,20 +188,20 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                                 />
                                 <div>
                                     <p className="text-[16px] font-semibold text-[#111827]">
-                                        {order.costumer?.firstName}
+                                        {order.costumer?.firstName + " " + order.costumer?.lastName}
                                     </p>
-                                    <p className="text-[13px] text-[#6B7280]">johnyheydaddy@gmail.com</p>
+                                    <p className="text-[13px] text-[#6B7280]">TODO:johnyheydaddy@gmail.com</p>
                                 </div>
                             </div>
 
                             <div className="space-y-2.5 pt-3 border-t border-[#E5E7EB]">
                                 <div className="flex items-center gap-3">
                                     <Mail className="w-4 h-4 text-[#9CA3AF]" />
-                                    <span className="text-[14px] text-[#6B7280]">johnyheydaddy@gmail.com</span>
+                                    <span className="text-[14px] text-[#6B7280]">TODO:johnyheydaddy@gmail.com</span>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <MapPin className="w-4 h-4 text-[#9CA3AF]" />
-                                    <span className="text-[14px] text-[#6B7280]">thailand</span>
+                                    <span className="text-[14px] text-[#6B7280]">{order.location?.street + " " + order.location?.city + " " + order.location?.province + " " + order.location?.country}</span>
                                 </div>
                             </div>
                         </div>

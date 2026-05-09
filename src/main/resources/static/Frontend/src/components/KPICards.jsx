@@ -1,53 +1,19 @@
 import { ShoppingBag, Clock, CheckCircle, DollarSign, RotateCcw, TrendingUp, TrendingDown } from 'lucide-react';
 
-// const Order = {
-//     id: "string",
-//     orderNumber: "string",
-//     product: {
-//         name: "string",
-//         description: "string",
-//         variant: "string",
-//         color: "string",
-//         colorHex: "string",
-//         images: "string",
-//         price: "number"
-//     },
-//     customer: {
-//         name: "string",
-//         email: "string",
-//         avatar: "string",
-//         location: "string"
-//     },
-//     date: "string",
-//     time: "string",
-//     orderStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled',
-//     paymentStatus: 'paid' | 'pending' | 'failed' | 'refunded',
-//     returnStatus: 'none' | 'requested' | 'approved' | 'completed',
-//     timeline: {
-//         ordered: "string",
-//         paid: "string",
-//         processing: "string",
-//         shipped?: "string",
-//         delivered?: "string"
-//     }
-// }
-
 export function KPICards({ orders }) {
-    const totalOrders = orders.length;
-    const pendingOrders = orders.filter(o => o.orderStatus === 'pending').length;
-    const paidOrders = orders.filter(o => o.paymentStatus === 'paid').length;
-    const revenue = orders
-        .filter(o => o.paymentStatus === 'paid')
-        .reduce((sum, o) => sum + o.product.price, 0);
-    const returns = orders.filter(o => o.returnStatus !== 'none').length;
+    const totalOrders = orders.totalOrders;
+    const pendingOrders = orders.pendingOrders;
+    const paidOrders = orders.paidOrders;
+    const revenue = orders.revenue;
+    const returns = orders.returns
 
     const kpis = [
         {
             label: 'Total Orders',
             value: totalOrders.toString(),
             icon: ShoppingBag,
-            trend: '+12%',
-            trendUp: true,
+            trend: '-12%',
+            trendUp: false,
             color: 'bg-[#6366F1]',
         },
         {
@@ -78,8 +44,8 @@ export function KPICards({ orders }) {
             label: 'Returns',
             value: returns.toString(),
             icon: RotateCcw,
-            trend: '-8%',
-            trendUp: false,
+            trend: '+8%',
+            trendUp: true,
             color: 'bg-[#EF4444]',
         },
     ];

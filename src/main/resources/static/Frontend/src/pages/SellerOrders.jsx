@@ -291,12 +291,31 @@ export default function SellerOrders () {
 
             const result = await GET(url);
             console.log(result);
+
+            const paidOne = result.filter(res => res.paymentStatus === "paid");
+
+            const totalOrders = result.length;
+            const pendingOrders = result.filter(res => res.orderStatus === "PENDING").length;
+            const paidOrders = paidOne.length;
+            const revenue = paidOne.map(res => res.variations.price * res.quantity).reduce((acc, item) => {return Number(acc) + Number(item)}, [0]);
+            const returns = result.filter(res => res.returnStatus === "RETURNED").length;
+        
+            setStats({
+                totalOrders: totalOrders,
+                pendingOrders: pendingOrders,
+                paidOrders: paidOrders,
+                revenue: revenue,
+                returns: returns
+            });
+
             setOrders(result);
         }
 
         getOrder();
         
     }, []);
+
+    console.log(stats);
 
     const openDrawer = (orderId) => {
 
@@ -317,7 +336,7 @@ export default function SellerOrders () {
     return (
         <div className="min-h-screen bg-[#F8FAFC]">
             <SellerOrderHeader />
-            <KPICards orders={mockOrders} />
+            <KPICards orders={stats} />
             <FiltersToolbar />
             <OrdersList onOrderClick={openDrawer} orders={orders} />
             <OrderDetailsDrawer onClose={closeDrawer} overlayHide={hideOverlay} position={drawerPosition} order={selectedOrderRealone} />

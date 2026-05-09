@@ -71,7 +71,7 @@ export function OrdersList({ orders, onOrderClick }) {
                                 </p>
                                 <p className="text-[12px] text-[#9CA3AF] flex items-center gap-1 mt-0.5">
                                     <MapPin className="w-3 h-3" />
-                                    <span className="truncate">TODO: philipinnes</span>
+                                    <span className="truncate">{order.location.street + " " + order.location.city + " " + order.location.province + " " + order.location.country}</span>
                                 </p>
                             </div>
                         </div>
@@ -79,10 +79,10 @@ export function OrdersList({ orders, onOrderClick }) {
                         
                         <div>
                             <p className="text-[13px] font-medium text-[#6B7280] mb-1">
-                                {order.orderId}{/* Order Info */}
+                               ORDER# {order.orderId}{/* Order Info */}
                             </p>
-                            <p className="text-[13px] text-[#9CA3AF]">{order.orderDate}</p>
-                            {/* <p className="text-[12px] text-[#9CA3AF]">{order.time}</p> */}
+                            <p className="text-[13px] text-[#9CA3AF]">{order.orderDate.split("T")[0]}</p>
+                            <p className="text-[12px] text-[#9CA3AF]">{order.orderDate.split("T")[1]}</p>
                         </div>
 
                         {/* Pricing */}

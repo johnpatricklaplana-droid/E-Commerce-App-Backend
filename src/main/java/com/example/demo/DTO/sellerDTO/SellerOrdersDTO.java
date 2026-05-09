@@ -29,5 +29,6 @@ public class SellerOrdersDTO {
     private String paymentStatus;
 
     private LocationDTO location;
+    private int quantity;
 
 }

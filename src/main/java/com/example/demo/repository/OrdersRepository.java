@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +21,19 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
         AND o.paymentStatusOrder = :paymentStatus
     """)
     List<Orders> findAllPaidOrders(@Param("costumerId") int costumerId, @Param("paymentStatus") PaymentStatusOrder paymentStatusOrder);
+
+    @Query("""
+        SELECT o
+        FROM Orders o
+        JOIN o.product p
+        WHERE o.orderDate BETWEEN :start AND :end
+        AND p.seller.id = :sellerId
+    """)
+    List<Orders> findByOrderDateBetween(
+        @Param("start") LocalDateTime lastWeek, 
+        @Param("end") LocalDateTime today,
+        @Param("sellerId") int sellerId
+    );
 
 
     

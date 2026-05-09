@@ -1,9 +1,11 @@
 package com.example.demo.Service.user;
 
+import com.example.demo.repository.OrdersRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import com.example.demo.DTO.productDTO.ProductDTO;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.RatingsDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfo;
+import com.example.demo.DTO.sellerDTO.SellerOrderStatsDTO;
 import com.example.demo.DTO.sellerDTO.SellerOrdersDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Mapper.ProductMapper;
@@ -48,6 +50,8 @@ import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Bank_Account_status;
 import com.example.demo.enums.Business_Registration_Document_Status;
 import com.example.demo.enums.OrderReturnStatus;
+import com.example.demo.enums.OrderStatus;
+import com.example.demo.enums.PaymentStatusOrder;
 import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.exceptions.EmailAlreadyExistException;
@@ -71,6 +75,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class SellerService {
     
+    private final OrdersRepository ordersRepository;
+
     @Autowired
     Seller_Repository seller_Repo;
 
@@ -124,6 +130,10 @@ public class SellerService {
 
     @Autowired
     ProductMapper productMapper;
+
+    SellerService(OrdersRepository ordersRepository) {
+        this.ordersRepository = ordersRepository;
+    }
 
     @Transactional
     public String signup (SellerSignUpFieldsDTO sellerInfo) {
@@ -439,6 +449,7 @@ public class SellerService {
             locationDTO.setStreet(location.getStreet());
 
             dto.setCostumer(costumerDTO);
+            dto.setLocation(locationDTO);
             dto.setOrderDate(o.getOrderDate());
             dto.setOrderId(o.getId());
             dto.setOrderStatus(o.getOrderStatus().toString());
@@ -467,6 +478,7 @@ public class SellerService {
             variationsDTO.setVariationName(variations.getVariationName());
 
             dto.setVariations(variationsDTO);
+            dto.setQuantity(o.getQuantity());
  
             ordersDTO.add(dto);
 
@@ -475,7 +487,116 @@ public class SellerService {
         return ordersDTO;
 
     }
+
+    public SellerOrderStatsDTO getSellerStats() {
     
+        LocalDateTime today = LocalDateTime.now();
+        
+        LocalDateTime lastWeek = today.minusWeeks(1);
+         
+        LocalDateTime lastWeekTimes2 = today.minusWeeks(2);
+
+        int sellerId = ExtractUserId.extractUserId();
+
+        List<Orders> ordersLastWeek = ordersRepository.findByOrderDateBetween(lastWeekTimes2, lastWeek, sellerId);
+        List<Orders> ordersThisWeek = ordersRepository.findByOrderDateBetween(lastWeek, today, sellerId);
+        
+        String ordersThisWeekPercentage = getPercentage(ordersThisWeek.size(), ordersLastWeek.size());
+
+        double paidOrdersThisWeek = getPaidOrdersInThisEra(ordersThisWeek);
+        double paidOrdersLastWeek = getPaidOrdersInThisEra(ordersLastWeek);
+
+        String paidOrdersPercentage = getPercentage(paidOrdersThisWeek, paidOrdersLastWeek);
+
+        double pendingThisWeek = getpendingOrdersInThisEra(ordersThisWeek);
+        double pendingLastWeek = getpendingOrdersInThisEra(ordersLastWeek);
+
+        String pendingPercentage = getPercentage(pendingThisWeek, pendingLastWeek);
+
+        double returnedOrderThisWeek = getReturnedOrdersInThisEra(ordersThisWeek);
+        double returnedOrderLastWeek = getReturnedOrdersInThisEra(ordersLastWeek);
+
+        String returnedPercentage = getPercentage(returnedOrderThisWeek, returnedOrderLastWeek);
+
+        double revenueThisWeek = getRevenueInThisEra(ordersThisWeek);
+        double revenueLastWeek = getRevenueInThisEra(ordersLastWeek);
+
+        String revenuePercentage = getPercentage(revenueThisWeek, revenueLastWeek);
+
+        SellerOrderStatsDTO stats = new SellerOrderStatsDTO();
+        stats.setOrdersPercentageCompareToLastTime(ordersThisWeekPercentage);
+        stats.setPaidOrdersCompareToLastTime(paidOrdersPercentage);
+        stats.setPendingOrdersPercentageCompareToLastTime(pendingPercentage);
+        stats.setOrdersReturnComparedToLastTime(returnedPercentage);
+        stats.setRevenueCompareToLastTime(revenuePercentage);
+
+        return stats;
+
+    }
+
+    private Integer getPaidOrdersInThisEra(List<Orders> orders) {
+
+        return orders.stream()
+                .mapToInt(ord -> {
+                    if (ord.getPaymentStatusOrder() == PaymentStatusOrder.paid) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                })
+                .sum();
+
+    }
+    
+    private String getPercentage(double thisWeek, double lastWeek) {
+
+        if(lastWeek == 0) {
+            return thisWeek == 0 ? "0%" : "100%";
+        }
+            System.out.println(thisWeek);
+            System.out.println(lastWeek);
+        double percent = (thisWeek - lastWeek) / lastWeek * 100;
+       System.out.println(percent);
+        return String.format("%.2f%%", percent);
+
+    }
+
+    private Integer getpendingOrdersInThisEra(List<Orders> orders) {
+        return orders.stream()
+                .mapToInt(ord -> {
+                    if (ord.getOrderStatus() == OrderStatus.PENDING) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                })
+                .sum();
+    }
+
+    private Integer getReturnedOrdersInThisEra(List<Orders> orders) {
+        return orders.stream()
+            .mapToInt(ord -> {
+                if (ord.getReturnStatus() == OrderReturnStatus.RETURNED) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            .sum();
+    }
+
+    private double getRevenueInThisEra(List<Orders> orders) {
+
+        double totalRevenue = 0;
+
+        for (Orders o : orders) {
+            ProductVariations variations = o.getVariations();
+            totalRevenue += variations.getPrice();
+        }
+
+        return totalRevenue;
+    }
+
 }
 
 
