@@ -3,7 +3,6 @@ import SellerAddProduct from "./pages/seller_add_product";
 import SellerBusinessRegistrationFile from "./pages/sellerBusinessRegistrationFIle";
 import SellerRegistrationFileStorage from "./pages/AdminSellerRegistrationFileStorage";
 import SellerDashBoard from "./pages/SellerDashboard";
-import Orders from "./pages/SellerOrders";
 import SellerProducts from "./pages/SellerProducts";
 import CostumerSignup from "./pages/CostumerSignup";
 import AdminLogin from "./pages/AdminLogin";
@@ -22,6 +21,7 @@ import CostumerPlaceOrder from "./pages/CostumerPlaceOrder";
 import PaymentConfirmation from "./pages/paymentConfirmation";
 import PaymentSuccess from "./pages/PaymentSuccess"
 import CostumerOrder from "./pages/CostumerOrder";
+import SellerOrders from "./pages/SellerOrders";
 
 export default function App() {
     return (
@@ -31,7 +31,6 @@ export default function App() {
                 <Route path="/add-business-registration-file" element={<SellerBusinessRegistrationFile/>} />
                 <Route path="/business-registration-file-storage" element={<SellerRegistrationFileStorage/>} />
                 <Route path="/seller-dashboard" element={<SellerDashBoard/>} />
-                <Route path="/seller-orders" element={<Orders/>} />
                 <Route path="/seller-products" element={<SellerProducts/>} />
                 <Route path="/costumer-signup" element={<CostumerSignup/>} />
                 <Route path="/admin-login" element={<AdminLogin/>} />
@@ -50,6 +49,7 @@ export default function App() {
                 <Route path="/costumer-payment-confirmation" element={<PaymentConfirmation/>} />
                 <Route path="/costumer-payment-success" element={<PaymentSuccess />} />
                 <Route path="/costumer-orders" element={<CostumerOrder />} />
+                <Route path="/seller-orders" element={<SellerOrders />} />
             </Routes>
         </BrowserRouter>
     );

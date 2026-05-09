@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Configuration.AdminProperties;
 import com.example.demo.Controller.client.Location_external_API;
+import com.example.demo.DTO.costumerDTO.CostumerDTO;
 import com.example.demo.DTO.location.LocationDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
+import com.example.demo.DTO.productDTO.ProductDTO;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.RatingsDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfo;
+import com.example.demo.DTO.sellerDTO.SellerOrdersDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Mapper.ProductMapper;
 import com.example.demo.Service.Jwt;
 import com.example.demo.Service.product.ProductService;
 import com.example.demo.entity.Business_Registration_Documents;
 import com.example.demo.entity.Category;
+import com.example.demo.entity.Costumer;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductVariations;
@@ -41,6 +47,7 @@ import com.example.demo.entity.Sellers_Papers;
 import com.example.demo.entity.User_Location;
 import com.example.demo.enums.Bank_Account_status;
 import com.example.demo.enums.Business_Registration_Document_Status;
+import com.example.demo.enums.OrderReturnStatus;
 import com.example.demo.enums.User_Role;
 import com.example.demo.exceptions.ActionNotAllowedException;
 import com.example.demo.exceptions.EmailAlreadyExistException;
@@ -56,6 +63,7 @@ import com.example.demo.repository.Seller_Repository;
 import com.example.demo.repository.User_LocationRepository;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.utils.CredentialsValidator;
+import com.example.demo.utils.ExtractUserId;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -400,6 +408,72 @@ public class SellerService {
         sellerInfo.setLocation(locationDTOs);
 
         return sellerInfo;
+    }
+
+    public List<SellerOrdersDTO> getSellerOrders() {
+
+        int sellerId = ExtractUserId.extractUserId();
+
+        Set<Orders> orders = seller_Repo.getSellerOrders(sellerId);
+
+        List<SellerOrdersDTO> ordersDTO = new ArrayList<>();
+
+        for (Orders o : orders) {
+            SellerOrdersDTO dto = new SellerOrdersDTO();
+
+            Costumer costumer = o.getCostumer();
+            CostumerDTO costumerDTO = new CostumerDTO();
+            costumerDTO.setCostumerId(costumer.getId());
+            costumerDTO.setFirstName(costumer.getFirst_name());
+            costumerDTO.setLastName(costumer.getLast_name());
+            costumerDTO.setProfilePic(costumer.getProfile_pic());
+
+            User_Location location = costumer.getCostumer_location().get(0);
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setCity(location.getCity());
+            locationDTO.setCountry(location.getCountry());
+            locationDTO.setLat(location.getLat());
+            locationDTO.setLon(location.getLon());
+            locationDTO.setPostcode(location.getPostal_code());
+            locationDTO.setProvince(location.getProvince());
+            locationDTO.setStreet(location.getStreet());
+
+            dto.setCostumer(costumerDTO);
+            dto.setOrderDate(o.getOrderDate());
+            dto.setOrderId(o.getId());
+            dto.setOrderStatus(o.getOrderStatus().toString());
+            dto.setPaymentStatus(o.getPaymentStatusOrder().toString());
+
+            Product product = o.getProduct();
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductId(product.getId());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setProductDescription(product.getProductDescription());
+            productDTO.setThumbnail(product.getThumbnail());
+
+            dto.setProduct(productDTO);
+            OrderReturnStatus returnStatus = o.getReturnStatus();
+            if(returnStatus != null) {
+                dto.setReturnStatus(o.getReturnStatus().toString());
+            }
+
+            ProductVariations variations = o.getVariations();
+            ProductVariationsDTO variationsDTO = new ProductVariationsDTO();
+            variationsDTO.setColor(variations.getColor());
+            variationsDTO.setImagesUrl(variations.getImages().stream().map(img -> img.getImageUrl()).collect(Collectors.toSet()));
+            variationsDTO.setPrice(variations.getPrice());
+            variationsDTO.setSku(variations.getSku());
+            variationsDTO.setVariantId(variations.getId());
+            variationsDTO.setVariationName(variations.getVariationName());
+
+            dto.setVariations(variationsDTO);
+ 
+            ordersDTO.add(dto);
+
+        }
+
+        return ordersDTO;
+
     }
     
 }

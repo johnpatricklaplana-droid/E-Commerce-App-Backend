@@ -47,7 +47,6 @@ export default function CostumerNavBar({ cartItemsCount }) {
                             <span className="text-xl font-bold text-gray-900">ShopHub</span>
                         </div>
 
-                        {/* Navigation Links */}
                         <div className="hidden md:flex items-center gap-6">
                             <a href="/costumer-feed" className="text-gray-600 hover:text-gray-900 transition-colors">
                                 Home

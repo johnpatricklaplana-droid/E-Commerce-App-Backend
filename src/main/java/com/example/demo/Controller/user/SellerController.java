@@ -20,6 +20,7 @@ import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfo;
+import com.example.demo.DTO.sellerDTO.SellerOrdersDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
 import com.example.demo.Service.user.SellerService;
 import com.example.demo.Service.user.UserAuthService;
@@ -122,6 +123,13 @@ public class SellerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(sellerInfo);
+    }
+    
+    @GetMapping("/api/seller/orders")
+    public ResponseEntity<List<SellerOrdersDTO>> getSellerOrders() {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(sellerService.getSellerOrders());
     }
     
 }

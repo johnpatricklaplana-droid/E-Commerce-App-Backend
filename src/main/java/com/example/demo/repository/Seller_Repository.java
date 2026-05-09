@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Seller;
 import com.example.demo.entity.Sellers_Papers;
 
@@ -45,4 +46,15 @@ public interface Seller_Repository extends JpaRepository<Seller, Integer> {
     """)
     Seller findSellerByProduct(@Param("productId") int productId);
     
+    @Query("""
+        SELECT o
+        FROM Orders o
+        JOIN FETCH o.product p
+        JOIN FETCH o.variations v
+        JOIN FETCH o.costumer c
+        JOIN FETCH c.costumer_location cl
+        WHERE p.seller.id = :sellerId
+    """)
+    Set<Orders> getSellerOrders(@Param("sellerId") int sellerId);
+
 }

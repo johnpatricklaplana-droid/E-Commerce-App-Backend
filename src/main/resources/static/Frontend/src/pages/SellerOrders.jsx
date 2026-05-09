@@ -1,142 +1,342 @@
-export default function Orders () {
+import { SellerOrderHeader } from '../components/CostumerOrderHeader';
+import { KPICards } from '../components/KPICards';
+import { FiltersToolbar } from '../components/FiltersToolbar';
+import { OrdersList } from '../components/OrderList';
+import { OrderDetailsDrawer } from '../components/OrderDetailsDrawer';
+import { useEffect, useState } from 'react';
+import { GET } from '../api/API';
+
+const mockOrders = [
+    {
+        id: '1',
+        orderNumber: 'ORD-2024-0847',
+        product: {
+            name: 'Premium Wireless Headphones',
+            description: 'Active noise cancellation with premium sound quality',
+            variant: 'Pro Max Edition',
+            color: 'Midnight Black',
+            colorHex: '#1a1a1a',
+            images: [
+                'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+                'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400',
+            ],
+            price: 349.99,
+        },
+        customer: {
+            name: 'Sarah Johnson',
+            email: 'sarah.j@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=1',
+            location: 'San Francisco, CA',
+        },
+        date: 'May 9, 2026',
+        time: '10:24 AM',
+        orderStatus: 'pending',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 9, 2026 10:24 AM',
+            paid: 'May 9, 2026 10:24 AM',
+        },
+    },
+    {
+        id: '2',
+        orderNumber: 'ORD-2024-0846',
+        product: {
+            name: 'Minimalist Leather Backpack',
+            description: 'Handcrafted genuine leather with laptop compartment',
+            variant: 'Standard Size',
+            color: 'Cognac Brown',
+            colorHex: '#8B4513',
+            images: [
+                'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400',
+                'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=400',
+            ],
+            price: 189.00,
+        },
+        customer: {
+            name: 'Michael Chen',
+            email: 'm.chen@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=12',
+            location: 'New York, NY',
+        },
+        date: 'May 9, 2026',
+        time: '09:15 AM',
+        orderStatus: 'processing',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 9, 2026 09:15 AM',
+            paid: 'May 9, 2026 09:15 AM',
+            processing: 'May 9, 2026 09:30 AM',
+        },
+    },
+    {
+        id: '3',
+        orderNumber: 'ORD-2024-0845',
+        product: {
+            name: 'Smart Fitness Watch',
+            description: 'Advanced health tracking with GPS and heart rate monitor',
+            variant: 'Sport Edition',
+            color: 'Ocean Blue',
+            colorHex: '#0077BE',
+            images: [
+                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400',
+                'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400',
+            ],
+            price: 279.99,
+        },
+        customer: {
+            name: 'Emma Rodriguez',
+            email: 'emma.r@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=5',
+            location: 'Austin, TX',
+        },
+        date: 'May 8, 2026',
+        time: '04:32 PM',
+        orderStatus: 'shipped',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 8, 2026 04:32 PM',
+            paid: 'May 8, 2026 04:32 PM',
+            processing: 'May 8, 2026 05:00 PM',
+            shipped: 'May 9, 2026 08:00 AM',
+        },
+    },
+    {
+        id: '4',
+        orderNumber: 'ORD-2024-0844',
+        product: {
+            name: 'Organic Cotton T-Shirt',
+            description: 'Sustainable fashion with premium comfort',
+            variant: 'Classic Fit',
+            color: 'Forest Green',
+            colorHex: '#228B22',
+            images: [
+                'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+                'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400',
+            ],
+            price: 45.00,
+        },
+        customer: {
+            name: 'David Park',
+            email: 'david.park@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=14',
+            location: 'Seattle, WA',
+        },
+        date: 'May 8, 2026',
+        time: '02:18 PM',
+        orderStatus: 'delivered',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 8, 2026 02:18 PM',
+            paid: 'May 8, 2026 02:18 PM',
+            processing: 'May 8, 2026 03:00 PM',
+            shipped: 'May 8, 2026 06:00 PM',
+            delivered: 'May 9, 2026 11:30 AM',
+        },
+    },
+    {
+        id: '5',
+        orderNumber: 'ORD-2024-0843',
+        product: {
+            name: 'Ceramic Coffee Mug Set',
+            description: 'Artisan handmade ceramic set of 4 mugs',
+            variant: 'Set of 4',
+            color: 'Matte White',
+            colorHex: '#F5F5F5',
+            images: [
+                'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400',
+                'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=400',
+            ],
+            price: 68.00,
+        },
+        customer: {
+            name: 'Jessica Williams',
+            email: 'j.williams@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=9',
+            location: 'Portland, OR',
+        },
+        date: 'May 8, 2026',
+        time: '11:45 AM',
+        orderStatus: 'pending',
+        paymentStatus: 'pending',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 8, 2026 11:45 AM',
+            paid: '',
+        },
+    },
+    {
+        id: '6',
+        orderNumber: 'ORD-2024-0842',
+        product: {
+            name: 'Designer Sunglasses',
+            description: 'UV protection with polarized lenses',
+            variant: 'Aviator Style',
+            color: 'Gold Frame',
+            colorHex: '#FFD700',
+            images: [
+                'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400',
+                'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400',
+            ],
+            price: 159.99,
+        },
+        customer: {
+            name: 'Alex Thompson',
+            email: 'alex.t@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=7',
+            location: 'Miami, FL',
+        },
+        date: 'May 7, 2026',
+        time: '03:22 PM',
+        orderStatus: 'delivered',
+        paymentStatus: 'paid',
+        returnStatus: 'requested',
+        timeline: {
+            ordered: 'May 7, 2026 03:22 PM',
+            paid: 'May 7, 2026 03:22 PM',
+            processing: 'May 7, 2026 04:00 PM',
+            shipped: 'May 7, 2026 07:30 PM',
+            delivered: 'May 8, 2026 02:15 PM',
+        },
+    },
+    {
+        id: '7',
+        orderNumber: 'ORD-2024-0841',
+        product: {
+            name: 'Wireless Charging Pad',
+            description: 'Fast charging for all Qi-enabled devices',
+            variant: 'Dual Charger',
+            color: 'Space Gray',
+            colorHex: '#8E8E93',
+            images: [
+                'https://images.unsplash.com/photo-1591290619762-c588f0fc1d9e?w=400',
+                'https://images.unsplash.com/photo-1635514569146-9a9607ecf303?w=400',
+            ],
+            price: 49.99,
+        },
+        customer: {
+            name: 'Ryan Martinez',
+            email: 'ryan.m@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=13',
+            location: 'Denver, CO',
+        },
+        date: 'May 7, 2026',
+        time: '10:08 AM',
+        orderStatus: 'shipped',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 7, 2026 10:08 AM',
+            paid: 'May 7, 2026 10:08 AM',
+            processing: 'May 7, 2026 11:00 AM',
+            shipped: 'May 7, 2026 03:00 PM',
+        },
+    },
+    {
+        id: '8',
+        orderNumber: 'ORD-2024-0840',
+        product: {
+            name: 'Yoga Mat Premium',
+            description: 'Extra thick non-slip exercise mat',
+            variant: 'Extra Large',
+            color: 'Purple',
+            colorHex: '#800080',
+            images: [
+                'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400',
+                'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=400',
+            ],
+            price: 79.00,
+        },
+        customer: {
+            name: 'Sophia Lee',
+            email: 'sophia.lee@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=10',
+            location: 'Los Angeles, CA',
+        },
+        date: 'May 6, 2026',
+        time: '05:55 PM',
+        orderStatus: 'cancelled',
+        paymentStatus: 'refunded',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 6, 2026 05:55 PM',
+            paid: 'May 6, 2026 05:55 PM',
+        },
+    },
+];
+
+const selectedOrder = {
+    id: '1',
+    orderNumber: 'ORD-2024-0847',
+    product: {
+        name: 'Premium Wireless Headphones',
+        description: 'Active noise cancellation with premium sound quality',
+        variant: 'Pro Max Edition',
+        color: 'Midnight Black',
+        colorHex: '#1a1a1a',
+        images: [
+            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+            'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400',
+        ],
+        price: 349.99,
+    },
+    customer: {
+        name: 'Sarah Johnson',
+        email: 'sarah.j@example.com',
+        avatar: 'https://i.pravatar.cc/150?img=1',
+        location: 'San Francisco, CA',
+    },
+    date: 'May 9, 2026',
+    time: '10:24 AM',
+    orderStatus: 'pending',
+    paymentStatus: 'paid',
+    returnStatus: 'none',
+    timeline: {
+        ordered: 'May 9, 2026 10:24 AM',
+        paid: 'May 9, 2026 10:24 AM',
+    },
+};
+
+export default function SellerOrders () {
+
+    const [orders, setOrders] = useState([]);
+
+    const [drawerPosition, setDrawerPosition] = useState("translate-x-[100%]");
+    const [hideOverlay, setHideOverlay] = useState("opacity-0 pointer-events-none");
+
+    useEffect(() => {
+        
+        const getOrder = async () => {
+            const url = "http://localhost:8080/api/seller/orders";
+
+            const result = await GET(url);
+            console.log(result);
+
+            setOrders(result);
+        }
+
+        getOrder();
+        
+    }, []);
+
+    const openDrawer = () => {
+
+    };
+
+    const closeDrawer = () => {
+        
+    };
+
     return (
-        <div className="flex bg-blue-100 h-screen w-screen">
-            <div id="sideBar" className="bg-blue-900 flex w-62.5 py-5 h-full flex-col items-center gap-1.5">
-                <div className="flex flex-col items-center">
-                    <img className="rounded-[50%]" src="https://picsum.photos/seed/picsum/50/50" alt="" />
-                        <h1 className="text-white text-lg">Johny hey daddy</h1>
-                        <p className="text-sm text-gray-400">Seller</p>
-                </div>
-
-                <div className="px-5 py-2 w-full hover:bg-blue-300 flex gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="8" height="8" rx="2" fill="#D1D5DB" />
-
-                        <rect x="13" y="3" width="8" height="5" rx="2" fill="#D1D5DB" />
-
-                        <rect x="3" y="13" width="8" height="8" rx="2" fill="#D1D5DB" />
-
-                        <rect x="13" y="10" width="8" height="11" rx="2" fill="#D1D5DB" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Dashboard</label>
-                </div>
-                <div className="px-5 py-2 flex w-full hover:bg-blue-300 gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 7L12 3L21 7V17L12 21L3 17V7Z" stroke="#D1D5DB" strokeWidth="2" stroke-linejoin="round" />
-                        <path d="M3 7L12 11L21 7" stroke="#D1D5DB" strokeWidth="2" />
-                        <line x1="12" y1="11" x2="12" y2="21" stroke="#D1D5DB" strokeWidth="2" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Orders</label>
-                </div>
-                <div className="px-5 py-2 flex hover:bg-blue-300 w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#D1D5DB" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#D1D5DB" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#D1D5DB" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#D1D5DB" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Products</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="14" width="3" height="6" fill="#D1D5DB" />
-                        <rect x="10" y="10" width="3" height="10" fill="#D1D5DB" />
-                        <rect x="16" y="6" width="3" height="14" fill="#D1D5DB" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Analytics</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 5H20V15H7L4 18V5Z" stroke="#D1D5DB" strokeWidth="2" stroke-linejoin="round" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Messages</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 17L6 21L8 14L3 9L10 9L12 3L14 9L21 9L16 14L18 21L12 17Z" stroke="#D1D5DB" strokeWidth="2"
-                            stroke-linejoin="round" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Reviews</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <rect x="3" y="6" width="18" height="12" rx="2" stroke="#D1D5DB" strokeWidth="2" />
-                        <circle cx="12" cy="12" r="2" fill="#D1D5DB" />
-                    </svg>
-                    <label className="text-gray-300 text-[12px]" for="">Payouts</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5A3.5 3.5 0 1 0 12 15.5Z" stroke="#D1D5DB" strokeWidth="2" />
-
-                        <path
-                            d="M19.4 15A7.9 7.9 0 0 0 20 12A7.9 7.9 0 0 0 19.4 9L21 7.5L19 4.5L17 5.3A8 8 0 0 0 15 4.6L14.5 2H9.5L9 4.6A8 8 0 0 0 7 5.3L5 4.5L3 7.5L4.6 9A7.9 7.9 0 0 0 4 12A7.9 7.9 0 0 0 4.6 15L3 16.5L5 19.5L7 18.7A8 8 0 0 0 9 19.4L9.5 22H14.5L15 19.4A8 8 0 0 0 17 18.7L19 19.5L21 16.5L19.4 15Z"
-                            stroke="#D1D5DB" strokeWidth="1.5" stroke-linejoin="round" />
-                    </svg>
-                    <label className="text-[12px] text-gray-300" for="">Settings</label>
-                </div>
-                <div className="px-5 py-2 hover:bg-blue-300 flex w-full gap-1.5 items-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 12A8 8 0 0 1 20 12" stroke="#D1D5DB" strokeWidth="2" stroke-linecap="round" />
-
-                        <rect x="4" y="12" width="3" height="6" rx="1.5" stroke="#D1D5DB" strokeWidth="2" />
-                        <rect x="17" y="12" width="3" height="6" rx="1.5" stroke="#D1D5DB" strokeWidth="2" />
-
-                        <path d="M12 20C13.5 20 14.5 19 14.5 17.5" stroke="#D1D5DB" strokeWidth="2" stroke-linecap="round" />
-                    </svg>
-                    <label className="text-[12px] text-gray-300" for="">Support</label>
-                </div>
-            </div>
-            <div className="flex flex-col overflow-auto items-baseline w-full">
-                <div className="w-full flex px-4 items-center top-0 sticky py-3 shadow-2xs justify-between bg-white">
-                    <h1 className="text-2xl">Orders</h1>
-                    <div className="flex gap-4">
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M12 2.5C9.5 2.5 7.5 4.5 7.5 7V11C7.5 11.9 7.1 12.7 6.5 13.3L5.2 14.6C4.4 15.4 5 17 6.3 17H17.7C19 17 19.6 15.4 18.8 14.6L17.5 13.3C16.9 12.7 16.5 11.9 16.5 11V7C16.5 4.5 14.5 2.5 12 2.5Z"
-                                stroke="gray" strokeWidth="2" stroke-linejoin="round" />
-
-                            <circle cx="12" cy="19" r="1.5" stroke="gray" strokeWidth="2" />
-                        </svg>
-                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" stroke="gray" r="10" />
-                            <path d="M10 4H14V10H20V14H14V20H10V14H4V10H10V4Z" fill="gray" />
-                        </svg>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <button>All</button>
-                        <button>Pending</button>
-                        <button>Processing</button>
-                        <button>Shipped</button>
-                        <button>Completed</button>
-                    </div>
-                    <div>
-                        <label for="searchOrders" className="flex bg-white px-2.5 py-1.5 rounded gap-2.5 items-center">
-                            <span>
-                                <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" fill="none" strokeWidth="3" stroke="gray" />
-                                    <path d="M20 20 L30 30 " stroke="gray" strokeWidth="4" />
-                                </svg>
-                            </span>
-                            <input id="searchOrders" className="outline-0 w-full" type="search" placeholder="Search some" />
-                        </label>
-                    </div>
-                    <div>
-                        <div>
-                            <img className="rounded-[50%]" src="https://picsum.photos/seed/picsum/40/40" alt="" />
-                            <div>
-                                <h1>Wireless Headphones #1001</h1>
-                                <div>
-                                    <p>Rasma</p>
-                                    <p>April</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className="min-h-screen bg-[#F8FAFC]">
+            <SellerOrderHeader />
+            <KPICards orders={mockOrders} />
+            <FiltersToolbar />
+            <OrdersList orders={orders} />
+            <OrderDetailsDrawer overlayHide={hideOverlay} position={drawerPosition} order={selectedOrder} onClose={closeDrawer} />
         </div>
     );
 }
