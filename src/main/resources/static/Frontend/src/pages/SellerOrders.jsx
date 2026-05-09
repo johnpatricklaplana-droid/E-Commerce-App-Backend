@@ -275,6 +275,7 @@ export default function SellerOrders () {
     const [drawerPosition, setDrawerPosition] = useState("translate-x-[100%]");
     const [hideOverlay, setHideOverlay] = useState("opacity-0 pointer-events-none");
     const [selectedOrderRealone, setSelectedOrderRealone] = useState({});
+    const [statsPercent, setStatsPercent] = useState({});
 
     const [stats, setStats] = useState({
         totalOrders: 0,
@@ -311,7 +312,16 @@ export default function SellerOrders () {
             setOrders(result);
         }
 
+        const getSellerOrderStats = async () => {
+            const url = "http://localhost:8080/api/seller/orders/stats";
+
+            const result = await GET(url);
+            console.log(result);
+            setStatsPercent(result);
+        }
+
         getOrder();
+        getSellerOrderStats();
         
     }, []);
 
@@ -336,7 +346,7 @@ export default function SellerOrders () {
     return (
         <div className="min-h-screen bg-[#F8FAFC]">
             <SellerOrderHeader />
-            <KPICards orders={stats} />
+            <KPICards stats={statsPercent} orders={stats} />
             <FiltersToolbar />
             <OrdersList onOrderClick={openDrawer} orders={orders} />
             <OrderDetailsDrawer onClose={closeDrawer} overlayHide={hideOverlay} position={drawerPosition} order={selectedOrderRealone} />

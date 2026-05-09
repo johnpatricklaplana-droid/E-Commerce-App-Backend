@@ -140,5 +140,4 @@ public class SellerController {
             .body(sellerService.getSellerStats());
     }
     
-
 }

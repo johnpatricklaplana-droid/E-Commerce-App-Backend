@@ -1,6 +1,6 @@
 import { ShoppingBag, Clock, CheckCircle, DollarSign, RotateCcw, TrendingUp, TrendingDown } from 'lucide-react';
 
-export function KPICards({ orders }) {
+export function KPICards({ orders, stats }) {
     const totalOrders = orders.totalOrders;
     const pendingOrders = orders.pendingOrders;
     const paidOrders = orders.paidOrders;
@@ -12,15 +12,15 @@ export function KPICards({ orders }) {
             label: 'Total Orders',
             value: totalOrders.toString(),
             icon: ShoppingBag,
-            trend: '-12%',
-            trendUp: false,
+            trend: stats.ordersPercentageCompareToLastTime,
+            trendUp: stats.ordersPercentageCompareToLastTime?.startsWith("-") ? false : true,
             color: 'bg-[#6366F1]',
         },
         {
             label: 'Pending Orders',
             value: pendingOrders.toString(),
             icon: Clock,
-            trend: '+5%',
+            trend: stats.pendingOrdersPercentageCompareToLastTime,
             trendUp: true,
             color: 'bg-[#F59E0B]',
         },
@@ -28,7 +28,7 @@ export function KPICards({ orders }) {
             label: 'Paid Orders',
             value: paidOrders.toString(),
             icon: CheckCircle,
-            trend: '+18%',
+            trend: stats.paidOrdersCompareToLastTime,
             trendUp: true,
             color: 'bg-[#10B981]',
         },
@@ -36,7 +36,7 @@ export function KPICards({ orders }) {
             label: 'Revenue',
             value: `$${revenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             icon: DollarSign,
-            trend: '+24%',
+            trend: stats.revenueCompareToLastTime,
             trendUp: true,
             color: 'bg-[#6366F1]',
         },
@@ -44,7 +44,7 @@ export function KPICards({ orders }) {
             label: 'Returns',
             value: returns.toString(),
             icon: RotateCcw,
-            trend: '+8%',
+            trend: stats.ordersReturnComparedToLastTime,
             trendUp: true,
             color: 'bg-[#EF4444]',
         },
