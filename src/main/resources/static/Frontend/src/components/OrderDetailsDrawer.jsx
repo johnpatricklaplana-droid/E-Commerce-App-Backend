@@ -18,12 +18,43 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
         );
     };
 
+    const selectedOrder = {
+        id: '1',
+        orderNumber: 'ORD-2024-0847',
+        product: {
+            name: 'Premium Wireless Headphones',
+            description: 'Active noise cancellation with premium sound quality',
+            variant: 'Pro Max Edition',
+            color: 'Midnight Black',
+            colorHex: '#1a1a1a',
+            images: [
+                'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+                'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400',
+            ],
+            price: 349.99,
+        },
+        customer: {
+            name: 'Sarah Johnson',
+            email: 'sarah.j@example.com',
+            avatar: 'https://i.pravatar.cc/150?img=1',
+            location: 'San Francisco, CA',
+        },
+        date: 'May 9, 2026',
+        time: '10:24 AM',
+        orderStatus: 'pending',
+        paymentStatus: 'paid',
+        returnStatus: 'none',
+        timeline: {
+            ordered: 'May 9, 2026 10:24 AM',
+            paid: 'May 9, 2026 10:24 AM',
+        },
+    };
+
     const timelineSteps = [
-        { key: 'ordered', label: 'Order Placed', time: order.timeline.ordered, completed: !!order.timeline.ordered },
-        { key: 'paid', label: 'Payment Confirmed', time: order.timeline.paid, completed: !!order.timeline.paid },
-        { key: 'processing', label: 'Processing', time: order.timeline.processing, completed: !!order.timeline.processing },
-        { key: 'shipped', label: 'Shipped', time: order.timeline.shipped, completed: !!order.timeline.shipped },
-        { key: 'delivered', label: 'Delivered', time: order.timeline.delivered, completed: !!order.timeline.delivered },
+        { key: 'paid', label: 'Payment Confirmed', time: "TODO: " + selectedOrder.timeline.paid, completed: !!selectedOrder.timeline.paid },
+        { key: 'processing', label: 'Processing', time: selectedOrder.timeline.processing, completed: !!selectedOrder.timeline.processing },
+        { key: 'shipped', label: 'Shipped', time: selectedOrder.timeline.shipped, completed: !!selectedOrder.timeline.shipped },
+        { key: 'delivered', label: 'Delivered', time: selectedOrder.timeline.delivered, completed: !!selectedOrder.timeline.delivered },
     ];
 
     return (
@@ -34,14 +65,13 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                 onClick={onClose}
             />
 
-            {/* Drawer */}
             <div className={`fixed right-0 top-0 bottom-0 w-[600px] ${position} bg-white shadow-2xl z-50 overflow-y-auto`}>
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b border-[#E5E7EB] px-8 py-6 z-10">
                     <div className="flex items-center justify-between">
                         <div>
                             <h2 className="text-[24px] font-semibold text-[#111827]">Order Details</h2>
-                            <p className="text-[14px] text-[#6B7280] mt-1">{order.orderNumber}</p>
+                            <p className="text-[14px] text-[#6B7280] mt-1">{order.orderId}</p>
                         </div>
                         <button
                             onClick={onClose}
@@ -59,12 +89,11 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                         <h3 className="text-[16px] font-semibold text-[#111827] mb-4">Product</h3>
                         <div className="relative rounded-2xl overflow-hidden bg-[#F9FAFB]">
                             <img
-                                src={order.product.images[currentImageIndex]}
-                                alt={order.product.name}
+                                src={`http://localhost:8080/api/public/product-image/${order.variations?.imagesUrl?.[currentImageIndex]}`}
                                 className="w-full h-[320px] object-cover"
                             />
 
-                            {order.product.images.length > 1 && (
+                            {order.variations?.imagesUrl?.length > 1 && (
                                 <>
                                     <button
                                         onClick={prevImage}
@@ -80,7 +109,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                                     </button>
 
                                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                                        {order.product.images.map((_, index) => (
+                                        {order.variations.imagesUrl.map((_, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setCurrentImageIndex(index)}
@@ -95,10 +124,9 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                             )}
                         </div>
 
-                        {/* Thumbnail Gallery */}
-                        {order.product.images.length > 1 && (
+                        {order.variations?.imagesUrl?.length > 1 && (
                             <div className="flex gap-3 mt-4">
-                                {order.product.images.map((image, index) => (
+                                {order.variations.imagesUrl.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setCurrentImageIndex(index)}
@@ -108,8 +136,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                                             }`}
                                     >
                                         <img
-                                            src={image}
-                                            alt={`${order.product.name} ${index + 1}`}
+                                            src={`http://localhost:8080/api/public/product-image/${image}`}
                                             className="w-full h-full object-cover"
                                         />
                                     </button>
@@ -121,32 +148,32 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                     {/* Product Details */}
                     <div>
                         <h3 className="text-[20px] font-semibold text-[#111827] mb-2">
-                            {order.product.name}
+                            {order.product?.productName}
                         </h3>
                         <p className="text-[15px] text-[#6B7280] mb-4">
-                            {order.product.description}
+                            {order.product?.productDescription}
                         </p>
 
                         <div className="bg-[#F9FAFB] rounded-xl p-4 space-y-3">
                             <div className="flex items-center justify-between">
                                 <span className="text-[14px] text-[#6B7280]">Variant</span>
-                                <span className="text-[14px] font-medium text-[#111827]">{order.product.variant}</span>
+                                <span className="text-[14px] font-medium text-[#111827]">{order.variations?.variationName}</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-[14px] text-[#6B7280]">Color</span>
                                 <div className="flex items-center gap-2">
                                     <div
                                         className="w-4 h-4 rounded-full ring-1 ring-black/10"
-                                        style={{ backgroundColor: order.product.colorHex }}
+                                        style={{ backgroundColor: order.variations?.color }}
                                     />
-                                    <span className="text-[14px] font-medium text-[#111827]">{order.product.color}</span>
+                                    <span className="text-[14px] font-medium text-[#111827]">{order.variations?.color}</span>
                                 </div>
                             </div>
                             <div className="h-px bg-[#E5E7EB]" />
                             <div className="flex items-center justify-between">
                                 <span className="text-[14px] text-[#6B7280]">Price</span>
                                 <span className="text-[20px] font-semibold text-[#111827]">
-                                    ${order.product.price.toFixed(2)}
+                                    ${order.variations?.price.toFixed(2)}
                                 </span>
                             </div>
                         </div>
@@ -158,38 +185,36 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                         <div className="bg-[#F9FAFB] rounded-xl p-5">
                             <div className="flex items-center gap-4 mb-4">
                                 <img
-                                    src={order.customer.avatar}
-                                    alt={order.customer.name}
+                                    src="https://picsum.photos/200/300?random=1"
+                                    alt={order.costumer?.firstName}
                                     className="w-14 h-14 rounded-full ring-2 ring-white shadow-sm"
                                 />
                                 <div>
                                     <p className="text-[16px] font-semibold text-[#111827]">
-                                        {order.customer.name}
+                                        {order.costumer?.firstName}
                                     </p>
-                                    <p className="text-[13px] text-[#6B7280]">{order.customer.email}</p>
+                                    <p className="text-[13px] text-[#6B7280]">johnyheydaddy@gmail.com</p>
                                 </div>
                             </div>
 
                             <div className="space-y-2.5 pt-3 border-t border-[#E5E7EB]">
                                 <div className="flex items-center gap-3">
                                     <Mail className="w-4 h-4 text-[#9CA3AF]" />
-                                    <span className="text-[14px] text-[#6B7280]">{order.customer.email}</span>
+                                    <span className="text-[14px] text-[#6B7280]">johnyheydaddy@gmail.com</span>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <MapPin className="w-4 h-4 text-[#9CA3AF]" />
-                                    <span className="text-[14px] text-[#6B7280]">{order.customer.location}</span>
+                                    <span className="text-[14px] text-[#6B7280]">thailand</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Order Timeline */}
                     <div>
                         <h3 className="text-[16px] font-semibold text-[#111827] mb-4">Order Timeline</h3>
                         <div className="relative space-y-6">
                             {timelineSteps.map((step, index) => (
                                 <div key={step.key} className="relative flex gap-4">
-                                    {/* Line connector */}
                                     {index < timelineSteps.length - 1 && (
                                         <div
                                             className={`absolute left-4 top-10 w-0.5 h-full ${step.completed ? 'bg-[#10B981]' : 'bg-[#E5E7EB]'
@@ -197,7 +222,6 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                                         />
                                     )}
 
-                                    {/* Icon */}
                                     <div
                                         className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${step.completed
                                                 ? 'bg-[#10B981] text-white'
@@ -211,7 +235,6 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                                         )}
                                     </div>
 
-                                    {/* Content */}
                                     <div className="flex-1 pb-2">
                                         <p className={`text-[15px] font-medium ${step.completed ? 'text-[#111827]' : 'text-[#9CA3AF]'
                                             }`}>
@@ -227,8 +250,7 @@ export function OrderDetailsDrawer({ position, overlayHide, order, onClose }) {
                     </div>
                 </div>
 
-                {/* Footer Actions */}
-                <div className="sticky bottom-0 bg-white border-t border-[#E5E7EB] px-8 py-6">
+                <div className="sticky bottom-0 z-50 bg-white border-t border-[#E5E7EB] px-8 py-6">
                     <div className="grid grid-cols-2 gap-3">
                         <button className="h-12 px-6 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
                             <Package className="w-4 h-4" />

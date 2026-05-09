@@ -268,44 +268,21 @@ const mockOrders = [
     },
 ];
 
-const selectedOrder = {
-    id: '1',
-    orderNumber: 'ORD-2024-0847',
-    product: {
-        name: 'Premium Wireless Headphones',
-        description: 'Active noise cancellation with premium sound quality',
-        variant: 'Pro Max Edition',
-        color: 'Midnight Black',
-        colorHex: '#1a1a1a',
-        images: [
-            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
-            'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400',
-        ],
-        price: 349.99,
-    },
-    customer: {
-        name: 'Sarah Johnson',
-        email: 'sarah.j@example.com',
-        avatar: 'https://i.pravatar.cc/150?img=1',
-        location: 'San Francisco, CA',
-    },
-    date: 'May 9, 2026',
-    time: '10:24 AM',
-    orderStatus: 'pending',
-    paymentStatus: 'paid',
-    returnStatus: 'none',
-    timeline: {
-        ordered: 'May 9, 2026 10:24 AM',
-        paid: 'May 9, 2026 10:24 AM',
-    },
-};
-
 export default function SellerOrders () {
 
     const [orders, setOrders] = useState([]);
 
     const [drawerPosition, setDrawerPosition] = useState("translate-x-[100%]");
     const [hideOverlay, setHideOverlay] = useState("opacity-0 pointer-events-none");
+    const [selectedOrderRealone, setSelectedOrderRealone] = useState({});
+
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        pendingOrders: 0,
+        paidOrders: 0,
+        revenue: 0,
+        returns: 0
+    });
 
     useEffect(() => {
         
@@ -314,7 +291,6 @@ export default function SellerOrders () {
 
             const result = await GET(url);
             console.log(result);
-
             setOrders(result);
         }
 
@@ -322,12 +298,20 @@ export default function SellerOrders () {
         
     }, []);
 
-    const openDrawer = () => {
+    const openDrawer = (orderId) => {
+
+        const orderOpenInDrawer = orders.find(ord => ord.orderId === orderId);
+
+        setSelectedOrderRealone(orderOpenInDrawer);
+
+        setDrawerPosition("translate-x-0");
+        setHideOverlay("opacity-100 pointer-events-auto");
 
     };
 
     const closeDrawer = () => {
-        
+        setDrawerPosition("translate-x-[100%]");
+        setHideOverlay("opacity-0 pointer-events-none");
     };
 
     return (
@@ -335,8 +319,8 @@ export default function SellerOrders () {
             <SellerOrderHeader />
             <KPICards orders={mockOrders} />
             <FiltersToolbar />
-            <OrdersList orders={orders} />
-            <OrderDetailsDrawer overlayHide={hideOverlay} position={drawerPosition} order={selectedOrder} onClose={closeDrawer} />
+            <OrdersList onOrderClick={openDrawer} orders={orders} />
+            <OrderDetailsDrawer onClose={closeDrawer} overlayHide={hideOverlay} position={drawerPosition} order={selectedOrderRealone} />
         </div>
     );
 }

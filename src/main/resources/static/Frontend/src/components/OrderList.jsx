@@ -25,7 +25,7 @@ export function OrdersList({ orders, onOrderClick }) {
             {orders.map((order) => (
                 <div
                     key={order.id}
-                    // onClick={() => onOrderClick(order)}
+                    onClick={() => onOrderClick(order.orderId)}
                     className="bg-white rounded-[20px] border border-[#E5E7EB] shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer group"
                 >
                     <div className="p-6 grid grid-cols-[1fr,200px,180px,140px,180px,auto] gap-6 items-center">
