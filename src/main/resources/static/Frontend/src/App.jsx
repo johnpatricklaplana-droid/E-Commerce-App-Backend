@@ -22,6 +22,7 @@ import PaymentConfirmation from "./pages/paymentConfirmation";
 import PaymentSuccess from "./pages/PaymentSuccess"
 import CostumerOrder from "./pages/CostumerOrder";
 import SellerOrders from "./pages/SellerOrders";
+import SellerSettings from "./pages/SellerSettings";
 
 export default function App() {
     return (
@@ -50,6 +51,7 @@ export default function App() {
                 <Route path="/costumer-payment-success" element={<PaymentSuccess />} />
                 <Route path="/costumer-orders" element={<CostumerOrder />} />
                 <Route path="/seller-orders" element={<SellerOrders />} />
+                <Route path="/seller-settings" element={<SellerSettings />} />
             </Routes>
         </BrowserRouter>
     );

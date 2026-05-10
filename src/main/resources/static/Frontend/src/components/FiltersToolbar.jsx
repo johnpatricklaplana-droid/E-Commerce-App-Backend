@@ -2,7 +2,7 @@ import { Search, Filter, Calendar, ArrowUpDown, Download } from 'lucide-react';
 
 export function FiltersToolbar() {
     return (
-        <div className="sticky top-0 z-10 bg-[#F8FAFC] border-b border-[#E5E7EB] px-8 py-4">
+        <div className="z-10 bg-[#F8FAFC] border-b border-[#E5E7EB] px-8 py-4">
             <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3 flex-1">
                     {/* Search Orders */}

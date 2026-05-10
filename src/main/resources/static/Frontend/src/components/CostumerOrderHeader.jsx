@@ -1,43 +1,151 @@
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+    LayoutDashboard,
+    ShoppingCart,
+    Package,
+    Layers,
+    Users,
+    BarChart3,
+    Megaphone,
+    Wallet,
+    Settings,
+    Search,
+    Bell,
+    Plus,
+    ChevronDown,
+    Menu,
+    X
+} from 'lucide-react';
 
 export function SellerOrderHeader() {
+
+    const [scrolled, setScrolled] = useState(false);
+    const navTabs = [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'orders', label: 'Orders', icon: ShoppingCart },
+        { id: 'products', label: 'Products', icon: Package },
+        { id: 'inventory', label: 'Inventory', icon: Layers },
+        { id: 'customers', label: 'Customers', icon: Users },
+        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+        { id: 'marketing', label: 'Marketing', icon: Megaphone },
+        { id: 'finance', label: 'Finance', icon: Wallet },
+        { id: 'settings', label: 'Settings', icon: Settings },
+    ];
+    const [activeTab, setActiveTab] = useState('orders');
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 0);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <header className="bg-white border-b border-gray-200 px-8 py-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-[32px] font-semibold text-[#111827] tracking-tight">Orders</h1>
-                    <p className="text-[15px] text-[#6B7280] mt-1">Manage incoming customer purchases</p>
+        <nav 
+            className={`sticky top-0 z-50 p-6 bg-white transition-shadow duration-200 ${scrolled ? 'shadow-md' : 'border-b border-[#E5E7EB]'}`}
+        >
+            <div className='flex items-center m-auto px-6'>
+                <div className="flex items-center gap-6">
+                    <div className='flex gap-3 items-center'>
+                        <div className='bg-gradient-to-br from-indigo-500 to-indigo-600 p-2 rounded-[8px]'>
+                            <Package className='text-white w-5 w-5'></Package>
+                        </div>
+                        <span className='text-xl font-semibold text-gray-900'>SellerHub</span>
+                    </div>
+                    <div className="hidden lg:block w-px h-8 bg-gray-200" />
                 </div>
 
-                <div className="flex items-center gap-4">
-                    {/* Global Search */}
-                    <div className="relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
-                        <input
-                            type="text"
-                            placeholder="Search orders, products, customers..."
-                            className="w-[400px] h-11 pl-12 pr-4 bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl text-[15px] text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
-                        />
-                    </div>
+                <div 
+                    className="hidden shrink-0 sm:flex overflow-x-scroll border-r border-gray-200 cursor-pointer max-w-full items-center gap-2 flex-1"
+                >
+                    {navTabs.map(tab => {
+                        const Icon = tab.icon;
+                        const isActive = activeTab === tab.id;
+                        
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`
+                                    flex  items-center gap-2 px-4 py-2 rounded-2xl
+                                    ${isActive ? "bg-indigo-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}
+                                `}
+                            >
+                            <Icon className='w-4 h-4' />
+                            <span className='text-sm font-medium'>{tab.label}</span>
+                            </button>
+                        )
+                    })}
+                </div>
+
+                <div className="flex items-center gap-4">  
 
                     {/* Notifications */}
-                    <button className="relative w-11 h-11 flex items-center justify-center bg-[#F9FAFB] hover:bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl transition-all">
-                        <Bell className="w-5 h-5 text-[#6B7280]" />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-[#EF4444] rounded-full ring-2 ring-white"></span>
+                    <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Bell className="w-5 h-5" />
+                        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
                     </button>
 
-                    {/* Profile Dropdown */}
-                    <button className="flex items-center gap-3 h-11 px-4 bg-[#F9FAFB] hover:bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl transition-all">
-                        <img
-                            src="https://i.pravatar.cc/150?img=33"
-                            alt="Profile"
-                            className="w-7 h-7 rounded-full ring-2 ring-white"
-                        />
-                        <span className="text-[15px] font-medium text-[#111827]">John Seller</span>
-                        <ChevronDown className="w-4 h-4 text-[#9CA3AF]" />
+                    {/* Quick Actions */}
+                    <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
+                        <Plus className="w-4 h-4" />
+                        <span className="text-sm font-medium">New Product</span>
+                    </button>
+
+                    {/* Profile Menu */}
+                    <button className="flex items-center gap-3 p-1.5 pr-3 hover:bg-gray-50 rounded-xl transition-colors">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-medium text-sm">
+                            JS
+                        </div>
+                        <div className="hidden xl:flex flex-col items-start">
+                            <span className="text-sm font-medium text-gray-900">John Seller</span>
+                            <span className="text-xs text-gray-500">John's Store</span>
+                        </div>
+                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                    </button>
+
+                    {/* Mobile Menu Toggle */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors"
+                    >
+                        {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
                 </div>
             </div>
-        </header>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+                <div className="lg:hidden border-t border-gray-200 bg-white">
+                    <div className="px-4 py-4 space-y-1">
+                        {navTabs.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => {
+                                        setActiveTab(tab.id);
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    className={`
+                      w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                      ${isActive
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                        }
+                    `}
+                                >
+                                    <Icon className="w-5 h-5" />
+                                    <span className="text-sm font-medium">{tab.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </nav>
     );
 }
