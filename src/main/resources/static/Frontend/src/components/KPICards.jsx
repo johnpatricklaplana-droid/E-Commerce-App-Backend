@@ -21,7 +21,7 @@ export function KPICards({ orders, stats }) {
             value: pendingOrders.toString(),
             icon: Clock,
             trend: stats.pendingOrdersPercentageCompareToLastTime,
-            trendUp: true,
+            trendUp: stats.pendingOrdersPercentageCompareToLastTime?.startsWith("-") ? false : true,
             color: 'bg-[#F59E0B]',
         },
         {
@@ -29,7 +29,7 @@ export function KPICards({ orders, stats }) {
             value: paidOrders.toString(),
             icon: CheckCircle,
             trend: stats.paidOrdersCompareToLastTime,
-            trendUp: true,
+            trendUp: stats.paidOrdersCompareToLastTime?.startsWith("-") ? false : true,
             color: 'bg-[#10B981]',
         },
         {
@@ -37,7 +37,7 @@ export function KPICards({ orders, stats }) {
             value: `$${revenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             icon: DollarSign,
             trend: stats.revenueCompareToLastTime,
-            trendUp: true,
+            trendUp: stats.revenueCompareToLastTime?.startsWith("-") ? false : true,
             color: 'bg-[#6366F1]',
         },
         {
@@ -45,7 +45,7 @@ export function KPICards({ orders, stats }) {
             value: returns.toString(),
             icon: RotateCcw,
             trend: stats.ordersReturnComparedToLastTime,
-            trendUp: true,
+            trendUp: stats.ordersPercentageCompareToLastTime?.startsWith("-") ? false : true,
             color: 'bg-[#EF4444]',
         },
     ];

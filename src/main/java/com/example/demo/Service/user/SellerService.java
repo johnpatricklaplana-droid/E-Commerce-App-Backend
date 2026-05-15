@@ -28,6 +28,7 @@ import com.example.demo.DTO.productDTO.ProductDTO;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.RatingsDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfo;
+import com.example.demo.DTO.sellerDTO.SellerInfoPrivate;
 import com.example.demo.DTO.sellerDTO.SellerOrderStatsDTO;
 import com.example.demo.DTO.sellerDTO.SellerOrdersDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
@@ -585,13 +586,13 @@ public class SellerService {
         return totalRevenue;
     }
 
-    public SellerInfo getSellerInfo() {
+    public SellerInfoPrivate getSellerInfo() {
 
         int sellerId = ExtractUserId.extractUserId();
 
         Seller seller = seller_Repo.findById(sellerId).orElse(null);
 
-        SellerInfo sellerInfo = new SellerInfo();
+        SellerInfoPrivate sellerInfo = new SellerInfoPrivate();
         sellerInfo.setFirstName(seller.getFirst_name());
         sellerInfo.setLastName(seller.getLast_name());
 
@@ -621,6 +622,7 @@ public class SellerService {
         sellerInfo.setRatings(0.9);
 
         sellerInfo.setSellerId(seller.getId());
+        sellerInfo.setEmail(seller.getEmail());
 
         return sellerInfo;
 

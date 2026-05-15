@@ -20,6 +20,7 @@ import com.example.demo.DTO.ResponseDTO.SimpleResponseDTO;
 import com.example.demo.DTO.productDTO.CreateProductRequest;
 import com.example.demo.DTO.productDTO.ProductVariationsDTO;
 import com.example.demo.DTO.sellerDTO.SellerInfo;
+import com.example.demo.DTO.sellerDTO.SellerInfoPrivate;
 import com.example.demo.DTO.sellerDTO.SellerOrderStatsDTO;
 import com.example.demo.DTO.sellerDTO.SellerOrdersDTO;
 import com.example.demo.DTO.sellerDTO.SellerSignUpFieldsDTO;
@@ -141,7 +142,7 @@ public class SellerController {
     }
     
     @GetMapping("/api/seller")
-    public ResponseEntity<SellerInfo> getSellerInfo() {
+    public ResponseEntity<SellerInfoPrivate> getSellerInfo() {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(sellerService.getSellerInfo());

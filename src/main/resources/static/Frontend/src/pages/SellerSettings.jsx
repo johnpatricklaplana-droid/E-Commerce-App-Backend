@@ -21,15 +21,18 @@ import {
     // Building2,
     FileText,
     Badge,
-    // X,
+    X,
     Check
 } from 'lucide-react';
 import { GET } from "../api/API";
 
 export default function SellerSettings () {
 
-    const [activeTab, setActiveTab] = useState("");
+    const [activeTab, setActiveTab] = useState("default");
     const [seller, setSeller] = useState({});
+    const [profilePic, setProfilePic] = useState("https://picsum.photos/200/300?random=1");
+    const [newProfilePic, setNewProfilePic] = useState({});
+    const [changingProfilePic, setChangingProfilePic] = useState(false);
 
     const [formData, setFormData] = useState({}); 
 
@@ -52,11 +55,23 @@ export default function SellerSettings () {
             console.log(result);
             setSeller(result);
             setFormData(result);
+            setProfilePic(result.profilePic);
         };
 
         getSellerInfo();
 
     }, []);
+
+    const handleChangeInProfilePic = (e) => {
+        const file = e.target.files[0];
+        setChangingProfilePic(true);
+        setNewProfilePic(URL.createObjectURL(file));
+    };
+
+    const removeNewProfile = (e) => {
+        setChangingProfilePic(false);
+        setNewProfilePic(null);
+    };
 
     const handleChange = (e) => {
         const { value, id } = e.target;
@@ -103,11 +118,26 @@ export default function SellerSettings () {
                     <h1 className="text-lg font-semibold mb-6">Personal profile</h1>
                     <label className="font-medium text-gray-600">Profile picture</label>
                     <div className="flex mt-2 mb-4 items-center gap-4">
-                        <img className="w-24 h-24 rounded-[50%]" src="https://picsum.photos/200/300?random=1" />
+                        <div className="relative">
+                            {changingProfilePic === true && <X
+                                className="text-white w-5 h-5 absolute right-1 cursor-pointer hover:scale-110 transition top-1 bg-red-600 rounded-2xl"
+                                onClick={removeNewProfile}
+                            ></X>}
+                            <img className="w-24 h-24 rounded-[50%]" src={changingProfilePic ? newProfilePic : "https://picsum.photos/200/300?random=1"} alt="No way" />
+                        </div>
                         <div className="space-x-2">
-                            <button className="bg-gradient-to-br ring-1 ring-blue-500 cursor-pointer rounded-2xl px-4 py-2 from-indigo-500 to-indigo-600 text-white font-semibold">Upload</button>
+                            <label 
+                                htmlFor="inputProfile" 
+                                className="bg-gradient-to-br ring-1 ring-blue-500 cursor-pointer rounded-2xl px-4 py-2 from-indigo-500 to-indigo-600 text-white font-semibold"
+                            >Upload</label>
                             <button className="ring-1 ring-gray-200 cursor-pointer px-4 py-2 rounded-2xl">Change</button>
                         </div>
+                        <input 
+                            type="file" 
+                            id="inputProfile"  
+                            hidden
+                            onChange={handleChangeInProfilePic}
+                        />
                     </div>
                     <div className="w-full grid gap-4 grid-cols-2">
                         <div className="flex gap-2 flex-col">
@@ -141,7 +171,14 @@ export default function SellerSettings () {
                             <label htmlFor="">Email address</label>
                             <div className="w-full focus-within:ring-blue-600 focus-within:ring-2 gap-2 items-center ring-1 pl-4 ring-gray-400 rounded-2xl flex">
                                 <Mail className="text-gray-400" />
-                                <input className="outline-none w-full pl-0 p-4" type="text" placeholder="last name" />
+                                <input 
+                                    className="outline-none w-full pl-0 p-4" 
+                                    type="text" 
+                                    placeholder="last name" 
+                                    value={formData.email}
+                                    id="email"
+                                    onChange={handleChange}
+                                />
                             </div>
                         </div>
                         <div className="flex gap-2 flex-col">
