@@ -140,4 +140,12 @@ public class SellerController {
             .body(sellerService.getSellerStats());
     }
     
+    @GetMapping("/api/seller")
+    public ResponseEntity<SellerInfo> getSellerInfo() {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(sellerService.getSellerInfo());
+    }
+    
+
 }

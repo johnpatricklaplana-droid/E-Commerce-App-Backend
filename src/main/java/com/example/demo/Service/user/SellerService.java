@@ -384,19 +384,7 @@ public class SellerService {
 
         Set<SellerRatings> ratings = seller.getRatings();
 
-        Set<RatingsDTO> ratingsDTOs = ratings.stream()
-            .map(rat -> {
-                RatingsDTO dto = new RatingsDTO();
-                dto.setRating(rat.getRating());
-                dto.setReview(rat.getReview());
-                dto.setCreatedAt(rat.getCreatedAt());
-                dto.setUpdatedAt(rat.getUpdatedAt());
-
-                return dto;
-            })
-            .collect(Collectors.toSet());
-
-        sellerInfo.setRatings(ratingsDTOs);
+        sellerInfo.setRatings(0.9);
         
         Set<User_Location> locations = seller.getSeller_location();
 
@@ -595,6 +583,47 @@ public class SellerService {
         }
 
         return totalRevenue;
+    }
+
+    public SellerInfo getSellerInfo() {
+
+        int sellerId = ExtractUserId.extractUserId();
+
+        Seller seller = seller_Repo.findById(sellerId).orElse(null);
+
+        SellerInfo sellerInfo = new SellerInfo();
+        sellerInfo.setFirstName(seller.getFirst_name());
+        sellerInfo.setLastName(seller.getLast_name());
+
+        Set<User_Location> userLocation = seller.getSeller_location();
+
+        Set<LocationDTO> location = userLocation.stream()
+            .map(loc -> {
+                LocationDTO loca = new LocationDTO();
+
+                loca.setCity(loc.getCity());
+                loca.setCountry(loc.getCountry());
+                loca.setLat(loc.getLat());
+                loca.setLon(loc.getLon());
+                loca.setPostcode(loc.getPostal_code());
+                loca.setProvince(loc.getProvince());
+                loca.setStreet(loc.getStreet());
+
+                return loca;
+            })
+            .collect(Collectors.toSet());
+        
+        sellerInfo.setLocation(location);
+        sellerInfo.setProfilePic(seller.getProfile_pic());
+
+
+
+        sellerInfo.setRatings(0.9);
+
+        sellerInfo.setSellerId(seller.getId());
+
+        return sellerInfo;
+
     }
 
 }

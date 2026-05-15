@@ -1,4 +1,4 @@
-import { SellerOrderHeader } from '../components/CostumerOrderHeader';
+import { SellerOrderHeader } from '../components/SellerNavBar';
 import { KPICards } from '../components/KPICards';
 import { FiltersToolbar } from '../components/FiltersToolbar';
 import { OrdersList } from '../components/OrderList';
@@ -345,7 +345,7 @@ export default function SellerOrders () {
 
     return (
         <div className="min-h-screen bg-[#F8FAFC]">
-            <SellerOrderHeader />
+            <SellerOrderHeader currentTab={"orders"} />
             <KPICards stats={statsPercent} orders={stats} />
             <FiltersToolbar />
             <OrdersList onOrderClick={openDrawer} orders={orders} />

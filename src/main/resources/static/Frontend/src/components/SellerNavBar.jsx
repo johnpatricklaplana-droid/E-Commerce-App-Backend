@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -17,21 +19,23 @@ import {
     X
 } from 'lucide-react';
 
-export function SellerOrderHeader() {
+export function SellerOrderHeader( {currentTab} ) {
+
+    const navigation = useNavigate();
 
     const [scrolled, setScrolled] = useState(false);
     const navTabs = [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'orders', label: 'Orders', icon: ShoppingCart },
-        { id: 'products', label: 'Products', icon: Package },
-        { id: 'inventory', label: 'Inventory', icon: Layers },
-        { id: 'customers', label: 'Customers', icon: Users },
-        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-        { id: 'marketing', label: 'Marketing', icon: Megaphone },
-        { id: 'finance', label: 'Finance', icon: Wallet },
-        { id: 'settings', label: 'Settings', icon: Settings },
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, navigateTo: "" },
+        { id: 'orders', label: 'Orders', icon: ShoppingCart, navigateTo: "/seller-orders" },
+        { id: 'products', label: 'Products', icon: Package, navigateTo: "" },
+        { id: 'inventory', label: 'Inventory', icon: Layers, navigateTo: "" },
+        { id: 'customers', label: 'Customers', icon: Users, navigateTo: "" },
+        { id: 'analytics', label: 'Analytics', icon: BarChart3, navigateTo: "" },
+        { id: 'marketing', label: 'Marketing', icon: Megaphone, navigateTo: "" },
+        { id: 'finance', label: 'Finance', icon: Wallet, navigateTo: "" },
+        { id: 'settings', label: 'Settings', icon: Settings, navigateTo: "/seller-settings" },
     ];
-    const [activeTab, setActiveTab] = useState('orders');
+    const [activeTab, setActiveTab] = useState(currentTab);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -41,6 +45,10 @@ export function SellerOrderHeader() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const navigateABit = (navigateTo) => {
+        navigation(navigateTo);
+    };
 
     return (
         <nav 
@@ -67,7 +75,7 @@ export function SellerOrderHeader() {
                         return (
                             <button
                                 key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
+                                onClick={() => navigateABit(tab.navigateTo)}
                                 className={`
                                     flex  items-center gap-2 px-4 py-2 rounded-2xl
                                     ${isActive ? "bg-indigo-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}

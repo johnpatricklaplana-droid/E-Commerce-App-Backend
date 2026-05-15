@@ -18,7 +18,7 @@ public class SellerInfo {
     private String lastName;
     private String profilePic;
 
-    private Set<RatingsDTO> ratings;
+    private double ratings;
 
     private Set<LocationDTO> location;
 

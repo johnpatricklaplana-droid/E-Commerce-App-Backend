@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { SellerOrderHeader } from "../components/CostumerOrderHeader";
+import { useEffect, useState } from "react";
+import { SellerOrderHeader } from "../components/SellerNavBar";
 import {
     User,
     Store,
@@ -22,12 +22,16 @@ import {
     FileText,
     Badge,
     // X,
-    // Check
+    Check
 } from 'lucide-react';
+import { GET } from "../api/API";
 
 export default function SellerSettings () {
 
     const [activeTab, setActiveTab] = useState("");
+    const [seller, setSeller] = useState({});
+
+    const [formData, setFormData] = useState({}); 
 
     const settingsTabs = [
         { id: 'profile', label: 'Profile', icon: User },
@@ -39,9 +43,32 @@ export default function SellerSettings () {
         { id: 'preferences', label: 'Preferences', icon: SettingsIcon },
     ];
 
+    useEffect(() => {
+
+        async function getSellerInfo() {
+            const url = "http://localhost:8080/api/seller";
+
+            const result = await GET(url);
+            console.log(result);
+            setSeller(result);
+            setFormData(result);
+        };
+
+        getSellerInfo();
+
+    }, []);
+
+    const handleChange = (e) => {
+        const { value, id } = e.target;
+
+        setFormData(prev => ({...prev, [id]: value}));
+    };
+
+    console.log(formData);
+
     return (
         <div>
-            <SellerOrderHeader />
+            <SellerOrderHeader currentTab={"settings"} />
             <div className="p-12">
                 <div>
                     <span>Settings / </span>
@@ -88,11 +115,25 @@ export default function SellerSettings () {
                             <div className="grid relative gap-4 grid-cols-2">
                                 <div className="w-full gap-2 focus-within:ring-blue-600 focus-within:ring-2 items-center ring-1 pl-4 ring-gray-400 rounded-2xl flex">
                                     <User className="text-gray-400" />
-                                    <input className="outline-none pl-0 p-4" type="text" placeholder="first name" />
+                                    <input 
+                                        className="outline-none pl-0 p-4" 
+                                        type="text" 
+                                        value={formData.firstName} 
+                                        placeholder="first name"
+                                        id="firstName"
+                                        onChange={handleChange}
+                                    />
                                 </div>
                                 <div className="w-full focus-within:ring-blue-600 focus-within:ring-2 gap-2 items-center ring-1 pl-4 ring-gray-400 rounded-2xl flex">
                                     <User className="text-gray-400" />
-                                    <input className="outline-none pl-0 p-4" type="text" placeholder="last name" />
+                                    <input 
+                                        className="outline-none pl-0 p-4" 
+                                        type="text" 
+                                        value={formData.lastName} 
+                                        placeholder="last name" 
+                                        onChange={handleChange}
+                                        id="lastName"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -223,6 +264,16 @@ export default function SellerSettings () {
                     </div>
                 </div>
             </div>
+            <footer className="flex justify-between ring-1 ring-gray-200 p-6 bg-white items-center sticky bottom-0">
+                <p>Last updated 2 minutes ago</p>
+                <div className="flex gap-2">
+                    <button className="ring-1 cursor-pointer ring-gray-200 rounded-2xl px-4 py-2">Cancel</button>
+                    <button className="flex items-center gap-2 font-bold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer ring-1 ring-gray-200 px-4 py-2 rounded-2xl">
+                        <Check className="w-5 h-5"></Check>
+                        Save Changes
+                    </button>
+                </div>
+            </footer>
         </div>
     );
 }
