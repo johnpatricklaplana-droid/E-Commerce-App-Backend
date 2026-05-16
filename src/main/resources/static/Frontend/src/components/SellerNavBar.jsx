@@ -27,7 +27,7 @@ export function SellerOrderHeader( {currentTab} ) {
     const navTabs = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, navigateTo: "" },
         { id: 'orders', label: 'Orders', icon: ShoppingCart, navigateTo: "/seller-orders" },
-        { id: 'products', label: 'Products', icon: Package, navigateTo: "" },
+        { id: 'products', label: 'Products', icon: Package, navigateTo: "/seller-products" },
         { id: 'inventory', label: 'Inventory', icon: Layers, navigateTo: "" },
         { id: 'customers', label: 'Customers', icon: Users, navigateTo: "" },
         { id: 'analytics', label: 'Analytics', icon: BarChart3, navigateTo: "" },
@@ -97,7 +97,10 @@ export function SellerOrderHeader( {currentTab} ) {
                     </button>
 
                     {/* Quick Actions */}
-                    <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
+                    <button 
+                        className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+                        onClick={() => navigation("/add-product")}
+                    >
                         <Plus className="w-4 h-4" />
                         <span className="text-sm font-medium">New Product</span>
                     </button>

@@ -6,11 +6,20 @@ import CommonSvgIcon from "../components/CommonIcon";
 import { useEffect, useState } from "react";
 import { GET } from "../api/API";
 import { useNavigate } from "react-router-dom";
+import { SellerOrderHeader } from "../components/SellerNavBar";
+import { Plus, Package, Clock, CheckCircle2, AlertCircle, Filter, TrendingUp, TrendingDown, Search } from "lucide-react";
 
 export default function SellerProducts () {
 
     const [product, setProduct] = useState([]);
     const navigate = useNavigate();
+
+    const stats = [
+        { label: 'Total Orders', value: '2,847', icon: Package, change: '+12.5%', trend: 'up' },
+        { label: 'Pending', value: '156', icon: Clock, change: '+4.2%', trend: 'up' },
+        { label: 'Completed', value: '2,534', icon: CheckCircle2, change: '+8.1%', trend: 'up' },
+        { label: 'Cancelled', value: '157', icon: AlertCircle, change: '-2.3%', trend: 'down' },
+    ];
 
     useEffect(() => {
         const url = "http://localhost:8080/api/seller/product";
@@ -37,88 +46,65 @@ export default function SellerProducts () {
     console.log(product);
 
     return (
-        <div className="bg-blue-100 grid grid-cols-[270px_1fr] h-screen">
-            <Sidebar />
-            <div className="h-full overflow-auto w-full">
-                <div className="flex p-4 bg-white z-50 sticky top-0 items-center justify-between w-full">
-                    <h1 className="text-2xl font-semibold font-sans">Manage Products</h1>
-                    <a href="/add-product" className="bg-slate-900 cursor-pointer transition-transform duration-500 hover:-translate-y-1.5 hover:bg-slate-700 font-sans text-slate-300 flex py-1.5 px-3 rounded-[10px]">
-                        <svg className="h-6 w-6 flex-none text-slate-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                            <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                        Add New Product
-                    </a>
-                </div>
-                <div className="p-7 flex flex-col gap-10">
-                    <div className="flex gap-4">
-                        <div className="w-60 border-2 bg-white rounded-2xl shadow-2xl p-4 border-slate-800">
-                            <div className="flex items-center gap-1.5">
-                                <svg className="h-6 w-6 flex-none mb-2 text-slate-800" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M6 6H21L20 14H7L6 6Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                                    <path d="M6 6L5 3H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                    <circle cx="9" cy="20" r="1.5" fill="currentColor" />
-                                    <circle cx="18" cy="20" r="1.5" fill="currentColor" />
-                                </svg>
-                                <p className="font-semibold">Active Products</p>
-                            </div>
-                            <p className="font-bold text-2xl">100</p>
-                        </div>
-                        <div className="w-60 border-2 bg-white rounded-2xl shadow-2xl p-4 border-slate-800">
-                            <div className="flex items-center gap-1.5">
-                                <svg className="h-6 w-6 flex-none text-slate-800" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-
-                                    <path d="M4 7L12 3L20 7V17L12 21L4 17V7Z" stroke="currentColor" strokeWidth="2"
-                                        strokeLinejoin="round" />
-
-                                    <path d="M8 9L16 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                    <path d="M16 9L8 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                </svg>
-                                <p className="font-semibold">Out of Stock</p>
-                            </div>
-                            <p className="font-bold text-2xl">8</p>
-                        </div>
+        <div className="h-screen">
+            <SellerOrderHeader currentTab={"products"}></SellerOrderHeader>
+            <div className="h-full p-8 overflow-auto w-full">
+                <span>Dashboard / </span>
+                <span>Products</span>   
+                <div>
+                    <div className="mb-6 mt-4">
+                        <h1 className="mb-2 text-2xl font-bold">Products</h1>
+                        <p>Manage your products inventory and pricing.</p>
                     </div>
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <h1 className="text-lg font-sans font-semibold">Product List</h1>
-                            <div>
-                                <select className="outline-0 border-2 px-3 py-1 rounded border-slate-300 bg-white">
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                </select>
-                                <select className="outline-0 border-2 px-3 py-1 rounded border-slate-300 bg-white">
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                    <option value="TODO">TODO</option>
-                                </select>
+                    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                        {
+                            stats.map(stat => {
+                                return (
+                                    <div
+                                        key={stat.label}
+                                        className="shadow-sm rounded-2xl flex justify-between items-start p-4 ring-1 ring-black/5 bg-white"
+                                    >
+                                        <div>
+                                            <p className="mb-4">{stat.label}</p>
+                                            <p className="font-semibold mb-2 text-2xl">{stat.value}</p>
+                                            <div className="flex gap-1">
+                                                {stat.trend === 'up' ? <TrendingUp className="text-green-500" /> : <TrendingDown className="text-red-500" />}
+                                                <p className={`text-sm`}>
+                                                    <span className={`font-semibold ${stat.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>{stat.change}</span>
+                                                    <span className="text-black ml-2">this month</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-indigo-600/5 p-2 rounded-2xl">
+                                            {<stat.icon className="text-indigo-600" />}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                    <div className="mt-6 ring-1 ring-black/5 rounded-2xl shadow-sm">
+                        <div className="overflow-hidden p-4 flex items-start gap-2">
+                            <div className="flex pl-4 items-center w-full ring-1 ring-black/15 gap-2 focus-within:outline-2 rounded-2xl focus-within:outline-indigo-600">
+                                <Search className="text-gray-400"></Search>
+                                <input
+                                    type="search"
+                                    placeholder="search some"
+                                    className="w-full py-2 rounded-2xl rounded-l-none outline-none"
+                                />
                             </div>
-                        </div>
-                        <div className="flex mt-2.5">
-                            <Input variant={"default"} placeholder={"Search some products"} fullWidth={true}></Input>
-                            <Button>Search</Button>
-                        </div>
-                        <div className="grid grid-cols-3 mt-10 gap-4">
-                            {product.map(prod => 
-                                <div 
-                                    key={prod.id} 
-                                    className="rounded-2xl flex flex-col items-center justify-start h-87.5 cursor-pointer transition duration-500 hover:scale-105 shadow-2xl"
-                                    onClick={() => navigate(`/seller-product/${prod.id}`)}
-                                >
-
-                                    <img className="w-full rounded-t-2xl h-[70%]" src={prod.variations[0] ? `http://localhost:8080/api/public/product-image/${prod.thumbnail}` : "error"} alt="" />
-                                    <div className="w-full p-3">
-                                        <Text position={"start"} variant={"semiSmall"}>{prod.productname}</Text>
-                                        <Text color={"orange"} variant={"bold"}>${prod.variations[0] ? prod.variations[0].price.toLocaleString() : "00.00"}</Text>
-                                    </div>
-                                    <div className="flex justify-end w-full px-3">
-                                        <CommonSvgIcon hover={"grow"} width={28} height={28} type={"threeDot"}></CommonSvgIcon>
-                                    </div>
-                                </div>
-                            )}
+                            <select 
+                                className="py-2 px-4 focus:outline-2 focus:outline-indigo-600 rounded-2xl ring-1 ring-black/15"
+                            >
+                                <option value="">fkjafka</option>
+                                <option value="">fkjafka</option>
+                                <option value="">fkjafka</option>
+                                <option value="">fkjafka</option>
+                            </select>
+                            <button className="hover:bg-gray-50 flex gap-1 ring-1 ring-black/15 px-4 py-2 rounded-2xl">
+                                <Filter className=""></Filter>
+                                <span className="">Filters</span>
+                            </button>
                         </div>
                     </div>
                 </div>
