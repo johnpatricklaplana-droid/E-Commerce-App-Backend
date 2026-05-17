@@ -1,18 +1,16 @@
-import Sidebar from "../components/Sidebar";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import Text from "../components/Text";
-import CommonSvgIcon from "../components/CommonIcon";
 import { useEffect, useState } from "react";
 import { GET } from "../api/API";
 import { useNavigate } from "react-router-dom";
 import { SellerOrderHeader } from "../components/SellerNavBar";
-import { Plus, Package, Clock, CheckCircle2, AlertCircle, Filter, TrendingUp, TrendingDown, Search } from "lucide-react";
+import ListOfSellerProducts from "../components/ListOfSellerProducts";
+import GridOfSellerProducts from "../components/GridOfSellerProducts";
+import { List, Package, Clock, CheckCircle2, AlertCircle, Filter, TrendingUp, TrendingDown, Search, Grid3X3 } from "lucide-react";
 
 export default function SellerProducts () {
 
-    const [product, setProduct] = useState([]);
+    const [products, setProducts] = useState([]);
     const navigate = useNavigate();
+    const [gridOrList, setGridOrList] = useState("list");
 
     const stats = [
         { label: 'Total Orders', value: '2,847', icon: Package, change: '+12.5%', trend: 'up' },
@@ -31,27 +29,31 @@ export default function SellerProducts () {
                 return {
                     id: res.id,
                     thumbnail: res.thumbNailUrl,
-                    productname: res.productName,
-                    productdescription: res.productDescription,
+                    product: res.productName,
+                    price: res.price,
+                    rating: { rating: res.ratings.rating, numberOfRaters: res.ratings.numberOfRaters },
                     categories: res.categories || [],
-                    variations: res.variations || [], 
+                    stock: res.stock,
+                    sales: res.sales,
+                    status: "TODO",
+                    revenue: res.productRevenue
                 }
            });
-           setProduct(prev => [...prev, ...cleanResult]);
+           setProducts(prev => [...prev, ...cleanResult]);
         }   
         
         fetchProduct();
     }, []);
 
-    console.log(product);
+    console.log(products);
 
     return (
-        <div className="h-screen">
+        <div className="h-screen w-screen">
             <SellerOrderHeader currentTab={"products"}></SellerOrderHeader>
             <div className="h-full p-8 overflow-auto w-full">
                 <span>Dashboard / </span>
                 <span>Products</span>   
-                <div>
+                <div className="w-full">
                     <div className="mb-6 mt-4">
                         <h1 className="mb-2 text-2xl font-bold">Products</h1>
                         <p>Manage your products inventory and pricing.</p>
@@ -83,7 +85,7 @@ export default function SellerProducts () {
                             })
                         }
                     </div>
-                    <div className="mt-6 ring-1 ring-black/5 rounded-2xl shadow-sm">
+                    <div className="mt-8 ring-1 pb-4 ring-black/5 rounded-2xl shadow-sm">
                         <div className="overflow-hidden p-4 flex items-start gap-2">
                             <div className="flex pl-4 items-center w-full ring-1 ring-black/15 gap-2 focus-within:outline-2 rounded-2xl focus-within:outline-indigo-600">
                                 <Search className="text-gray-400"></Search>
@@ -105,8 +107,56 @@ export default function SellerProducts () {
                                 <Filter className=""></Filter>
                                 <span className="">Filters</span>
                             </button>
+                            <div className="flex items-center ring-1 gap-2 p-1 ring-black/15 bg-gray-100 rounded-lg">
+                                <button 
+                                    className={`p-1 ${gridOrList === "list" && 'shadow-sm bg-white'} cursor-pointer rounded-lg`}
+                                    onClick={() => setGridOrList("list")}
+                                >
+                                    <List></List>
+                                </button>
+                                <button 
+                                    className={`p-1 rounded-2xl ${gridOrList === "grid" && 'bg-white shadow-sm'} rounded-lg cursor-pointer`}
+                                    onClick={() => setGridOrList("grid")}
+                                >
+                                    <Grid3X3></Grid3X3>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="border-t mt-4 border-gray-200 grid grid-cols-3">
+                            <div className="px-4 py-2 flex flex-col gap-2">
+                                <label className="font-medium">Category</label>
+                                <select className="ring-1 outline-0 ring-black/15 focus:ring-indigo-600 focus:ring-2 rounded-2xl px-4 py-2">
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                </select>
+                            </div>
+                            <div className="px-4 py-2 flex flex-col gap-2">
+                                <label className="font-medium">Price range</label>
+                                <select className="ring-1 outline-0 ring-black/15 focus:ring-indigo-600 focus:ring-2 rounded-2xl px-4 py-2">
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                </select>
+                            </div>
+                            <div className="px-4 py-2 flex flex-col gap-2">
+                                <label className="font-medium">Stock status</label>
+                                <select className="ring-1 outline-0 ring-black/15 focus:ring-indigo-600 focus:ring-2 rounded-2xl px-4 py-2">
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                    <option value="klfjaf">fafjksa</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    {gridOrList === "list" && <ListOfSellerProducts products={products} />}
+                    {gridOrList === "grid" && <GridOfSellerProducts products={products} /> }
                 </div>
             </div>
         </div>

@@ -42,6 +42,12 @@ public class ProductVariations {
     @Column(name = "SKU", nullable = false)
     private String sku;
 
+    @Column(name = "stock")
+    private int stock;
+
+    @Column(name = "sales")
+    private int sales;
+
     @OneToMany(mappedBy = "productVariations")
     private Set<ProductImage> images;
 

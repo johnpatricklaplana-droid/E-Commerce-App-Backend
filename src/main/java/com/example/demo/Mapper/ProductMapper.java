@@ -1,6 +1,5 @@
 package com.example.demo.Mapper;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,6 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductImage;
 import com.example.demo.entity.ProductRating;
 import com.example.demo.entity.ProductVariations;
-import com.example.demo.entity.Seller;
 
 import io.jsonwebtoken.lang.Collections;
 
@@ -36,6 +34,10 @@ public class ProductMapper {
         prodResponse.setVariations(toProductVariationsDTO(product.getVariations()));
 
         prodResponse.setRatings(toProductRatings(product.getRatings()));
+
+        prodResponse.setStock(getProductStock(product));
+        prodResponse.setSales(getProductSales(product));
+        prodResponse.setProductRevenue(getProductRevenue(product));
 
         return prodResponse;
     }
@@ -108,4 +110,27 @@ public class ProductMapper {
             .collect(Collectors.toSet());
 
     }
+
+    private Integer getProductStock (Product product) {
+        return product.getVariations() == null 
+        ? null 
+        : product.getVariations().stream()
+            .mapToInt(var -> var.getStock())
+            .sum(); 
+    }
+
+    private Integer getProductSales (Product product) {
+        if(product.getVariations() == null) return null;
+        return product.getVariations().stream()
+            .mapToInt(var -> var.getSales())
+            .sum();
+    }
+
+    public double getProductRevenue (Product product) {
+        if(product.getVariations() == null) return 0;
+        return product.getVariations().stream()
+            .mapToDouble(var -> var.getSales() * var.getPrice())
+            .sum();
+    }
+
 }

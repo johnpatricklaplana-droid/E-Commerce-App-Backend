@@ -23,6 +23,11 @@ public class ProductResponse {
 
     private ProductRatingDTO ratings;
 
+    private Integer stock;
+    private Integer sales;
+
+    private double productRevenue;
+
 }
 
 
