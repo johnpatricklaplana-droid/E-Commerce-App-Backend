@@ -12,6 +12,7 @@ import Button from "../components/Button";
 import CostumerLoginPopup from "../components/CostumerLoginPopup";
 import SuccessOrFailureMessagePopup from "../components/SuccessOrFailureMessagePopup";
 import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
+import ProductBoxInFeed from "../components/ProductBoxInFeed";
 
 export default function CostumerProductInspect () {
 
@@ -405,25 +406,7 @@ export default function CostumerProductInspect () {
 
             <div className="grid sm:grid-cols-6 p-1.5 grid-cols-2 gap-3">
                 {relatedProducts?.map(relProd => 
-                    <button 
-                        onClick={() => (changeProduct(relProd.id))}
-                        className="space-y-1.5 hover:scale-101 transition duration-300 cursor-pointer p-1.5 shadow rounded bg-white"
-                        key={relProd.id}
-                    >
-                        <img 
-                            className="object-cover w-full h-[150px] sm:h-[200px]  rounded" 
-                            src={`http://localhost:8080/api/public/product-image/${relProd.thumbNailUrl}`} alt="" />
-                        <div className="space-y-1.5">
-                            <div>
-                                <p className="text-start text-gray-700 truncate">{relProd.productName}</p>
-                                <p className="text-start text-red-600">${relProd.price.toLocaleString()}</p>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                <p className="text-xs text-gray-400">{relProd.ratings.rating} rating {relProd.ratings.numberOfRaters} reviews</p>
-                            </div>
-                        </div>
-                    </button>
+                    <ProductBoxInFeed product={relProd} onClick={changeProduct} />
                 )}
             </div>
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { GET } from "../api/API.js"
 import { useNavigate } from "react-router-dom";
 import CostumerNavBar from "../components/CostumerNavBar.jsx";
+import ProductBoxInFeed from "../components/ProductBoxInFeed.jsx";
 
 export default function CostumerFeed() {
 
@@ -53,27 +54,9 @@ export default function CostumerFeed() {
                     <div className="py-6 space-y-6">
                         <h1 className="sm:text-3xl text-lg font-bold text-indigo-600 font-sans">GOAT</h1>
                         <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-                            {
-                                products?.map(prod => 
-                                    <button 
-                                        key={prod.id} 
-                                        className="transition duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-lg rounded-2xl"
-                                        onClick={() => (inspectProduct(prod.id))}
-                                    >
-                                        <img className="object-cover w-full h-[150px] sm:h-[200px]  rounded" src={`http://localhost:8080/api/public/product-image/${prod.thumbNailUrl}`} alt="" />
-                                        <div className="p-2">
-                                            <div>
-                                                <p className="text-start truncate">{prod.productName}</p>
-                                                <p className="text-start mt-2 mb-4 text-indigo-600 font-semibold">${prod.price.toLocaleString()}</p>
-                                            </div>
-                                            <div className="flex items-center gap-1.5">
-                                                <CommonSvgIcon type={"star"} classList={"h-[18px] width-[18px]"}></CommonSvgIcon>
-                                                <p className="text-xs">{prod.ratings.rating} rating {prod.ratings.numberOfRaters} reviews</p>
-                                            </div>
-                                        </div>
-                                    </button>
-                                )
-                            }
+                            {products.map(prod => 
+                                <ProductBoxInFeed product={prod} onClick={inspectProduct} />
+                            )}
                         </div>
                     </div>
                 </div>
