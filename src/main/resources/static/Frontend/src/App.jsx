@@ -11,7 +11,6 @@ import SellerLogin from "./pages/SellerLogin";
 import SellerSignup from "./pages/SellerSignup";
 import CostumerLogin from "./pages/CostumerLogin";
 import AddSellerBankAccount from "./pages/AddSellerBankAccount";
-import ProductInspect from "./pages/ProductInspect";
 import SellerProductInspect from "./pages/SellerProduct";
 import CostumerFeed from "./pages/CostumerFeed";
 import AddProductVariants from "./pages/AddProductVariants";
@@ -40,9 +39,8 @@ export default function App() {
                 <Route path="/seller-signup" element={<SellerSignup/>} />
                 <Route path="/costumer-login" element={<CostumerLogin/>} />
                 <Route path="/seller-bank-account" element={<AddSellerBankAccount/>} />
-                <Route path="/costumer-product" element={<ProductInspect/>} />
                 <Route path="/seller-product/:id" element={<SellerProductInspect/>} />
-                <Route path="/costumer-feed" element={<CostumerFeed/>} />
+                <Route path="/costumer-feed" element={<CostumerFeed />} />
                 <Route path="/add-product-variants/:productId" element={<AddProductVariants/>} />
                 <Route path="/costumer-product-inspect/:productId" element={<CostumerProductInspect/>} />
                 <Route path="/costumer-cart" element={<Cart/>} />

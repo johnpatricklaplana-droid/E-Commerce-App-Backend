@@ -11,6 +11,7 @@ import CostumerNavBar from "../components/CostumerNavBar";
 import Button from "../components/Button";
 import CostumerLoginPopup from "../components/CostumerLoginPopup";
 import SuccessOrFailureMessagePopup from "../components/SuccessOrFailureMessagePopup";
+import { ArrowRightIcon, ArrowLeftIcon } from "lucide-react";
 
 export default function CostumerProductInspect () {
 
@@ -33,6 +34,7 @@ export default function CostumerProductInspect () {
     const [openSuccessOrFailureMessage, setOpenSuccessOrFailureMessage] = useState(false);
     const [changeCartItemCount, setChangeCartItemCount] = useState(0);
     const [addedToCartMessage, setAddedToCartMessage] = useState("");
+    const [activeLittleImage, setActiveLittleImage] = useState();
 
     // TODO: cartItemsCount is partially backend-sourced and partially locally incremented.
     // Initial value is fetched from API (getCartItemsCount),
@@ -50,10 +52,11 @@ export default function CostumerProductInspect () {
             setProduct(toProduct(result));
 
             const tempVariation = toProductVariations(result);
-
+           console.log(tempVariation);
             setProductVariations(tempVariation);
             setCurrentVariation(tempVariation[0]);
             setCurrentVariationNearAddToCart(tempVariation[0]);
+            setActiveLittleImage(tempVariation[0].index);
 
             const cats = toCategories(result);
 
@@ -152,9 +155,11 @@ export default function CostumerProductInspect () {
         if(currentIndex + 1 > productVariations.length-1) {
             const newActiveVariation = productVariations.find(vary => vary.index === 0);
             setCurrentVariation(newActiveVariation);
+            setActiveLittleImage(newActiveVariation.index);
         } else {
             const newActiveVariation = productVariations.find(vary => vary.index === currentIndex + 1);
             setCurrentVariation(newActiveVariation);
+            setActiveLittleImage(newActiveVariation.index);
         }
     };
 
@@ -164,9 +169,11 @@ export default function CostumerProductInspect () {
         if (currentIndex - 1 < 0) {
             const newActiveVariation = productVariations.find(vary => vary.index === productVariations.length - 1);
             setCurrentVariation(newActiveVariation);
+            setActiveLittleImage(newActiveVariation.index);
         } else {
             const newActiveVariation = productVariations.find(vary => vary.index === currentIndex - 1);
             setCurrentVariation(newActiveVariation);
+            setActiveLittleImage(newActiveVariation.index);
         }
     };  
 
@@ -199,16 +206,16 @@ export default function CostumerProductInspect () {
         <div className="">
         <SuccessOrFailureMessagePopup open={openSuccessOrFailureMessage ? true : false} message={addedToCartMessage}></SuccessOrFailureMessagePopup>
         <CostumerNavBar cartItemsCount={cartItemsCount}></CostumerNavBar>
-        <div className={`min-h-screen mt-6 relative w-screen flex flex-col sm:pb-1.5 pb-24 gap-6`}>
+        <div className={`min-h-screen relative w-screen flex flex-col sm:pb-1.5 pb-24 gap-6`}>
             {openLoginPopup === true && <CostumerLoginPopup noWay={nowWayToLogin}></CostumerLoginPopup>}
             {isOpen && <AddToCartBox variations={productVariations} closeOpen={closeOpen}></AddToCartBox>}
-            <div className="sm:grid sm:grid-cols-2 w-full sm:gap-3">
+            <div className="sm:grid sm:grid-cols-2 w-full gap-8">
                 <div className="">
                     <div
-                        className="h-96 w-full flex relative overflow-x-hidden"
+                        className="h-96 w-full flex relative group overflow-x-hidden"
                         {...swipeHandlers}
                     >
-                        <button onClick={prev} className="absolute left-1.5 top-1/2 bg-orange-500 font-bold p-1.5 -translate-y-1/2 cursor-pointer z-50">prev</button>
+                        <button onClick={prev} className="absolute group-hover:block hidden left-1.5 top-1/2 rounded-[50%] bg-white font-bold p-2 -translate-y-1/2 cursor-pointer z-50"><ArrowLeftIcon className="text-indigo-600"></ArrowLeftIcon></button>
                         <div
                             className={`flex transition-transform duration-200`}
                             style={{ transform: `translateX(-${currentVariation?.index * 100}%)` }}
@@ -222,12 +229,12 @@ export default function CostumerProductInspect () {
                                 </img>
                             )}
                         </div>
-                            <button onClick={next} className="absolute right-1.5 top-1/2 bg-orange-500 p-1.5 font-bold -translate-y-1/2 cursor-pointer">next</button>
+                            <button onClick={next} className="absolute right-1.5 top-1/2 group-hover:block hidden rounded-[50%] bg-white p-2 font-bold -translate-y-1/2 cursor-pointer"><ArrowRightIcon className="text-indigo-600"></ArrowRightIcon></button>
                     </div>
-                    <div className=" overflow-x-auto sm:max-w-[80%] gap-1.5 p-1.5 flex h-[100px] w-full">
+                    <div className="mt-4 overflow-x-auto gap-2 p-1.5 flex h-[100px] w-full">
                         {productVariations.map(vary =>
                             <img
-                                className="rounded-2xl shadow object-contain aspect-square h-full"
+                                className={`rounded-2xl ${activeLittleImage === vary.index && 'ring-indigo-600 ring-2' } shadow object-contain aspect-square h-full`}
                                 src={`http://localhost:8080/api/public/product-image/${vary.image}`}
                             >
 
@@ -235,34 +242,34 @@ export default function CostumerProductInspect () {
                         )}
                     </div>
                 </div>
-                <div className="space-y-3 p-1.5 sm:block hidden">
-                    <div className="flex gap-1.5">
+                <div className="p-1.5 sm:block hidden">
+                    <div className="flex gap-2 mb-6">
                         <img
                             className="aspect-square max-w-[122px]"
                             src={`http://localhost:8080/api/public/product-image/${currentVariationNearAddToCart.image}`}
                             alt=""
                         />
                         <div>
-                            <p>{currentVariationNearAddToCart.variationName}</p>
-                            <p className="text-2xl text-red-500 font-bold">${currentVariationNearAddToCart.price.toLocaleString()}</p>
+                            <p className="font-medium text-lg mb-2">{currentVariationNearAddToCart.variationName}</p>
+                            <p className="text-2xl text-indigo-600 mb-4 font-bold">${currentVariationNearAddToCart.price.toLocaleString()}</p>
                             <div className="flex gap-1.5 items-center">
                                 <CommonSvgIcon classList={"w-6 h-6"} type={"star"}></CommonSvgIcon>
                                 <p className="text-sm text-gray-400">todo: ratings</p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-1.5 max-h-[250px] flex-wrap overflow-y-scroll">
+                    <div className="flex gap-2 mb-4 max-h-[250px] flex-wrap overflow-y-scroll">
                         {
                             productVariations.map((vary, i, self) => {
 
                             const isFirst = self.findIndex(selfy => selfy.variantId === vary.variantId) === i;
 
                             if(!isFirst) {
-                                return undefined;
+                                return null;
                             }
 
                             return <button
-                                        className="flex relative gap-1.5 hover:bg-gray-500 active:scale-95 transition cursor-pointer items-center border border-gray-500 hover:scale-101"
+                                        className="flex relative gap-1.5 hover:bg-indigo-100 active:scale-95 transition cursor-pointer items-center ring-2 ring-black/5 hover:scale-101"
                                         key={vary.variantId}
                                         onClick={() => (changeCurrentVariationNearAddToCart(vary.variantId))}
                                     >
@@ -273,7 +280,7 @@ export default function CostumerProductInspect () {
                                         />
                                         <div>
                                             <p className=" px-1.5 text-sm text-gray-700">{vary.variationName}</p>
-                                            <p className=" px-1.5 text-sm text-red-500">${vary.price.toLocaleString()}</p>
+                                            <p className=" px-1.5 text-sm text-indigo-600">${vary.price.toLocaleString()}</p>
                                         </div>
                                 {currentVariationNearAddToCart.variantId === vary.variantId && <p className="absolute text-2xl bottom-0 right-0">✅</p>}
                                     </button>
@@ -281,14 +288,14 @@ export default function CostumerProductInspect () {
                             )
                         }
                     </div>
-                    <p className="font-semibold">Quantity</p>
-                    <div className="flex gap-7 items-center">
+                    <p className="font-semibold mb-2">Quantity</p>
+                    <div className="flex gap-7 items-center mb-4">
                         <button onClick={() => (changeQuantity(quantity - 1))} disabled={quantity === 0} className="hover:bg-gray-300 active:scale-95 transition cursor-pointer border px-1.5 rounded">-</button>
                         <p>{quantity}</p>
                         <button onClick={() => (changeQuantity(quantity + 1))} className="hover:bg-gray-300 active:scale-95 transition cursor-pointer border px-1.5 rounded">+</button>
                     </div>
                     <div className="flex justify-start w-full">
-                        <Button onClick={addToCart} bg={"bg-emerald-500"} classList={"mr-3 hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Add to cart</Button>
+                        <button onClick={addToCart} className={"mr-3 hover:scale-105 bg-indigo-600 px-4 py-2 rounded-2xl text-white font-semibold transition active:scale-95 cursor-pointer"}>Add to cart</button>
                         <Button bg={"bg-orange-500"} classList={"hover:scale-105 transition active:scale-95 cursor-pointer"} variant="primary">Buy now</Button>
                     </div>
                 </div>
@@ -296,7 +303,7 @@ export default function CostumerProductInspect () {
             <div className="border-b p-3">
                 <div>                                                        
                     <p className="text-[22px] leading-tight line-clamp-2 font-semibold">{currentVariation.variationName}</p>
-                    <p className="text-[22px] font-bold text-red-500">${currentVariation?.price?.toLocaleString()}</p>
+                    <p className="text-[22px] font-bold text-indigo-600">${currentVariation?.price?.toLocaleString()}</p>
                 </div>
             </div>
             <p className="text-gray-400 flex items-center pl-3 gap-1.5 mt-1.5">
